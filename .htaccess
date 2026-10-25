@@ -1,0 +1,7 @@
+# PERSYS Frontend — Custom HTTP Error Pages
+
+# Display the custom PERSYS error page for missing resources.
+ErrorDocument 404 /PERSYS-FRONTEND/error.html?code=404
+
+# Display the custom error page when Apache denies access.
+ErrorDocument 403 /PERSYS-FRONTEND/error.html?code=403

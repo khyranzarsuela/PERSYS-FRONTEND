@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERSYS | Admin Dashboard</title>
+     <link rel="icon" type="image/x-icon" href="assets/SAC logo.jpg">
+
+  <!--
+    Paths are relative to this file's location:
+      Pages/Admin/adminDashboard.html
+    so we go up two levels (../../) to reach the project root.
+  -->
+  <link rel="stylesheet" href="../../styles/admin.css" />
+  <style>
+    /* =========================================================
+   GLOBAL SIDEBAR LOGOUT BUTTON
+   Shared by all migrated Admin pages
+   ========================================================= */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logout-container {
+  margin-top: auto;
+  padding: 16px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+.sidebar-logout {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: transparent;
+  color: #FCA5A5;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar-logout svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sidebar-logout:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(252, 165, 165, 0.4);
+}
+
+.sidebar-logout:focus-visible {
+  outline: 2px solid #FCA5A5;
+  outline-offset: 3px;
+}
+
+.sidebar-logout:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+  </style>
+  <script src="../../scripts/adminGuard.js"></script>
+</head>
+<body>
+
+  <!-- ======================================================
+       Admin Dashboard
+       Layout: .app-shell → .sidebar + .main-wrapper
+                               (.topbar + .page-content)
+  ====================================================== -->
+
+  <!-- Mobile sidebar overlay (click to close) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+
+      <!-- Admin profile block -->
+      <img
+        class="sidebar-avatar"
+        src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
+        alt="Admin profile photo"
+      />
+      
+      <p class="sidebar-name" id="adminUsername">Loading...</p>
+      <p class="sidebar-role" id="adminRole">Loading...</p>
+
+      <div class="sidebar-divider" role="separator"></div>
+
+      <!-- Primary navigation -->
+      <nav aria-label="Main menu">
+        <ul class="sidebar-nav">
+
+          <!-- My Dashboard (active by default) -->
+          <li>
+            <a
+              href="adminDashboard.html"
+              class="nav-item active"
+              aria-current="page"
+            >
+              <span class="nav-icon" aria-hidden="true">
+                <!-- Grid / dashboard icon -->
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7" rx="1"/>
+                  <rect x="14" y="3" width="7" height="7" rx="1"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+              </span>
+              My Dashboard
+            </a>
+          </li>
+
+          <!-- Profile -->
+          <li>
+            <a href="adminProfile.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <!-- Person icon -->
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </span>
+              Profile
+            </a>
+          </li>
+
+          <!-- Employees -->
+          <li>
+            <a href="adminEmployees.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <!-- Group / people icon -->
+                <svg viewBox="0 0 24 24">
+                  <circle cx="9" cy="8" r="3.5"/>
+                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+                  <circle cx="17" cy="8" r="2.5"/>
+                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                </svg>
+              </span>
+              Employees
+            </a>
+          </li>
+
+          <!-- Service Credits -->
+          <li>
+            <a href="adminServiceCredits.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <!-- Badge / award icon -->
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="9" r="5"/>
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                </svg>
+              </span>
+              Service Credits
+            </a>
+          </li>
+
+          <!-- Transactions -->
+          <li>
+            <a href="adminTransactions.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <!-- Receipt / transactions icon -->
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <line x1="8" y1="7" x2="16" y2="7"/>
+                  <line x1="8" y1="11" x2="16" y2="11"/>
+                  <line x1="8" y1="15" x2="12" y2="15"/>
+                </svg>
+              </span>
+              Transactions
+            </a>
+          </li>
+
+          <!-- Settings -->
+          <li>
+            <a href="adminSettings.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <!-- Gear icon -->
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
+                           2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                           1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                           A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33
+                           l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06
+                           A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1
+                           H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9
+                           a1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                           a2 2 0 0 1 2.83-2.83l.06.06
+                           A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51
+                           V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51
+                           1.65 1.65 0 0 0 1.82-.33l.06-.06
+                           a2 2 0 0 1 2.83 2.83l-.06.06
+                           A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                </svg>
+              </span>
+              Settings
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+       <!-- Global Logout button at the bottom of the sidebar -->
+      <div class="sidebar-logout-container">
+        <button type="button" class="btn-logout sidebar-logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+
+
+    </aside>
+    <!-- ── END SIDEBAR ───────────────────────────────────── -->
+
+    <!-- ── MAIN WRAPPER ─────────────────────────────────── -->
+    <div class="main-wrapper">
+
+      <!-- Top bar -->
+      <header class="topbar" role="banner">
+        <!-- Four-square waffle icon -->
+        <div class="topbar-icon" aria-hidden="true">
+          <span></span><span></span>
+          <span></span><span></span>
+        </div>
+        <h1 class="topbar-title">My Dashboard</h1>
+
+        <!-- Mobile hamburger -->
+        <button
+          class="hamburger"
+          id="hamburger"
+          type="button"
+          aria-controls="sidebar"
+          aria-expanded="false"
+          aria-label="Toggle navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      <!-- Page content -->
+      <main class="page-content" id="mainContent">
+
+        <!-- ── LEFT COLUMN: STAT CARDS ─────────────────── -->
+        <section class="stat-cards" aria-label="Personnel statistics">
+
+          <!-- Card 1 — Active Teaching Personnel -->
+          <article class="stat-card">
+            <div class="stat-card-header">
+              <div class="stat-icon" aria-hidden="true">
+                <!-- Teaching / person with book icon -->
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="7" r="4"/>
+                  <path d="M5.5 21a7 7 0 0 1 13 0"/>
+                  <path d="M17 11l2 2 4-4" stroke-width="2"/>
+                </svg>
+              </div>
+              <h2 class="stat-label">Active Teaching Personnel</h2>
+            </div>
+            <!-- Number intentionally left as placeholder — backend will populate -->
+            <p class="stat-number" data-stat="active-teaching">—</p>
+          </article>
+
+          <!-- Card 2 — Active Non-Teaching Personnel -->
+          <article class="stat-card">
+            <div class="stat-card-header">
+              <div class="stat-icon" aria-hidden="true">
+                <!-- Person with gear (non-teaching) icon -->
+                <svg viewBox="0 0 24 24">
+                  <circle cx="10" cy="7" r="4"/>
+                  <path d="M3.5 21a7 7 0 0 1 13 0"/>
+                  <circle cx="19" cy="14" r="2"/>
+                  <path d="M19 10v1M19 17v1M15.5 12.3l.7.7M22.5 14.7l-.7.7M15.5 16.7l.7-.7M22.5 12.3l-.7.7"/>
+                </svg>
+              </div>
+              <h2 class="stat-label">Active Non-Teaching Personnel</h2>
+            </div>
+          <p class="stat-number" data-stat="active-nonteaching">—</p>
+          </article>
+
+          <!-- Card 3 — Pending Leave Request -->
+          <article class="stat-card">
+            <div class="stat-card-header">
+              <div class="stat-icon" aria-hidden="true">
+                <!-- Document / leave request icon -->
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="8" y1="13" x2="16" y2="13"/>
+                  <line x1="8" y1="17" x2="12" y2="17"/>
+                </svg>
+              </div>
+              <h2 class="stat-label">Pending Leave Request</h2>
+            </div>
+            <p class="stat-number" data-stat="pending-leave">—</p>
+          </article>
+
+        </section>
+        <!-- ── END STAT CARDS ──────────────────────────── -->
+
+        <!-- ── RIGHT COLUMN: NOTIFICATIONS PANEL ──────── -->
+        <aside class="notif-panel" aria-label="Recent leave request notifications">
+
+          <!-- Panel header -->
+          <div class="notif-header">
+            <h2 class="notif-header-title">Recent Leave Request Notifications</h2>
+          </div>
+
+          <!-- Notification items -->
+          <ul class="notif-list">
+              <li class="notif-item" id="recentLeaveRequests">
+                <p style="text-align: center; padding: 8px 0;">
+                  Loading recent leave requests...
+                </p>
+              </li>
+          </ul>
+        </aside>
+        <!-- ── END NOTIFICATIONS PANEL ────────────────── -->
+
+      </main>
+    </div>
+    <!-- ── END MAIN WRAPPER ──────────────────────────────── -->
+
+  </div>
+  <!-- Global Logout Confirmation Modal -->
+
+  <!-- Global Logout Confirmation Modal -->
+  <div
+    class="modal-overlay"
+    id="logoutModal"
+    style="display: none;"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="logoutModalTitle"
+  >
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="logoutModalTitle">Log Out</h2>
+      </div>
+
+      <div class="modal-body">
+        <p>Are you sure you want to log out?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="cancelLogoutBtn" class="btn-secondary">
+          Cancel
+        </button>
+
+        <button type="button" id="confirmLogoutBtn" class="btn-yellow">
+          Log Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── END APP SHELL ──────────────────────────────────── -->
+
+  <script src="../../scripts/admin.js"></script>
+  <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/adminDashboard.js"></script>
+  <script src="../../scripts/settings.js"></script>
+</body>
+</html>

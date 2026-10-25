@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERSYS | Admin Profile</title>
+     <link rel="icon" type="image/x-icon" href="assets/SAC logo.jpg">
+
+  <!--
+    Paths relative to Pages/Admin/ — go up two levels to reach root.
+    admin.css  : shared shell (sidebar, topbar, app-shell)
+    admin-profile.css : profile-specific card + grid styles
+  -->
+  <link rel="stylesheet" href="../../styles/admin.css" />
+  <link rel="stylesheet" href="../../styles/admin-profile.css" />
+   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <style>
+    /* =========================================================
+   GLOBAL SIDEBAR LOGOUT BUTTON
+   Shared by all migrated Admin pages
+   ========================================================= */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logout-container {
+  margin-top: auto;
+  padding: 16px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+.sidebar-logout {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: transparent;
+  color: #FCA5A5;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar-logout svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sidebar-logout:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(252, 165, 165, 0.4);
+}
+
+.sidebar-logout:focus-visible {
+  outline: 2px solid #FCA5A5;
+  outline-offset: 3px;
+}
+
+.sidebar-logout:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+  </style>
+  <script src="../../scripts/adminGuard.js"></script>
+  </head>
+<body>
+
+  <!-- ======================================================
+       Admin Profile Page
+       Shell identical to adminDashboard.html.
+       Page content swapped to profile-content layout.
+  ====================================================== -->
+
+  <!-- Mobile sidebar backdrop -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+
+      <!-- Admin profile block -->
+      <img
+        class="sidebar-avatar"
+        src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
+        alt="Admin profile photo"
+      />
+       <p class="sidebar-name" id="profileSidebarName">Loading...</p>
+      <p class="sidebar-role" id="profileSidebarRole">Loading...</p>
+
+      <div class="sidebar-divider" role="separator"></div>
+
+      <nav aria-label="Main menu">
+        <ul class="sidebar-nav">
+
+          <!-- My Dashboard -->
+          <li>
+            <a href="adminDashboard.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7" rx="1"/>
+                  <rect x="14" y="3" width="7" height="7" rx="1"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+              </span>
+              My Dashboard
+            </a>
+          </li>
+
+          <!-- Profile — active on this page -->
+          <li>
+            <a href="#" class="nav-item active" aria-current="page">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </span>
+              Profile
+            </a>
+          </li>
+
+          <!-- Employees -->
+          <li>
+            <a href="adminEmployees.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="9" cy="8" r="3.5"/>
+                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+                  <circle cx="17" cy="8" r="2.5"/>
+                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                </svg>
+              </span>
+              Employees
+            </a>
+          </li>
+
+          <!-- Service Credits -->
+          <li>
+            <a href="adminServiceCredits.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="9" r="5"/>
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                </svg>
+              </span>
+              Service Credits
+            </a>
+          </li>
+
+          <!-- Transactions -->
+          <li>
+            <a href="adminTransactions.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <line x1="8" y1="7" x2="16" y2="7"/>
+                  <line x1="8" y1="11" x2="16" y2="11"/>
+                  <line x1="8" y1="15" x2="12" y2="15"/>
+                </svg>
+              </span>
+              Transactions
+            </a>
+          </li>
+
+          <!-- Settings -->
+          <li>
+            <a href="adminSettings.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
+                           2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                           1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                           A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33
+                           l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06
+                           A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1
+                           H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9
+                           a1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                           a2 2 0 0 1 2.83-2.83l.06.06
+                           A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51
+                           V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51
+                           1.65 1.65 0 0 0 1.82-.33l.06-.06
+                           a2 2 0 0 1 2.83 2.83l-.06.06
+                           A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                </svg>
+              </span>
+              Settings
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      
+        </ul>
+      </nav>
+
+      <!-- Global Logout button at the bottom of the sidebar -->
+      <div class="sidebar-logout-container">
+        <button type="button" class="btn-logout sidebar-logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+    <!-- ── END SIDEBAR ───────────────────────────────────── -->
+
+    <!-- ── MAIN WRAPPER ─────────────────────────────────── -->
+    <div class="main-wrapper">
+
+      <!-- Topbar — person icon variant for Profile page -->
+      <header class="topbar" role="banner">
+        <span class="topbar-person-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </span>
+        <h1 class="topbar-title">Profile</h1>
+
+        <!-- Mobile hamburger -->
+        <button
+          class="hamburger"
+          id="hamburger"
+          type="button"
+          aria-controls="sidebar"
+          aria-expanded="false"
+          aria-label="Toggle navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      <!-- ── PAGE CONTENT ─────────────────────────────── -->
+     
+<main class="page-content profile-content" id="mainContent">
+
+  <!-- PREMIUM PROFILE BANNER -->
+  <section class="profile-hero" aria-label="Profile overview">
+    <div class="profile-hero-pattern" aria-hidden="true"></div>
+
+    <div class="profile-hero-content">
+      <div class="profile-hero-avatar" id="profileAvatarInitials"
+           aria-hidden="true">A</div>
+
+      <div class="profile-hero-details">
+        <span class="profile-hero-eyebrow">PERSONNEL PROFILE</span>
+        <h2 id="profileFullName">Loading profile...</h2>
+        <p class="profile-hero-position" id="profileHeroPosition">—</p>
+
+        <div class="profile-hero-meta">
+          <span>
+            <strong>Employee No.</strong>
+            <span id="profileEmployeeNumber">—</span>
+          </span>
+          <span>
+            <strong>DepEd Email</strong>
+            <span id="profileDepEdEmail">—</span>
+          </span>
+        </div>
+      </div>
+
+      <button class="profile-edit-btn profile-hero-edit"
+              type="button" disabled
+              title="Editing will be available in a future update">
+        ✎ Edit Profile
+      </button>
+    </div>
+  </section>
+
+  <div id="profileError" class="profile-error" hidden></div>
+
+  <div class="profile-details-grid">
+
+    <!-- PERSONAL INFORMATION -->
+    <section class="profile-panel" aria-labelledby="personalInfoTitle">
+      <div class="profile-panel-header">
+        <div class="profile-panel-heading">
+          <span class="profile-panel-icon" aria-hidden="true">♙</span>
+          <div>
+            <h3 id="personalInfoTitle">Personal Information</h3>
+            <p>Basic personal details</p>
+          </div>
+        </div>
+        <button class="profile-edit-btn" type="button" disabled
+                title="Editing is not available yet">✎ Edit</button>
+      </div>
+
+      <dl class="profile-fields">
+        <div class="profile-field">
+          <dt>Last Name</dt>
+          <dd id="profileLastName">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>First Name</dt>
+          <dd id="profileFirstName">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>Middle Name</dt>
+          <dd id="profileMiddleName">Loading...</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- EMPLOYEE INFORMATION -->
+    <section class="profile-panel" aria-labelledby="employeeInfoTitle">
+      <div class="profile-panel-header">
+        <div class="profile-panel-heading">
+          <span class="profile-panel-icon" aria-hidden="true">▦</span>
+          <div>
+            <h3 id="employeeInfoTitle">Employee Information</h3>
+            <p>Official employment details</p>
+          </div>
+        </div>
+        <button class="profile-edit-btn" type="button" disabled
+                title="Editing is not available yet">✎ Edit</button>
+      </div>
+
+      <dl class="profile-fields">
+        <div class="profile-field">
+          <dt>Plantilla Item Number</dt>
+          <dd id="profilePlantillaItem">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>Position</dt>
+          <dd id="profilePosition">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>Salary Grade</dt>
+          <dd id="profileSalaryGrade">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>Step Increment</dt>
+          <dd id="profileStepIncrement">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>Original Appointment</dt>
+          <dd id="profileAppointmentDate">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>Last Promotion</dt>
+          <dd id="profileLastPromotion">Loading...</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ACCOUNT INFORMATION -->
+    <section class="profile-panel profile-panel-wide"
+             aria-labelledby="accountInfoTitle">
+      <div class="profile-panel-header">
+        <div class="profile-panel-heading">
+          <span class="profile-panel-icon" aria-hidden="true">♧</span>
+          <div>
+            <h3 id="accountInfoTitle">Account Information</h3>
+            <p>System access and account details</p>
+          </div>
+        </div>
+        <button class="profile-edit-btn" type="button" disabled
+                title="Account editing is not available yet">✎ Edit</button>
+      </div>
+
+      <dl class="profile-fields profile-account-fields">
+        <div class="profile-field">
+          <dt>Username</dt>
+          <dd id="profileUsername">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>Account Role</dt>
+          <dd id="profileAccountRole">Loading...</dd>
+        </div>
+        <div class="profile-field">
+          <dt>Account Status</dt>
+          <dd>
+            <span class="profile-status" id="profileAccountStatus">
+              Loading...
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+  </div>
+</main>
+
+      <!-- ── END PAGE CONTENT ──────────────────────────── -->
+
+    </div>
+    <!-- ── END MAIN WRAPPER ──────────────────────────────── -->
+
+  </div>
+  <!-- ── END APP SHELL ──────────────────────────────────── -->
+  <div class="modal-overlay" id="logoutModal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="logoutModalTitle">Log Out</h2>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to log out?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelLogoutBtn" class="btn-secondary">Cancel</button>
+        <button type="button" id="confirmLogoutBtn" class="btn-yellow">Log Out</button>
+      </div>
+    </div>
+  </div>
+  <script src="../../scripts/admin.js"></script>
+  <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/adminProfile.js"></script>
+  <script src="../../scripts/settings.js"></script>
+</body>
+</html>

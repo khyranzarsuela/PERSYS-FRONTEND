@@ -1,0 +1,812 @@
+/* ============================================================
+   PERSYS — Login Page Stylesheet
+   Design: Two-panel login (white form | purple illustration)
+   Author: Senior Front-End Developer
+   ============================================================ */
+
+/* ── 1. CSS RESET & CUSTOM PROPERTIES ─────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Brand colours */
+  --clr-purple-dark:   #5B0FA8;   /* button / active states     */
+  --clr-purple-mid:    #6A0DAD;   /* brand name, icon, accents  */
+  --clr-purple-panel:  #6B0FBA;   /* right-panel background     */
+  --clr-purple-btn:    #5B0FA8;   /* login button fill          */
+
+  /* Neutrals */
+  --clr-white:         #FFFFFF;
+  --clr-bg-light:      #F5F5F5;
+  --clr-text-dark:     #111111;
+  --clr-text-mid:      #555555;
+  --clr-text-light:    #9CA3AF;
+  --clr-border:        #D1D5DB;
+  --clr-border-focus:  #6A0DAD;
+
+  /* Error / accent */
+  --clr-error:         #EF4444;
+  --clr-forgot:        #EF4444;
+
+  /* Typography */
+  --font-base: 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Spacing */
+  --gap-sm:   8px;
+  --gap-md:  16px;
+  --gap-lg:  24px;
+  --gap-xl:  40px;
+
+  /* Border radius */
+  --radius-sm:  6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Transitions */
+  --transition: 0.2s ease;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-base);
+  background-color: var(--clr-white);
+  color: var(--clr-text-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 2. PAGE LAYOUT ────────────────────────────────────────── */
+
+.login-page {
+  display: grid;
+  /* Left panel takes ~48%, right panel the remaining ~52% */
+  grid-template-columns: 48fr 52fr;
+  min-height: 100vh;
+}
+
+/* ── 3. LEFT — FORM PANEL ──────────────────────────────────── */
+
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--clr-white);
+  padding: 36px 80px 48px;
+}
+
+/* Brand / Logo */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--gap-xl);
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--clr-text-dark);
+}
+
+/* Form wrapper — vertically centred in remaining space */
+.form-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 420px;
+  width: 100%;
+}
+
+.form-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--clr-text-dark);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.form-subtitle {
+  font-size: 0.875rem;
+  color: var(--clr-text-mid);
+  margin-bottom: var(--gap-xl);
+  line-height: 1.5;
+}
+
+/* ── 4. FORM FIELDS ────────────────────────────────────────── */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+/* Each field group (label + input + error) */
+.field-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Floating-style label that sits on the top border */
+.field-label {
+  position: absolute;
+  top: -9px;
+  left: 12px;
+  padding: 0 4px;
+  background-color: var(--clr-white);
+  font-size: 0.75rem;
+  color: var(--clr-text-mid);
+  pointer-events: none;
+  transition: color var(--transition);
+  z-index: 1;
+}
+
+/* When the input inside this group is focused, tint the label */
+.field-group:focus-within .field-label {
+  color: var(--clr-purple-mid);
+}
+
+/* Base input styles */
+.field-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 0.9375rem;
+  color: var(--clr-text-dark);
+  background-color: var(--clr-white);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.field-input::placeholder {
+  color: var(--clr-text-light);
+}
+
+/* Focus ring */
+.field-input:focus {
+  border-color: var(--clr-border-focus);
+  box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.12);
+}
+
+/* Error state */
+.field-group.has-error .field-input {
+  border-color: var(--clr-error);
+}
+
+.field-group.has-error .field-label {
+  color: var(--clr-error);
+}
+
+.field-error {
+  display: block;
+  min-height: 16px;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--clr-error);
+  padding-left: 2px;
+  /* Hidden by default — JS adds text to reveal */
+}
+
+/* ── 5. PASSWORD TOGGLE ────────────────────────────────────── */
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Make password input fill the wrapper */
+.password-wrapper .field-input {
+  padding-right: 46px; /* room for the toggle icon */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: opacity var(--transition);
+}
+
+.toggle-password:hover {
+  opacity: 0.7;
+}
+
+.toggle-password:focus-visible {
+  outline: 2px solid var(--clr-purple-mid);
+  outline-offset: 2px;
+}
+
+/* Eye SVG icons — only one visible at a time */
+.eye-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.eye-on {
+  display: none; /* hidden when password is obscured */
+}
+
+/* JS adds .is-visible to the button when password is shown */
+.toggle-password.is-visible .eye-off { display: none; }
+.toggle-password.is-visible .eye-on  { display: block; }
+
+/* ── 6. FORM OPTIONS ROW ───────────────────────────────────── */
+
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  /* Offset the gap introduced by .login-form's gap */
+  margin-top: -4px;
+}
+
+/* Remember me */
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--clr-text-dark);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Hide native checkbox */
+.remember-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Custom checkbox */
+.custom-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--clr-border);
+  border-radius: 3px;
+  background-color: var(--clr-white);
+  flex-shrink: 0;
+  transition: background-color var(--transition), border-color var(--transition);
+}
+
+/* Checked state */
+.remember-label input[type="checkbox"]:checked + .custom-checkbox {
+  background-color: var(--clr-purple-mid);
+  border-color: var(--clr-purple-mid);
+}
+
+/* Checkmark via pseudo-element */
+.remember-label input[type="checkbox"]:checked + .custom-checkbox::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 9px;
+  border: 2px solid var(--clr-white);
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+/* Focus ring on custom checkbox */
+.remember-label input[type="checkbox"]:focus-visible + .custom-checkbox {
+  outline: 2px solid var(--clr-purple-mid);
+  outline-offset: 2px;
+}
+
+/* Forgot password link */
+.forgot-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--clr-forgot);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity var(--transition);
+}
+
+.forgot-link:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+/* ── 7. LOGIN BUTTON ───────────────────────────────────────── */
+
+.btn-login {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--clr-white);
+  background-color: var(--clr-purple-btn);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition), transform var(--transition),
+              box-shadow var(--transition);
+  margin-top: 4px;
+}
+
+.btn-login:hover {
+  background-color: var(--clr-purple-dark);
+  box-shadow: 0 4px 16px rgba(91, 15, 168, 0.35);
+}
+
+.btn-login:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.btn-login:focus-visible {
+  outline: 3px solid var(--clr-purple-mid);
+  outline-offset: 3px;
+}
+
+/* ── 8. RIGHT — ILLUSTRATION PANEL ────────────────────────── */
+
+.illustration-panel {
+  background-color: var(--clr-purple-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap-xl);
+}
+
+/* White rounded card that holds the image */
+.illustration-card {
+  background-color: var(--clr-white);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  /* Maintain a portrait aspect ratio matching the design */
+  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 20px 24px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+/* Illustration image */
+.illustration-img {
+  width: 100%;
+  flex: 1;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  display: block;
+}
+
+/* Slide indicator dots */
+.slide-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.dot {
+  width: 22px;
+  height: 5px;
+  border-radius: 3px;
+  background-color: #D8B4FE; /* light purple */
+  transition: background-color var(--transition);
+}
+
+.dot--active {
+  background-color: var(--clr-purple-btn);
+}
+
+/* ── 9. RESPONSIVE — TABLET ────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .login-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .form-panel {
+    padding: 32px 40px 40px;
+  }
+
+  .form-wrapper {
+    max-width: 100%;
+    justify-content: flex-start;
+    padding-top: 16px;
+  }
+
+  .illustration-panel {
+    min-height: 360px;
+  }
+
+  .illustration-card {
+    max-width: 340px;
+    aspect-ratio: 4 / 3;
+  }
+}
+.login-message {
+  color: #b42318;
+  background-color: #fef3f2;
+  border: 1px solid #fecdca;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.login-message[hidden] {
+  display: none;
+}
+
+/* ── 10. RESPONSIVE — MOBILE ───────────────────────────────── */
+
+@media (max-width: 540px) {
+  .form-panel {
+    padding: 24px 24px 36px;
+  }
+
+  .form-title {
+    font-size: 1.625rem;
+  }
+
+  .illustration-panel {
+    padding: 28px 20px;
+    min-height: 280px;
+  }
+
+  .illustration-card {
+    aspect-ratio: unset;
+    padding: 20px 16px 18px;
+  }
+
+  .illustration-img {
+    height: 200px;
+  }
+}
+
+
+/* ==============================================
+   PERSYS LOGIN — PURPLE IMAGE CAROUSEL
+   ============================================== */
+
+.illustration-panel {
+    min-width: 0;
+    padding: 40px;
+    background: #6b0fba;
+}
+
+.login-carousel {
+    position: relative;
+    width: 100%;
+    height: min(75vh, 680px);
+    min-height: 420px;
+
+    overflow: hidden;
+    isolation: isolate;
+
+    border-radius: 20px;
+    background: #390563;
+
+    box-shadow: 0 15px 35px rgba(29, 0, 51, 0.18);
+}
+
+/* Layer images on top of one another */
+
+.carousel-images,
+.carousel-image,
+.carousel-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-image {
+    display: block;
+    object-fit: cover;
+    object-position: center;
+
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+.carousel-image.is-active {
+    opacity: 1;
+}
+
+/* Similar purple treatment to Profile banner */
+
+.carousel-overlay {
+    z-index: 1;
+    pointer-events: none;
+
+    background: linear-gradient(
+        to top,
+        rgba(37, 0, 65, 0.96) 0%,
+        rgba(62, 7, 107, 0.65) 38%,
+        rgba(87, 12, 147, 0.22) 100%
+    );
+}
+
+/* Banner text */
+
+.carousel-content {
+    position: absolute;
+    z-index: 2;
+
+    left: 40px;
+    right: 40px;
+    bottom: 100px;
+
+    color: #ffffff;
+}
+
+.carousel-eyebrow {
+    display: inline-block;
+    margin-bottom: 12px;
+
+    color: #f5c518;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.carousel-content h2 {
+    margin: 0 0 12px;
+    font-size: clamp(1.7rem, 2.5vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.carousel-content p {
+    color: #eee2f7;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Indicators and pause button */
+
+.carousel-controls {
+    position: absolute;
+    z-index: 3;
+
+    left: 40px;
+    right: 40px;
+    bottom: 35px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.carousel-indicators {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.55);
+    cursor: pointer;
+
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.carousel-dot.is-active {
+    width: 32px;
+    background: #f5c518;
+}
+
+.carousel-dot:focus-visible,
+.carousel-pause:focus-visible {
+    outline: 3px solid #f5c518;
+    outline-offset: 4px;
+}
+
+.carousel-pause {
+    padding: 9px 16px;
+
+    border: 1px solid rgba(255,255,255,0.45);
+    border-radius: 9px;
+
+    background: rgba(255,255,255,0.12);
+    color: #ffffff;
+
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.carousel-pause:hover {
+    background: rgba(255,255,255,0.22);
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+    .illustration-panel {
+        padding: 24px;
+    }
+
+    .login-carousel {
+        height: 420px;
+        min-height: 0;
+    }
+}
+
+@media (max-width: 540px) {
+    .illustration-panel {
+        padding: 16px;
+    }
+
+    .login-carousel {
+        height: 340px;
+        border-radius: 16px;
+    }
+
+    .carousel-content {
+        left: 24px;
+        right: 24px;
+        bottom: 90px;
+    }
+
+    .carousel-controls {
+        left: 24px;
+        right: 24px;
+        bottom: 24px;
+    }
+
+    .carousel-content h2 {
+        font-size: 1.6rem;
+    }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+    .carousel-image,
+    .carousel-dot {
+        transition: none;
+    }
+}
+
+
+
+/* ==========================================
+   LOGIN CAROUSEL — FULL RIGHT PANEL
+   ========================================== */
+
+/* Remove the purple outer spacing */
+.illustration-panel {
+    position: relative;
+    display: block;
+
+    padding: 0;
+    margin: 0;
+
+    min-width: 0;
+    min-height: 100vh;
+
+    background: #390563;
+    overflow: hidden;
+}
+
+/* Carousel fills the entire panel */
+.login-carousel {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+
+    border-radius: 0;
+    box-shadow: none;
+
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* Images fill the entire right side */
+.carousel-images,
+.carousel-image,
+.carousel-overlay {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-image {
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Keep the text readable */
+.carousel-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(33, 0, 60, 0.96) 0%,
+        rgba(56, 5, 100, 0.65) 35%,
+        rgba(88, 14, 155, 0.28) 100%
+    );
+}
+
+/* Adjust banner text position */
+.carousel-content {
+    left: 48px;
+    right: 48px;
+    bottom: 115px;
+}
+
+/* Controls near the bottom */
+.carousel-controls {
+    left: 48px;
+    right: 48px;
+    bottom: 48px;
+}
+
+/* Tablet and mobile adjustments */
+@media (max-width: 900px) {
+    .illustration-panel {
+        min-height: 450px;
+    }
+
+    .login-carousel {
+        position: absolute;
+        height: 100%;
+    }
+}
+
+@media (max-width: 540px) {
+    .illustration-panel {
+        min-height: 360px;
+    }
+
+    .carousel-content {
+        left: 24px;
+        right: 24px;
+        bottom: 95px;
+    }
+
+    .carousel-controls {
+        left: 24px;
+        right: 24px;
+        bottom: 24px;
+    }
+}

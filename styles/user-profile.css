@@ -1,0 +1,329 @@
+/* ============================================================
+   PERSYS — Admin Profile Page Stylesheet
+   Supplements admin.css — profile cards only.
+   Shared shell (sidebar, topbar, app-shell) lives in admin.css.
+   ============================================================ */
+
+/* ── 1. PAGE CONTENT OVERRIDE ─────────────────────────────────
+   Profile is a single full-width column, not the 2-col grid
+   used by the dashboard. Override .page-content here.
+   ──────────────────────────────────────────────────────────── */
+.page-content.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  padding: var(--gap-xl);
+  background-color: var(--clr-cream-bg);
+}
+
+/* ── 2. PROFILE CARD (shared shell for all three sections) ─── */
+
+.profile-card {
+  background-color: var(--clr-card-bg);
+  border: 1px solid var(--clr-border-light);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Card section heading */
+.profile-card-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--clr-text-dark);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--clr-border-light);
+}
+
+/* ── 3. INFO GRID — key / value field pairs ───────────────── */
+
+.info-grid {
+  display: grid;
+  gap: 20px 32px;
+}
+
+/* Personal Information — 3 equal columns */
+.info-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Employee Information — 2 equal columns */
+.info-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* A field that should span both columns (e.g. Employee Number) */
+.info-field.span-full {
+  grid-column: 1 / -1;
+}
+
+/* Individual field wrapper — uses <dl> semantics */
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Field label — bold, slightly smaller */
+.field-key {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--clr-text-dark);
+  line-height: 1.4;
+}
+
+/* Field value — regular weight, slightly muted */
+.field-val {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--clr-text-mid);
+  line-height: 1.5;
+}
+
+/* Email link inside a field value */
+.field-val a {
+  color: #1a73e8;          /* standard blue link — matches the design */
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.field-val a:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+/* ── 4. PASSWORD ROW ──────────────────────────────────────────
+   Lays the password field left + "Change Password" button right
+   on the same baseline row.
+   ──────────────────────────────────────────────────────────── */
+
+.account-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Row that holds Password field + Change Password button */
+.password-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap-md);
+}
+
+/* The password field block (label + value + eye icon) */
+.password-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Inline container: masked value + eye toggle */
+.password-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Shown password text / dots */
+.password-value {
+  font-size: 0.875rem;
+  color: var(--clr-text-mid);
+  letter-spacing: 0.08em;  /* slight tracking when shown as dots */
+}
+
+/* Eye toggle button — inherits .toggle-password from style.css
+   but we need a version that's not inside an input wrapper */
+.btn-eye-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  color: var(--clr-text-light);
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.btn-eye-toggle:hover {
+  color: var(--clr-purple-mid);
+}
+
+.btn-eye-toggle:focus-visible {
+  outline: 2px solid var(--clr-purple-mid);
+  outline-offset: 2px;
+}
+
+.btn-eye-toggle svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Eye-on icon (hidden by default — password is masked) */
+.eye-on { display: none; }
+
+/* JS adds .is-visible to the button to swap icons */
+.btn-eye-toggle.is-visible .eye-off { display: none; }
+.btn-eye-toggle.is-visible .eye-on  { display: block; }
+
+/* ── 5. CHANGE PASSWORD BUTTON ───────────────────────────── */
+
+.btn-change-password {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--clr-yellow-accent);
+  color: #1a1a1a;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-change-password:hover {
+  background-color: #e0b214;
+  box-shadow: 0 3px 10px rgba(245, 197, 24, 0.4);
+}
+
+.btn-change-password:active {
+  transform: translateY(1px);
+}
+
+.btn-change-password:focus-visible {
+  outline: 3px solid var(--clr-purple-mid);
+  outline-offset: 3px;
+}
+
+.btn-change-password svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* ── 6. LOG OUT BUTTON ────────────────────────────────────── */
+
+/* Wrapper to push the Log Out button to the bottom-right */
+.profile-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.btn-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background-color: transparent;
+  color: #D32F2F;               /* red — matches the design */
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1.5px solid #D32F2F;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #D32F2F;
+  color: var(--clr-white);
+}
+
+.btn-logout:active {
+  opacity: 0.85;
+}
+
+.btn-logout:focus-visible {
+  outline: 3px solid #D32F2F;
+  outline-offset: 3px;
+}
+
+.btn-logout svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* ── 7. TOPBAR ICON — person variant ─────────────────────── */
+/* The Profile topbar uses a person SVG, not the waffle grid.
+   The icon is inline in the HTML; only colour is set here. */
+.topbar-person-icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--clr-yellow-accent);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── 8. RESPONSIVE — TABLET (≤ 900px) ────────────────────── */
+
+@media (max-width: 900px) {
+  .info-grid.cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .info-grid.cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Employee Number already spans full — keep it */
+  .info-field.span-full {
+    grid-column: 1 / -1;
+  }
+
+  .password-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+/* ── 9. RESPONSIVE — MOBILE (≤ 600px) ────────────────────── */
+
+@media (max-width: 600px) {
+  .page-content.profile-content {
+    padding: var(--gap-lg) var(--gap-md);
+  }
+
+  .profile-card {
+    padding: 20px 18px;
+  }
+
+  .info-grid.cols-3,
+  .info-grid.cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .info-field.span-full {
+    grid-column: 1;
+  }
+
+  .btn-change-password {
+    width: 100%;
+    justify-content: center;
+  }
+}

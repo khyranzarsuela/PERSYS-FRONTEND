@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERSYS | Employees</title>
+  <link rel="stylesheet" href="../../styles/admin.css">
+  <link rel="stylesheet" href="../../styles/adminEmployees.css">
+     <link rel="icon" type="image/x-icon" href="assets/SAC logo.jpg">
+
+  <!-- ============================================================
+       PAGE-SCOPED STYLES — adminEmployees.html only
+       All variables inherited from admin.css via :root
+  ============================================================ -->
+ 
+  <script src="../../scripts/adminGuard.js"></script>
+</head>
+<body>
+
+  <!-- Mobile sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+
+    <!-- ══════════════════════════════════════════════════════
+         SIDEBAR
+    ══════════════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+
+      <!-- Profile block -->
+      <img
+        class="sidebar-avatar"
+        src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
+        alt="Admin profile photo"
+      />
+     <p class="sidebar-name" id="adminUsername">Loading...</p>
+    <p class="sidebar-role" id="adminRole">Loading...</p>
+
+      <div class="sidebar-divider" role="separator"></div>
+
+      <nav aria-label="Main menu">
+        <ul class="sidebar-nav">
+
+          <!-- My Dashboard -->
+          <li>
+            <a href="adminDashboard.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7" rx="1"/>
+                  <rect x="14" y="3" width="7" height="7" rx="1"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+              </span>
+              My Dashboard
+            </a>
+          </li>
+
+          <!-- Profile -->
+          <li>
+            <a href="adminProfile.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </span>
+              Profile
+            </a>
+          </li>
+
+          <!-- Employees — active parent with sub-menu -->
+          <li>
+            <button
+              type="button"
+              class="nav-item nav-item--employees active"
+              id="employeesToggle"
+              aria-expanded="false"
+              aria-controls="employeesSubmenu"
+            >
+              <span class="nav-item-left">
+                <span class="nav-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="9" cy="8" r="3.5"/>
+                    <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+                    <circle cx="17" cy="8" r="2.5"/>
+                    <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                  </svg>
+                </span>
+                Employees
+              </span>
+              <!-- Caret arrow -->
+              <svg class="employees-caret" id="employeesCaret" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+
+            <!-- Sub-menu -->
+            <ul class="employees-submenu" id="employeesSubmenu" role="menu">
+              <li role="none">
+                <button
+                  type="button"
+                  class="submenu-item is-active"
+                  id="btnTeaching"
+                  role="menuitem"
+                  aria-pressed="true"
+                  data-panel="teaching"
+                >
+                  Teaching Employees
+                </button>
+              </li>
+              <li role="none">
+                <button
+                  type="button"
+                  class="submenu-item"
+                  id="btnNonTeaching"
+                  role="menuitem"
+                  aria-pressed="false"
+                  data-panel="non-teaching"
+                >
+                  Non-Teaching Employees
+                </button>
+              </li>
+               <li role="none">
+                <button
+                  type="button"
+                  class="submenu-item"
+                  id="btnAccounts"
+                  role="menuitem"
+                  aria-pressed="false"
+                  data-panel="accounts"
+                >
+                  Accounts
+                </button>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Service Credits -->
+          <li>
+            <a href="adminServiceCredits.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="9" r="5"/>
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                </svg>
+              </span>
+              Service Credits
+            </a>
+          </li>
+
+          <!-- Transactions -->
+          <li>
+            <a href="adminTransactions.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <line x1="8" y1="7" x2="16" y2="7"/>
+                  <line x1="8" y1="11" x2="16" y2="11"/>
+                  <line x1="8" y1="15" x2="12" y2="15"/>
+                </svg>
+              </span>
+              Transactions
+            </a>
+          </li>
+
+          <!-- Settings -->
+          <li>
+            <a href="adminSettings.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
+                           2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                           1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                           A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33
+                           l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06
+                           A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1
+                           H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9
+                           a1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                           a2 2 0 0 1 2.83-2.83l.06.06
+                           A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51
+                           V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51
+                           1.65 1.65 0 0 0 1.82-.33l.06-.06
+                           a2 2 0 0 1 2.83 2.83l-.06.06
+                           A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                </svg>
+              </span>
+              Settings
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+       <!-- Global Logout button at the bottom of the sidebar -->
+      <div class="sidebar-logout-container">
+        <button type="button" class="btn-logout sidebar-logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+    <!-- END SIDEBAR -->
+
+    <!-- ══════════════════════════════════════════════════════
+         MAIN WRAPPER
+    ══════════════════════════════════════════════════════ -->
+    <div class="main-wrapper">
+
+      <!-- Topbar -->
+      <header class="topbar" role="banner">
+        <!-- <div class="topbar-icon" aria-hidden="true">
+          <span></span><span></span>
+          <span></span><span></span>
+        </div> -->
+        <h1 class="topbar-title">
+          <!-- People icon inline before title -->
+          <svg style="width:26px;height:26px;stroke:#F5C518;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:8px;" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="9" cy="8" r="3.5"/>
+            <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+            <circle cx="17" cy="8" r="2.5"/>
+            <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+          </svg>
+          Employees
+        </h1>
+        <button class="hamburger" id="hamburger" type="button"
+          aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </header>
+
+      <!-- Page content -->
+      <main class="page-content employees-page" id="mainContent">
+
+<!-- <div class="flash-banner flash-error" role="alert" id="flashBanner">
+  <span></span>
+  <button type="button" class="flash-dismiss" aria-label="Dismiss" onclick="document.getElementById('flashBanner').remove()">&times;</button>
+</div> -->
+
+        <!-- ── TOOLBAR ──────────────────────────────────────── -->
+        <div class="emp-toolbar" role="toolbar" aria-label="Employee actions">
+
+          <!-- Add Employee button (UI only — no action) -->
+          <button type="button" class="btn-add-employee" aria-label="Add new employee">
+            + Add Employee
+          </button>
+
+          <!-- Search bar -->
+          <div class="search-wrap">
+            <input
+              type="search"
+              id="empSearch"
+              placeholder="Search..."
+              aria-label="Search employees"
+              autocomplete="off"
+            />
+            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/>
+              <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+            </svg>
+          </div>
+
+          <!-- Filter button -->
+          <button type="button" class="btn-filter" id="btnFilter" aria-label="Filter records" aria-expanded="false">
+            Filter
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+
+           <!-- Trigger Button -->
+        <button id="openBtn" class="btn-add-employee" aria-label="Upload Master File">
+          Master File Upload</button>
+
+      <!-- The Dialog / Big Card -->
+       
+   
+<!-- MASTER FILE UPLOAD DIALOG -->
+<dialog id="myDialog" aria-labelledby="masterUploadTitle">
+
+  <div class="master-upload-header">
+    <h2 id="masterUploadTitle">Import Employee Master File</h2>
+    <p>Import multiple employee records using an Excel file.</p>
+  </div>
+
+  <div class="master-upload-body">
+
+    <!-- STEP 1: TEMPLATE -->
+    <section class="master-upload-section">
+      <h3>
+        <span class="master-step-number">Step 1</span>
+        Download the Excel Template
+      </h3>
+
+      <p>
+        Use the official template to prepare employee information.
+        If you already have a completed template, proceed to Step 2.
+      </p>
+
+      <a
+        href="../../templates/PERSYS_Master_File_Template.xlsx"
+        download="PERSYS_Master_File_Template.xlsx"
+        class="btn-download-template"
+      >
+        &#8595; Download Excel Template
+      </a>
+    </section>
+
+    <!-- STEP 2: FILE SELECTION -->
+    <section class="master-upload-section">
+      <h3>
+        <span class="master-step-number">Step 2</span>
+        Upload the Completed Excel File
+      </h3>
+
+      <p>
+        Select your completed Master File to preview and
+        validate the employee records before importing.
+      </p>
+
+      <form
+        id="masterFileForm"
+        action="uploadMasterFile.php"
+        method="post"
+        enctype="multipart/form-data"
+        aria-label="Upload Excel file form"
+      >
+
+        <div class="master-upload-dropzone">
+
+          <svg
+            class="master-upload-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 16V3"/>
+            <path d="m7 8 5-5 5 5"/>
+            <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+          </svg>
+
+          <label for="fileUpload" class="master-upload-label">
+            Choose an Excel File
+          </label>
+
+          <p class="master-upload-format">
+            Supported formats: .xlsx and .xls
+          </p>
+
+          <input
+            type="file"
+            name="masterfile"
+            id="fileUpload"
+            accept=".xlsx,.xls"
+            required
+            aria-describedby="masterSelectedFile"
+          >
+
+          <p id="masterSelectedFile" class="master-selected-file"
+             aria-live="polite">
+            No file selected
+          </p>
+
+        </div>
+
+        <p class="master-upload-note">
+          The file will be reviewed before any employee records are saved.
+        </p>
+
+        <div class="master-upload-actions">
+          <button type="button" id="closeBtn"
+                  class="master-upload-cancel">
+            Cancel
+          </button>
+
+          <button type="submit" id="btnUploadMaster"
+                  class="master-upload-submit" disabled>
+            Upload &amp; Preview
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Existing status and preview functionality -->
+    <p id="masterFileStatus" role="status" aria-live="polite"></p>
+
+    <div id="masterFilePreview"></div>
+
+  </div>
+
+</dialog>
+
+        </div>
+        
+        <!-- END TOOLBAR -->
+        <!-- Records Card -->
+        <div class="records-card">
+
+          <!-- Teaching panel (shown by default) -->
+          <div class="emp-panel is-active" id="panel-teaching">
+            <h2 class="records-title">Teaching Employee Records</h2>
+            <div class="table-scroll-wrap">
+              <table class="emp-table" aria-label="Teaching employee records">
+              <thead>
+                <tr>
+                  <th>Last Name</th>
+                  <th>First Name</th>
+                  <th>Middle Name</th>
+                  <th>Plantilla Number</th>
+                  <th>Position</th>
+                  <th>Salary Grade</th>
+                  <th>Step Increment</th>
+                  <th>Date of Original Appointment</th>
+                  <th>Date of Last Promotion</th>
+                  <th>DepEd Email</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+                      <tbody id="teachingTableBody">
+                        <tr>
+                          <td colspan="11" style="text-align: center;">
+                                    Loading teaching employee records...
+                              </td>
+                           </tr>
+                    </tbody>
+              </table>
+            </div>
+            <!--Pagination-->
+            <div id="teachingPagination" class="employee-pagination"></div>
+          </div>
+
+          <!-- Non-Teaching panel (hidden by default) -->
+          <div class="emp-panel" id="panel-non-teaching">
+            <h2 class="records-title">Non-Teaching Employee Records</h2>
+            <div class="table-scroll-wrap">
+              <table class="emp-table" aria-label="Non-teaching employee records">
+              <thead>
+                <tr>
+                  <th>Last Name</th>
+                  <th>First Name</th>
+                  <th>Middle Name</th>
+                  <th>Plantilla Number</th>
+                  <th>Position</th>
+                  <th>Salary Grade</th>
+                  <th>Step Increment</th>
+                  <th>Date of Original Appointment</th>
+                  <th>Date of Last Promotion</th>
+                  <th>DepEd Email</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+               <tbody id="nonTeachingTableBody">
+                    <tr>
+                        <td colspan="11" style="text-align: center;">
+                            Loading non-teaching employee records...
+                        </td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--Pagination-->
+            <div id="nonTeachingPagination" class="employee-pagination"></div> 
+          </div>
+
+          <div class="emp-panel" id="panel-accounts">
+              <h2 class="records-title">Account Records</h2>
+            <div class="table-scroll-wrap">
+              <table class="emp-table" aria-label="Account records">
+              <thead>
+                <tr>
+                  <th>Employee Number</th>
+                  <th>Full Name</th>
+                  <th>Personnel Type</th>
+                  <th>DepEd Email</th>
+                  <th>Account Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="accountsTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center;">
+                            Loading account records...
+                        </td>
+                    </tr>
+                </tbody>
+              </table>
+      <!-- The Dialog / Big Card -->
+    
+<!-- CREATE ACCOUNT DIALOG -->
+<dialog id="createAccountDialog"
+        aria-labelledby="createAccountTitle">
+
+    <div class="create-account-header">
+        <h2 id="createAccountTitle">Create Employee Account</h2>
+        <p>
+            Set up login credentials for the selected employee.
+            Fields marked * are required.
+        </p>
+    </div>
+
+    <form method="POST"
+          id="createAccountForm"
+          aria-label="Create Account form">
+
+        <!-- JavaScript fills this automatically -->
+        <input type="hidden"
+               id="modal_employee_id"
+               name="employee_id"
+               value="">
+
+        <div class="create-account-body">
+
+            <!-- EMPLOYEE INFORMATION -->
+            <section class="create-account-section">
+
+                <h3>Employee Information</h3>
+
+                <p class="create-account-section-note">
+                    Verify the employee details before creating an account.
+                </p>
+
+                <div class="create-account-grid">
+
+                    <div class="create-account-field">
+                        <label for="employee_number">
+                            Employee Number
+                        </label>
+
+                        <input type="text"
+                               id="employee_number"
+                               name="employee_number"
+                               readonly>
+                    </div>
+
+                    <div class="create-account-field">
+                        <label for="employee_name">
+                            Employee Name
+                        </label>
+
+                        <input type="text"
+                               id="employee_name"
+                               name="employee_name"
+                               readonly>
+                    </div>
+
+                    <div class="create-account-field create-account-full">
+                        <label for="deped_email">
+                            DepEd Email
+                        </label>
+
+                        <input type="email"
+                               id="deped_email"
+                               name="deped_email"
+                               readonly>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ACCOUNT CREDENTIALS -->
+            <section class="create-account-section">
+
+                <h3>Account Credentials</h3>
+
+                <p class="create-account-section-note">
+                    Choose the account role and provide the
+                    employee's initial login credentials.
+                </p>
+
+                <div class="create-account-grid">
+
+                    <div class="create-account-field">
+                        <label for="role_id">
+                            Account Role <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="role_id"
+                                name="role_id"
+                                required>
+                            <option value="">-- Select a Role --</option>
+                            <option value="1">Admin</option>
+                            <option value="2">Teaching Personnel</option>
+                            <option value="3">Non-Teaching Personnel</option>
+                        </select>
+                    </div>
+
+                    <div class="create-account-field">
+                        <label for="username">
+                            Username <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input type="text"
+                               id="username"
+                               name="username"
+                               placeholder="Enter username"
+                               autocomplete="off"
+                               required>
+                    </div>
+
+                    <div class="create-account-field create-account-full">
+                        <label for="password">
+                            Temporary Password <span aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="create-account-password-wrapper">
+
+                            <input type="password"
+                                   id="password"
+                                   name="password"
+                                   placeholder="Enter temporary password"
+                                   autocomplete="new-password"
+                                   required>
+
+                            <button type="button"
+                                    id="toggleCreatePassword"
+                                    class="create-account-password-toggle"
+                                    aria-label="Show password"
+                                    aria-pressed="false">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="22"
+                                     height="22"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+                                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+
+                        </div>
+
+                        <p class="create-account-help">
+                            Use a strong temporary password and share
+                            it securely with the employee.
+                        </p>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- FIXED FOOTER -->
+        <div class="create-account-footer">
+
+            <button id="closeCreateAccount"
+                    type="button"
+                    class="create-account-cancel">
+                Cancel
+            </button>
+
+            <button type="submit"
+                    class="create-account-submit">
+                Create Account
+            </button>
+
+        </div>
+
+    </form>
+
+</dialog>
+
+      
+            </div>
+            <!--Pagination-->
+        <div id="accountsPagination" class="employee-pagination"></div>
+            
+             
+          </div>
+             </div>
+
+        </div>
+        <!-- END RECORDS CARD -->
+
+<!-- ── ADD EMPLOYEE DIALOG ─────────────────────────────────────────────── -->
+ 
+<!-- VIEW ACCOUNT — READ ONLY -->
+<dialog id="viewAccountDialog" class="view-account-dialog"
+        aria-labelledby="viewAccountTitle">
+
+    <h2 id="viewAccountTitle">View Employee Account</h2>
+    <p class="view-account-subtitle">
+        Registered personnel information and account details.
+    </p>
+
+    <h3>Personal Information</h3>
+
+    <div class="view-account-grid">
+        <div>
+            <label>Employee Number</label>
+            <p id="viewEmployeeNumber"></p>
+        </div>
+
+        <div>
+            <label>Personnel Type</label>
+            <p id="viewPersonnelType"></p>
+        </div>
+
+        <div>
+            <label>Full Name</label>
+            <p id="viewEmployeeName"></p>
+        </div>
+
+        <div>
+            <label>DepEd Email</label>
+            <p id="viewDepedEmail"></p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h3>Account Information</h3>
+
+    <div class="view-account-grid">
+        <div>
+            <label>Username</label>
+            <p id="viewUsername"></p>
+        </div>
+
+        <div>
+            <label>System Role</label>
+            <p id="viewRole"></p>
+        </div>
+
+        <div>
+            <label>Account Status</label>
+            <p id="viewAccountStatus"></p>
+        </div>
+
+        <div>
+          <label>Account Created At</label>
+          <p id="viewAccountCreatedAt"></p>
+      </div>
+    </div>
+
+    <div class="view-account-actions">
+        <button type="button" id="closeViewAccount"
+                class="btn-add-emp-submit">
+            Close
+        </button>
+    </div>
+</dialog>
+
+
+<!-- EDIT EMPLOYEE DIALOG -->
+<dialog id="editEmployeeDialog"
+        aria-labelledby="editEmployeeTitle">
+
+    <h2 id="editEmployeeTitle">Edit Employee Information</h2>
+    <p>Update the selected employee's personnel information.</p>
+
+    <form id="editEmployeeForm" method="POST">
+
+        <input type="hidden" id="ee_employee_id" name="employee_id">
+
+        <div class="add-emp-grid">
+
+            <div class="add-emp-field">
+                <label for="ee_last_name">Last Name *</label>
+                <input type="text" id="ee_last_name"
+                       name="last_name" required>
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_first_name">First Name *</label>
+                <input type="text" id="ee_first_name"
+                       name="first_name" required>
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_middle_name">Middle Name</label>
+                <input type="text" id="ee_middle_name"
+                       name="middle_name">
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_employee_number">Employee Number *</label>
+                <input type="text" id="ee_employee_number"
+                       name="employee_number" required>
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_personnel_type">Personnel Type</label>
+
+                <select id="ee_personnel_type" disabled>
+                    <option value="Teaching">Teaching</option>
+                    <option value="Non-Teaching">Non-Teaching</option>
+                </select>
+
+                <small>
+                    Personnel type is read-only and cannot be changed here.
+                </small>
+            </div>
+
+
+            <div class="add-emp-field">
+                <label for="ee_plantilla">Plantilla Item Number *</label>
+                <input type="text" id="ee_plantilla"
+                       name="plantilla_item_number" required>
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_position">Position *</label>
+                <input type="text" id="ee_position"
+                       name="position" required>
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_salary_grade">Salary Grade *</label>
+                <input type="number" id="ee_salary_grade"
+                       name="salary_grade" min="1" step="1" required>
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_step_increment">Step Increment *</label>
+                <input type="number" id="ee_step_increment"
+                       name="step_increment" min="1" step="1" required>
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_date_orig">Date of Original Appointment *</label>
+                <input type="date" id="ee_date_orig"
+                       name="date_original_appointment" required>
+            </div>
+
+            <div class="add-emp-field">
+                <label for="ee_date_promo">Date of Last Promotion</label>
+                <input type="date" id="ee_date_promo"
+                       name="date_last_promotion">
+            </div>
+
+            <div class="add-emp-field full-width">
+                <label for="ee_deped_email">DepEd Email *</label>
+                <input type="email" id="ee_deped_email"
+                       name="deped_email" required>
+            </div>
+
+        </div>
+
+        <div class="add-emp-actions">
+            <button type="button"
+                    id="closeEditEmployee"
+                    class="btn-add-emp-cancel">
+                Cancel
+            </button>
+
+            <button type="submit"
+                    id="saveEditEmployee"
+                    class="btn-add-emp-submit"
+                    >
+                Save Changes
+            </button>
+        </div>
+
+    </form>
+</dialog>
+
+
+
+<!-- ============================================
+     ADD EMPLOYEE DIALOG — REDESIGNED
+     ============================================ -->
+<dialog id="addEmployeeDialog"
+        aria-labelledby="addEmployeeTitle">
+
+    <div class="ae-dialog-header">
+        <h2 id="addEmployeeTitle">Add Employee</h2>
+        <p>
+            Enter the employee's information.
+            Fields marked <strong>*</strong> are required.
+        </p>
+    </div>
+
+    <form method="POST" id="addEmployeeForm">
+
+        <div class="ae-dialog-body">
+
+            <!-- PERSONAL INFORMATION -->
+            <section class="ae-section">
+                <h3>Personal Information</h3>
+
+                <div class="add-emp-grid">
+
+                    <div class="add-emp-field">
+                        <label for="ae_last_name">Last Name *</label>
+                        <input type="text"
+                               id="ae_last_name"
+                               name="last_name"
+                               required
+                               autocomplete="off">
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_first_name">First Name *</label>
+                        <input type="text"
+                               id="ae_first_name"
+                               name="first_name"
+                               required
+                               autocomplete="off">
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_middle_name">Middle Name</label>
+                        <input type="text"
+                               id="ae_middle_name"
+                               name="middle_name"
+                               autocomplete="off">
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_employee_number">
+                            Employee Number *
+                        </label>
+                        <input type="text"
+                               id="ae_employee_number"
+                               name="employee_number"
+                               placeholder="EMP-YYYY-XXXX"
+                               required
+                               autocomplete="off">
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- EMPLOYMENT DETAILS -->
+            <section class="ae-section">
+                <h3>Employment Details</h3>
+
+                <div class="add-emp-grid">
+
+                    <div class="add-emp-field">
+                        <label for="ae_personnel_type">
+                            Personnel Type *
+                        </label>
+                        <select id="ae_personnel_type"
+                                name="personnel_type"
+                                required>
+                            <option value="">-- Select --</option>
+                            <option value="Teaching">Teaching</option>
+                            <option value="Non-Teaching">
+                                Non-Teaching
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_plantilla">
+                            Plantilla Item Number *
+                        </label>
+                        <input type="text"
+                               id="ae_plantilla"
+                               name="plantilla_item_number"
+                               required
+                               autocomplete="off">
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_position">Position *</label>
+                        <input type="text"
+                               id="ae_position"
+                               name="position"
+                               required
+                               autocomplete="off">
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_salary_grade">
+                            Salary Grade *
+                        </label>
+                        <input type="number"
+                               id="ae_salary_grade"
+                               name="salary_grade"
+                               min="1"
+                               step="1"
+                               required>
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_step_increment">
+                            Step Increment *
+                        </label>
+                        <input type="number"
+                               id="ae_step_increment"
+                               name="step_increment"
+                               min="1"
+                               step="1"
+                               required>
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_date_orig">
+                            Date of Original Appointment *
+                        </label>
+                        <input type="date"
+                               id="ae_date_orig"
+                               name="date_original_appointment"
+                               required>
+                    </div>
+
+                    <div class="add-emp-field">
+                        <label for="ae_date_promo">
+                            Date of Last Promotion
+                        </label>
+                        <input type="date"
+                               id="ae_date_promo"
+                               name="date_last_promotion">
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- CONTACT INFORMATION -->
+            <section class="ae-section">
+                <h3>Contact Information</h3>
+
+                <div class="add-emp-grid">
+
+                    <div class="add-emp-field full-width">
+                        <label for="ae_deped_email">
+                            DepEd Email *
+                        </label>
+                        <input type="email"
+                               id="ae_deped_email"
+                               name="deped_email"
+                               required
+                               autocomplete="off"
+                               placeholder="name@deped.gov.ph">
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED FOOTER -->
+        <div class="add-emp-actions ae-dialog-footer">
+
+            <button type="button"
+                    id="closeAddEmployee"
+                    class="btn-add-emp-cancel">
+                Cancel
+            </button>
+
+            <button type="submit"
+                    class="btn-add-emp-submit">
+                Add Employee
+            </button>
+
+        </div>
+
+    </form>
+</dialog>
+
+
+<!-- ── SUCCESS ADD DIALOG ──────────────────────────────────────────────── -->
+
+<!-- SUCCESS ADD EMPLOYEE DIALOG -->
+<dialog id="successAddDialog"
+        class="persys-notification-dialog"
+        aria-labelledby="successAddTitle">
+
+    <div class="persys-notification-content">
+
+        <div class="persys-notification-icon">
+
+            <svg class="persys-result-svg"
+                 viewBox="0 0 130.2 130.2"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true">
+
+                <circle class="persys-result-circle"
+                        fill="none"
+                        stroke="#22A55A"
+                        stroke-width="6"
+                        cx="65.1"
+                        cy="65.1"
+                        r="62.1" />
+
+                <polyline class="persys-result-check"
+                          fill="none"
+                          stroke="#22A55A"
+                          stroke-width="6"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          points="100.2,40.2 51.5,88.8 29.8,67.5" />
+
+            </svg>
+
+        </div>
+
+        <h2 id="successAddTitle">Employee Added</h2>
+
+        <p>
+            The employee has been successfully added and
+            is now available in the employee records.
+        </p>
+
+        <p>
+            You can now create an account for them
+            from the Accounts tab.
+        </p>
+
+        <button type="button"
+                id="closeSuccessDialog"
+                class="btn-add-emp-submit">
+            Done
+        </button>
+
+    </div>
+
+</dialog>
+
+
+
+<!-- MASTER FILE IMPORT NOTIFICATION DIALOG -->
+  <dialog id="masterFileNotificationDialog"
+          class="master-file-notification"
+          aria-labelledby="masterFileNotificationTitle"
+          aria-describedby="masterFileNotificationMessage">
+
+    <div class="master-notification-content">
+
+      <div id="masterFileNotificationIcon"
+          class="notification-icon"
+          aria-hidden="true">
+        ✓
+      </div>
+
+      <h2 id="masterFileNotificationTitle">
+        Import Successful
+      </h2>
+
+      <p id="masterFileNotificationMessage">
+        Employee records have been imported successfully.
+      </p>
+
+      <button
+        type="button"
+        id="closeMasterFileNotification"
+        class="btn-add-emp-submit">
+        Done
+      </button>
+
+    </div>
+
+  </dialog>
+
+
+      </main>
+    </div>
+    <!-- END MAIN WRAPPER -->
+
+  </div>
+
+   <div class="modal-overlay" id="logoutModal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="logoutModalTitle">Log Out</h2>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to log out?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelLogoutBtn" class="btn-secondary">Cancel</button>
+        <button type="button" id="confirmLogoutBtn" class="btn-yellow">Log Out</button>
+      </div>
+    </div>
+  </div>
+  <!-- END APP SHELL -->
+  <!-- Shared admin JS (hamburger, sidebar, nav highlight) -->
+  <script src="../../scripts/admin.js"></script>
+  <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/adminEmployees.js"></script>
+  <script src="../../scripts/settings.js"></script>
+
+  <!-- ============================================================
+       PAGE-SCOPED JS � adminEmployees.html
+       Handles:
+         1. Employees sub-menu open/close toggle
+         2. Teaching / Non-Teaching panel swap
+       No fake fetches, no alerts, no timeouts.
+  ============================================================ -->
+
+
+</body>
+</html>

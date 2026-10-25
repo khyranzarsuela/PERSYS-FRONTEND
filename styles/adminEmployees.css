@@ -1,0 +1,2599 @@
+    /* ── EMPLOYEES SUB-MENU ────────────────────────────────── */
+
+    /* Parent "Employees" item — needs space for the caret */
+    .nav-item--employees {
+      justify-content: space-between;
+    }
+
+    .nav-item--employees .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Animated caret ▼ */
+    .employees-caret {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .employees-caret.is-open {
+      transform: rotate(180deg);
+    }
+
+    /* Sub-menu container — hidden by default, slides open */
+    .employees-submenu {
+      list-style: none;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease;
+      padding: 0 10px;
+    }
+
+    .employees-submenu.is-open {
+      max-height: 180px; /* enough for 3 items */
+    }
+
+    /* Sub-menu items */
+    .submenu-item {
+      display: block;
+      width: 100%;
+      padding: 9px 14px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #D4C5E8;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-align: left;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      margin-bottom: 2px;
+    }
+
+    .submenu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    /* Active sub-menu item — yellow pill */
+    .submenu-item.is-active {
+      background-color: #F5C518;
+      color: #1a1a1a;
+    }
+
+    /* ── PAGE CONTENT — EMPLOYEES OVERRIDE ────────────────── */
+
+    /* Override the dashboard's 2-col grid for this page */
+    .page-content.employees-page {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 28px 32px;
+    }
+
+    /* ── TOOLBAR ROW ────────────────────────────────────────── */
+
+    .emp-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* "+ Add Employee" button */
+    .btn-add-employee {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background-color: #F5C518;
+      color: #1a1a1a;
+      font-size: 0.875rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-add-employee:hover {
+      background-color: #e6b800;
+      box-shadow: 0 3px 10px rgba(245, 197, 24, 0.4);
+    }
+
+    /* Search bar wrapper */
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 540px;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 10px 42px 10px 16px;
+      border: 1.5px solid #D0C8B8;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: #444;
+      background-color: #fff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-wrap input::placeholder {
+      color: #aaa;
+    }
+
+    .search-wrap input:focus {
+      border-color: #6B0FBA;
+      box-shadow: 0 0 0 3px rgba(107, 15, 186, 0.12);
+    }
+
+    /* Search icon inside input */
+    .search-icon {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 17px;
+      height: 17px;
+      stroke: #999;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    /* Filter button */
+    .btn-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background-color: #F5C518;
+      color: #1a1a1a;
+      font-size: 0.875rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-filter:hover {
+      background-color: #e6b800;
+      box-shadow: 0 3px 10px rgba(245, 197, 24, 0.4);
+    }
+
+    .btn-filter svg {
+      width: 14px;
+      height: 14px;
+      stroke: #1a1a1a;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── RECORDS CARD ───────────────────────────────────────── */
+
+    .records-card {
+      background-color: #FEFCF5;
+      border: 1px solid #E8E0CC;
+      border-radius: 16px;
+      padding: 28px 24px 32px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .records-title {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 20px;
+    }
+
+    /* ── PANEL VISIBILITY ───────────────────────────────────── */
+
+    /* Each sub-section (teaching / non-teaching) */
+    .emp-panel {
+      display: none;
+    }
+
+    .emp-panel.is-active {
+      display: block;
+    }
+
+    /* ── TABLE WRAPPER — horizontal scroll ─────────────────── */
+
+    .table-scroll-wrap {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 55vh;
+      border: 1px solid #DDD6C8;
+      border-radius: 10px;
+    }
+
+    /* Scrollbar styling — both axes */
+    .table-scroll-wrap::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .table-scroll-wrap::-webkit-scrollbar-track {
+      background: #f0ebe0;
+      border-radius: 10px;
+    }
+
+    .table-scroll-wrap::-webkit-scrollbar-thumb {
+      background: #c0b0d0;
+      border-radius: 10px;
+    }
+
+    /* ── TABLE ──────────────────────────────────────────────── */
+
+    .emp-table {
+      width: 100%;
+      min-width: 1100px;
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+    }
+
+    /* Header row */
+    .emp-table thead tr {
+      background-color: #ffffff;
+      border-bottom: 2px solid #DDD6C8;
+    }
+
+    .emp-table thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #222;
+      white-space: nowrap;
+      /* Stick to top of the scroll container while scrolling rows */
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #ffffff;
+      box-shadow: 0 2px 0 #DDD6C8;
+    }
+
+    /* Body rows — alternating stripe */
+    .emp-table tbody tr:nth-child(odd) {
+      background-color: #EDE7F6; /* light lavender */
+    }
+
+    .emp-table tbody tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+
+    .emp-table tbody tr:hover {
+      background-color: #E0D6EF;
+    }
+
+    .emp-table tbody td {
+      padding: 11px 16px;
+      color: #333;
+      white-space: nowrap;
+      border-bottom: 1px solid #EDE8DC;
+    }
+
+    .emp-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .page-content.employees-page {
+        padding: 20px 16px;
+      }
+
+      .emp-toolbar {
+        gap: 10px;
+      }
+
+      .search-wrap {
+        min-width: 140px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .emp-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-add-employee,
+      .btn-filter {
+        justify-content: center;
+      }
+
+      .search-wrap {
+        max-width: 100%;
+      }
+    }
+
+    /* Style the main button */
+#openBtn {
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Style the big card window */
+dialog {
+  padding: 24px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+}
+
+/* Style the gray/faded background behind the card */
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  backdrop-filter: blur(4px);            /* Optional: blurs the background */
+}
+/* ============================================================
+   MASTER FILE IMPORT
+============================================================ */
+
+#importFileStatus {
+  margin-top: 12px;
+}
+
+
+/* Summary */
+
+.import-summary {
+  margin: 20px 0 12px;
+  padding: 12px 14px;
+  background-color: #f5f0fb;
+  border: 1px solid #ddd0ec;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+
+/* Preview table */
+
+.import-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #DDD6C8;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+
+
+.import-preview-table {
+  min-width: 1700px;
+}
+
+.import-input {
+  width: 100%;
+  min-width: 120px;
+  box-sizing: border-box;
+
+  padding: 7px 9px;
+
+  border: 1px solid #D0C8B8;
+  border-radius: 6px;
+
+  background-color: #ffffff;
+
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: #333;
+
+  outline: none;
+}
+
+
+.import-input:focus {
+  border-color: #6B0FBA;
+  box-shadow: 0 0 0 2px rgba(107, 15, 186, 0.12);
+}
+
+
+.import-input[type="number"] {
+  min-width: 80px;
+}
+
+
+.import-input[type="date"] {
+  min-width: 140px;
+}
+
+
+.import-input[type="email"] {
+  min-width: 220px;
+}
+
+
+.import-preview-table td {
+  vertical-align: top;
+}
+
+
+.import-status {
+  white-space: nowrap;
+}
+
+
+/* Valid / invalid rows */
+
+.import-valid {
+  background-color: #ffffff;
+}
+
+
+.import-invalid {
+  background-color: #fff1f1 !important;
+}
+
+
+/* Error messages */
+
+.import-errors {
+  margin-top: 5px;
+  color: #b42318;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+
+/* Disabled upload button */
+
+#btnUploadMaster:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── ADD EMPLOYEE MODAL ─────────────────────────────────────────────────── */
+dialog#addEmployeeDialog {
+  max-width: 680px;
+  width: 95%;
+  padding: 28px 28px 24px;
+}
+
+.add-emp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.add-emp-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.add-emp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.add-emp-field label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.add-emp-field input,
+.add-emp-field select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid #D0C8B8;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.add-emp-field input:focus,
+.add-emp-field select:focus {
+  border-color: #6B0FBA;
+  box-shadow: 0 0 0 3px rgba(107,15,186,0.12);
+}
+
+.add-emp-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-add-emp-submit {
+  background-color: #F5C518;
+  color: #1a1a1a;
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-add-emp-submit:hover {
+  background-color: #e6b800;
+}
+
+.btn-add-emp-cancel {
+  background: transparent;
+  border: 1.5px solid #ccc;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+/* ── FLASH BANNER ──────────────────────────────────────────────────────── */
+.flash-banner {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.flash-banner.flash-error {
+  background-color: #fff1f1;
+  border: 1.5px solid #f5c6c6;
+  color: #b42318;
+}
+
+.flash-banner .flash-dismiss {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: inherit;
+  line-height: 1;
+  padding: 0;
+}
+
+/* =========================================================
+   MASTER FILE — EXCEL TEMPLATE DOWNLOAD
+   ========================================================= */
+
+.master-template-guide {
+  margin: 18px 0 22px;
+  padding: 18px 20px;
+  background: #f8fafc;
+  border: 1px solid #dce5ee;
+  border-radius: 10px;
+}
+
+.master-template-guide h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #263445;
+}
+
+.master-template-guide p {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.btn-download-template {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 8px;
+  background: #167d49;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.btn-download-template:hover {
+  background: #116438;
+  color: #ffffff;
+}
+
+.btn-download-template:focus-visible {
+  outline: 3px solid #86efac;
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   MASTER FILE — NOTIFICATION DIALOG
+   ========================================================= */
+
+.master-file-notification {
+    width: min(420px, calc(100% - 32px));
+    max-width: 420px;
+    border: none;
+    border-radius: 16px;
+    padding: 28px;
+    background: #ffffff;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+}
+
+.master-file-notification::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.master-notification-content {
+    text-align: center;
+}
+
+.master-notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.master-file-notification.is-error
+.master-notification-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.master-notification-content h2 {
+    margin: 0 0 12px;
+    font-size: 21px;
+    color: #1e293b;
+}
+
+.master-notification-content p {
+    margin: 0 0 24px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.master-notification-content button {
+    min-width: 110px;
+}
+
+
+
+/* Employee tables — horizontal scrolling only 
+.table-scroll-wrap {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll-wrap .emp-table {
+    width: max-content;
+    min-width: 100%;
+}
+
+.table-scroll-wrap .emp-table th,
+.table-scroll-wrap .emp-table td {
+    white-space: nowrap;
+}
+*/
+
+/* =========================================================
+   EMPLOYEE MANAGEMENT — SCROLLABLE TABLES
+   ========================================================= */
+
+/* =========================================================
+   EMPLOYEE TABLES — AUTO HEIGHT WITH PAGINATION
+   ========================================================= */
+
+.table-scroll-wrap {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+
+    /* Expand to fit all records on the current page */
+    height: auto;
+    max-height: none;
+    min-height: 0;
+
+    /* Keep horizontal scrolling */
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll-wrap .emp-table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-scroll-wrap .emp-table th,
+.table-scroll-wrap .emp-table td {
+    white-space: nowrap;
+}
+
+
+
+/* =========================================================
+   EMPLOYEE MANAGEMENT — PAGINATION
+   ========================================================= */
+
+.employee-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 18px 4px 6px;
+}
+
+.pagination-info {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pagination-controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 12px;
+    font-size: 13px;
+    color: #475569;
+}
+
+.pagination-select {
+    padding: 7px 9px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 13px;
+}
+
+.pagination-button {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 9px;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #475569;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background: #f1f5f9;
+}
+
+.pagination-button.is-active {
+    background: #6b0fba;
+    border-color: #6b0fba;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.pagination-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+    .employee-pagination {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+/* =========================================================
+   PERSYS — EMPLOYEE TABLE WIDTH FIX
+   ========================================================= */
+
+/* Allow flex and grid children to shrink */
+.emp-panel,
+.emp-panel.is-active,
+.table-scroll-wrap {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Keep the table inside its own scrolling area */
+.table-scroll-wrap {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: auto;
+    max-height: none;
+}
+
+/* Wide columns scroll inside the table, not the page */
+.table-scroll-wrap > .emp-table {
+    width: max-content;
+    min-width: 100%;
+}
+
+/* Keep employee information on one line */
+.table-scroll-wrap .emp-table th,
+.table-scroll-wrap .emp-table td {
+    white-space: nowrap;
+}
+
+/* Pagination must stay within the card */
+.employee-pagination {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PERSYS — FIX WIDE EMPLOYEE TABLE CONTAINERS
+   ========================================================= */
+
+/* Prevent the employee card from growing with its table */
+.records-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Allow panels to shrink within the card */
+.records-card .emp-panel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Keep wide tables inside their own scrolling container */
+.records-card .table-scroll-wrap {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+
+/* Preserve the full table width internally */
+.records-card .table-scroll-wrap .emp-table {
+    width: max-content;
+    min-width: 100%;
+}
+
+/* Keep pagination inside the card */
+.records-card .employee-pagination {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   VIEW ACCOUNT MODAL
+   ========================================================= */
+
+.view-account-dialog {
+    width: min(560px, calc(100vw - 32px));
+    max-height: 85vh;
+    overflow-y: auto;
+    border: none;
+    border-radius: 14px;
+    padding: 28px;
+    box-sizing: border-box;
+    background: #fff;
+    color: #242424;
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.2);
+}
+
+.view-account-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.view-account-dialog h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+}
+
+.view-account-subtitle {
+    margin: 0 0 24px;
+    color: #666;
+    font-size: 14px;
+}
+
+.view-account-dialog h3 {
+    margin: 20px 0 14px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.view-account-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.view-account-grid > div {
+    min-width: 0;
+}
+
+.view-account-grid label {
+    display: block;
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.view-account-grid p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.view-account-dialog hr {
+    border: 0;
+    border-top: 1px solid #e5e5e5;
+    margin: 24px 0;
+}
+
+.view-account-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 28px;
+}
+
+.account-status-active {
+    color: #16803c;
+}
+
+.account-status-inactive {
+    color: #b42318;
+}
+
+@media (max-width: 480px) {
+    .view-account-dialog {
+        padding: 20px;
+    }
+
+    .view-account-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+/* ==========================================
+   EDIT EMPLOYEE MODAL
+   ========================================== */
+
+#editEmployeeDialog {
+    width: min(90vw, 850px);
+    max-height: 90vh;
+    padding: 28px;
+    margin: auto;
+    border: none;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #222222;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+}
+
+#editEmployeeDialog[open] {
+    display: block;
+}
+
+#editEmployeeDialog::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+#editEmployeeDialog h2 {
+    margin-bottom: 8px;
+}
+
+#editEmployeeDialog .add-emp-grid {
+    margin-top: 20px;
+}
+
+#editEmployeeDialog .add-emp-actions {
+    margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+    #editEmployeeDialog {
+        width: 95vw;
+        padding: 18px;
+    }
+
+    #editEmployeeDialog .add-emp-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* Read-only personnel type in Edit Employee modal */
+#editEmployeeDialog #ee_personnel_type:disabled {
+    background-color: #f1f3f5;
+    color: #555;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+#editEmployeeDialog #ee_personnel_type + small {
+    display: block;
+    margin-top: 5px;
+    color: #777;
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   PERSYS — STEP 9.6.1
+   EMPLOYEE TABLE READABILITY & ACCESSIBILITY
+   ============================================================ */
+
+/* 1. Record card */
+.employees-page .records-card {
+    background: #fffdf8;
+    border: 1px solid #e5dfd2;
+    border-radius: 16px;
+    padding: 28px;
+}
+
+.employees-page .records-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #202020;
+    margin-bottom: 20px;
+}
+
+/* 2. Table text and spacing */
+.employees-page .emp-table {
+    font-size: 0.9375rem;
+}
+
+.employees-page .emp-table thead th {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #242424;
+    padding: 16px 18px;
+    background: #faf8f3;
+}
+
+.employees-page .emp-table tbody td {
+    font-size: 0.9375rem;
+    color: #292929;
+    padding: 14px 18px;
+    height: 60px;
+    vertical-align: middle;
+    border-bottom: 1px solid #e9e5de;
+}
+
+/* 3. Subtle alternating rows */
+.employees-page .emp-table tbody tr:nth-child(odd) {
+    background-color: #f8f5fc;
+}
+
+.employees-page .emp-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.employees-page .emp-table tbody tr:hover {
+    background-color: #f0e9fa;
+}
+
+/* 4. Employee action buttons */
+.employees-page .emp-table button {
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.employees-page .emp-table button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 5. Search and toolbar buttons */
+.employees-page .emp-toolbar button {
+    min-height: 46px;
+    font-size: 0.9375rem;
+}
+
+.employees-page .search-wrap input {
+    min-height: 46px;
+    font-size: 1rem;
+    padding-left: 16px;
+}
+
+/* 6. Pagination */
+.employees-page .pagination-info,
+.employees-page .pagination-controls label {
+    font-size: 0.9375rem;
+    color: #475569;
+}
+
+.employees-page .pagination-button {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 0.9375rem;
+    border-radius: 8px;
+}
+
+.employees-page .pagination-select {
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 0.9375rem;
+}
+
+/* 7. Visible keyboard focus */
+.employees-page button:focus-visible,
+.employees-page input:focus-visible,
+.employees-page select:focus-visible {
+    outline: 3px solid #6b0fba;
+    outline-offset: 3px;
+}
+
+/* 8. Preserve horizontal scrolling */
+.employees-page .table-scroll-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.employees-page .emp-table th,
+.employees-page .emp-table td {
+    white-space: nowrap;
+}
+
+/* 9. Smaller screens */
+@media (max-width: 768px) {
+    .employees-page .records-card {
+        padding: 18px 14px;
+    }
+
+    .employees-page .emp-table thead th,
+    .employees-page .emp-table tbody td {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .employees-page .employee-pagination {
+        gap: 14px;
+    }
+}
+
+
+/* ============================================================
+   PERSYS — STEP 9.6.2
+   TOOLBAR & SEARCH UI POLISH
+   ============================================================ */
+
+.employees-page .emp-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Consistent button height */
+.employees-page .emp-toolbar button {
+    min-height: 46px;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+/* Add Employee remains the primary action */
+.employees-page .btn-add-employee {
+    background-color: #f5c518;
+    color: #1a1a1a;
+    padding: 10px 20px;
+}
+
+/* Wider search */
+.employees-page .search-wrap {
+    flex: 1 1 260px;
+    max-width: 460px;
+    min-width: 200px;
+}
+
+.employees-page .search-wrap input {
+    width: 100%;
+    min-height: 46px;
+    background: #ffffff;
+    border: 1.5px solid #c9c3b8;
+    border-radius: 8px;
+    padding: 10px 44px 10px 16px;
+    font-size: 1rem;
+}
+
+.employees-page .search-wrap input::placeholder {
+    color: #737373;
+}
+
+/* Filter becomes a secondary action */
+.employees-page .btn-filter {
+    background-color: #ffffff;
+    color: #333333;
+    border: 1.5px solid #c9c3b8;
+    padding: 10px 18px;
+}
+
+.employees-page .btn-filter svg {
+    stroke: #333333;
+}
+
+.employees-page .btn-filter:hover {
+    background-color: #f4eefb;
+    border-color: #6b0fba;
+    box-shadow: none;
+}
+
+/* Smaller screens */
+@media (max-width: 768px) {
+    .employees-page .emp-toolbar {
+        gap: 10px;
+    }
+
+    .employees-page .search-wrap {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .employees-page .emp-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .employees-page .emp-toolbar button,
+    .employees-page .search-wrap {
+        width: 100%;
+    }
+
+    .employees-page .emp-toolbar button {
+        justify-content: center;
+    }
+}
+
+/* =====================================================
+   PERSYS — STEP 9.6.2 TOOLBAR ALIGNMENT FIX
+   ===================================================== */
+
+/* Keep toolbar controls in one row on desktop */
+.employees-page .emp-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 12px;
+}
+
+/* Search fills available space without pushing buttons */
+.employees-page .search-wrap {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 160px;
+    max-width: none;
+}
+
+/* Prevent action buttons from shrinking or wrapping */
+.employees-page .emp-toolbar button {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Master File Upload button */
+.employees-page .btn-master-upload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 10px 18px;
+}
+
+/* Wrap neatly on smaller screens */
+@media (max-width: 1100px) {
+    .employees-page .emp-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .employees-page .search-wrap {
+        flex: 1 1 240px;
+    }
+}
+
+@media (max-width: 600px) {
+    .employees-page .emp-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .employees-page .emp-toolbar button,
+    .employees-page .search-wrap {
+        width: 100%;
+    }
+}
+
+
+/* =====================================================
+   PERSYS — FINAL TOOLBAR SPACING FIX
+   ===================================================== */
+
+/* Desktop: all controls on one line */
+.employees-page .emp-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 12px;
+    width: 100%;
+}
+
+/* Search takes ALL available space */
+.employees-page .emp-toolbar .search-wrap {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 180px;
+    max-width: none;
+    margin: 0;
+}
+
+/* Search input fills its container */
+.employees-page .emp-toolbar .search-wrap input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Buttons keep their natural width */
+.employees-page .emp-toolbar > button,
+.employees-page .emp-toolbar .btn-filter,
+.employees-page .emp-toolbar .btn-master-upload {
+    flex: 0 0 auto;
+    width: auto;
+    white-space: nowrap;
+}
+
+/* Prevent oversized button padding */
+.employees-page .emp-toolbar button {
+    padding: 10px 16px;
+    min-height: 48px;
+}
+
+/* Master File Upload with icon */
+.employees-page .btn-master-upload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+}
+
+/* Tablet: allow controls to wrap */
+@media (max-width: 1050px) {
+    .employees-page .emp-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .employees-page .emp-toolbar .search-wrap {
+        flex: 1 1 260px;
+        width: auto;
+    }
+}
+
+/* Mobile: stack controls */
+@media (max-width: 600px) {
+    .employees-page .emp-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .employees-page .emp-toolbar .search-wrap,
+    .employees-page .emp-toolbar > button {
+        width: 100%;
+        flex: none;
+    }
+}
+
+
+/* ============================================================
+   PERSYS — STEP 9.6.3.1
+   CENTER ALL EMPLOYEE MANAGEMENT DIALOGS
+   ============================================================ */
+
+/* Center dialogs within the browser viewport */
+dialog:where(
+    #addEmployeeDialog,
+    #editEmployeeDialog,
+    #createAccountDialog,
+    #viewAccountDialog,
+    #masterFileNotificationDialog
+) {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
+
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Ensure dialogs remain centered when opened with showModal() */
+dialog:where(
+    #addEmployeeDialog,
+    #editEmployeeDialog,
+    #createAccountDialog,
+    #viewAccountDialog,
+    #masterFileNotificationDialog
+):modal {
+    margin: auto;
+}
+
+/* Consistent background overlay */
+dialog:where(
+    #addEmployeeDialog,
+    #editEmployeeDialog,
+    #createAccountDialog,
+    #viewAccountDialog,
+    #masterFileNotificationDialog
+)::backdrop {
+    background: rgba(20, 10, 35, 0.55);
+}
+
+/* Allow comfortable spacing on smaller screens */
+@media (max-width: 600px) {
+    dialog:where(
+        #addEmployeeDialog,
+        #editEmployeeDialog,
+        #createAccountDialog,
+        #viewAccountDialog,
+        #masterFileNotificationDialog
+    ) {
+        max-width: calc(100vw - 20px);
+        max-height: calc(100dvh - 20px);
+    }
+}
+
+
+/* ============================================
+   PERSYS — CENTER MASTER FILE UPLOAD DIALOG
+   ============================================ */
+
+/* Replace this ID with the actual upload dialog ID */
+#myDialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+
+    box-sizing: border-box;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+}
+
+#myDialog::backdrop {
+    background: rgba(20, 10, 35, 0.55);
+}
+
+@media (max-width: 600px) {
+    #myDialog {
+        max-width: calc(100vw - 20px);
+        max-height: calc(100dvh - 20px);
+    }
+}
+
+
+/* ============================================================
+   PERSYS — STEP 9.6.3.2
+   ADD EMPLOYEE DIALOG REDESIGN
+   ============================================================ */
+
+/* Main dialog */
+dialog#addEmployeeDialog {
+    width: min(960px, calc(100vw - 40px));
+    max-width: calc(100vw - 40px);
+    max-height: calc(100dvh - 32px);
+
+    padding: 0;
+    margin: auto;
+    border: none;
+    border-radius: 16px;
+
+    background: #ffffff;
+    color: #222222;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+/* Form layout */
+#addEmployeeDialog #addEmployeeForm {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: calc(100dvh - 32px);
+}
+
+/* Header */
+#addEmployeeDialog .ae-dialog-header {
+    flex-shrink: 0;
+    padding: 22px 30px 16px;
+    border-bottom: 1px solid #e8e3db;
+}
+
+#addEmployeeDialog .ae-dialog-header h2 {
+    margin: 0 0 6px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #222222;
+}
+
+#addEmployeeDialog .ae-dialog-header p {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: #555555;
+}
+
+/* Scrollable body only when needed */
+#addEmployeeDialog .ae-dialog-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 18px 30px;
+}
+
+/* Form sections */
+#addEmployeeDialog .ae-section {
+    margin: 0 0 18px;
+}
+
+#addEmployeeDialog .ae-section:last-child {
+    margin-bottom: 0;
+}
+
+#addEmployeeDialog .ae-section h3 {
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+
+    font-size: 1rem;
+    font-weight: 700;
+    color: #5b0b9b;
+
+    border-bottom: 1px solid #e9e1f0;
+}
+
+/* Two-column form */
+#addEmployeeDialog .add-emp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 12px;
+    margin-top: 0;
+}
+
+#addEmployeeDialog .add-emp-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+/* Field labels */
+#addEmployeeDialog .add-emp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+#addEmployeeDialog .add-emp-field label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #292929;
+}
+
+/* Inputs and dropdown */
+#addEmployeeDialog .add-emp-field input,
+#addEmployeeDialog .add-emp-field select {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+
+    box-sizing: border-box;
+    padding: 9px 12px;
+
+    font-family: inherit;
+    font-size: 1rem;
+    color: #222222;
+
+    background: #ffffff;
+    border: 1.5px solid #cfc7bb;
+    border-radius: 8px;
+}
+
+/* Input focus */
+#addEmployeeDialog .add-emp-field input:focus,
+#addEmployeeDialog .add-emp-field select:focus {
+    outline: 2px solid #6b0fba;
+    outline-offset: 1px;
+    border-color: #6b0fba;
+}
+
+/* Placeholder */
+#addEmployeeDialog input::placeholder {
+    color: #737373;
+}
+
+/* Footer always visible */
+#addEmployeeDialog .ae-dialog-footer {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin: 0;
+    padding: 14px 30px;
+
+    background: #ffffff;
+    border-top: 1px solid #e8e3db;
+}
+
+/* Footer buttons */
+#addEmployeeDialog .ae-dialog-footer button {
+    min-height: 44px;
+    padding: 10px 22px;
+
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+/* Cancel */
+#addEmployeeDialog .btn-add-emp-cancel {
+    background: #ffffff;
+    color: #292929;
+    border: 1.5px solid #cfc7bb;
+}
+
+/* Submit */
+#addEmployeeDialog .btn-add-emp-submit {
+    background: #f5c518;
+    color: #1a1a1a;
+    border: none;
+}
+
+/* Keyboard focus */
+#addEmployeeDialog button:focus-visible {
+    outline: 3px solid #6b0fba;
+    outline-offset: 3px;
+}
+
+/* Smaller screens */
+@media (max-width: 700px) {
+    dialog#addEmployeeDialog {
+        width: calc(100vw - 20px);
+        max-width: calc(100vw - 20px);
+        max-height: calc(100dvh - 20px);
+    }
+
+    #addEmployeeDialog #addEmployeeForm {
+        max-height: calc(100dvh - 20px);
+    }
+
+    #addEmployeeDialog .ae-dialog-header {
+        padding: 20px;
+    }
+
+    #addEmployeeDialog .ae-dialog-body {
+        padding: 18px 20px;
+    }
+
+    #addEmployeeDialog .add-emp-grid {
+        grid-template-columns: 1fr;
+        row-gap: 14px;
+    }
+
+    #addEmployeeDialog .ae-dialog-footer {
+        padding: 14px 20px;
+    }
+}
+
+/* ====================================================
+   PERSYS — FIX ADD EMPLOYEE DIALOG FOOTER
+   ==================================================== */
+
+/* Dialog stays within the screen */
+dialog#addEmployeeDialog {
+    height: min(850px, calc(100dvh - 32px));
+    max-height: calc(100dvh - 32px);
+
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Header + form share the dialog height */
+#addEmployeeDialog {
+    display: none;
+    flex-direction: column;
+}
+
+/* Only display flex when the dialog is open */
+#addEmployeeDialog[open] {
+    display: flex;
+}
+
+/* Header must not shrink */
+#addEmployeeDialog .ae-dialog-header {
+    flex: 0 0 auto;
+}
+
+/* Form occupies remaining space */
+#addEmployeeDialog #addEmployeeForm {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    overflow: hidden;
+}
+
+/* Only the fields scroll */
+#addEmployeeDialog .ae-dialog-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* Footer stays at bottom */
+#addEmployeeDialog .ae-dialog-footer {
+    flex: 0 0 auto;
+    position: relative;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    background: #ffffff;
+    border-top: 1px solid #e8e3db;
+    z-index: 1;
+}
+
+/* Keep the dialog usable on mobile */
+@media (max-width: 700px) {
+    dialog#addEmployeeDialog {
+        height: calc(100dvh - 20px);
+        max-height: calc(100dvh - 20px);
+    }
+}
+
+
+/* ====================================================
+   PERSYS — NOTIFICATION DIALOG POLISH
+   ==================================================== */
+
+/* Center the notification */
+dialog#masterFileNotificationDialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+
+    width: min(520px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
+
+    box-sizing: border-box;
+    overflow-y: auto;
+
+    border: none;
+    border-radius: 16px;
+    background: #ffffff;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark overlay */
+dialog#masterFileNotificationDialog::backdrop {
+    background: rgba(20, 10, 35, 0.55);
+}
+
+/* Animate dialog when opened */
+dialog#masterFileNotificationDialog[open] {
+    animation: persysNotificationEnter 220ms ease-out both;
+}
+
+/* Subtle fade + scale */
+@keyframes persysNotificationEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Animate the success/error symbol.
+   Uses the first icon element inside the notification. */
+#masterFileNotificationDialog .notification-icon,
+#masterFileNotificationDialog .notification-symbol {
+    transform-origin: center;
+}
+
+#masterFileNotificationDialog[open] .notification-icon,
+#masterFileNotificationDialog[open] .notification-symbol {
+    animation: persysIconPop 350ms ease-out 100ms both;
+}
+
+@keyframes persysIconPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+
+    65% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    #masterFileNotificationDialog[open],
+    #masterFileNotificationDialog[open] .notification-icon,
+    #masterFileNotificationDialog[open] .notification-symbol {
+        animation: none;
+    }
+}
+
+
+/* =====================================================
+   PERSYS — ANIMATED NOTIFICATION ICONS
+   ===================================================== */
+
+.persys-result-svg {
+    width: 82px;
+    height: 82px;
+    display: block;
+    margin: 0 auto 18px;
+    overflow: visible;
+}
+
+/* Draw the circle */
+.persys-result-circle {
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: persysDrawCircle 650ms ease-out forwards;
+}
+
+/* Draw the checkmark after the circle */
+.persys-result-check {
+    stroke-dasharray: 110;
+    stroke-dashoffset: 110;
+    animation: persysDrawCheck 450ms ease-out 500ms forwards;
+}
+
+/* Draw the X after the circle */
+.persys-result-line {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: persysDrawCheck 350ms ease-out 500ms forwards;
+}
+
+/* Slight delay for the second X line */
+.persys-result-line:last-child {
+    animation-delay: 650ms;
+}
+
+@keyframes persysDrawCircle {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes persysDrawCheck {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+    .persys-result-circle,
+    .persys-result-check,
+    .persys-result-line {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+}
+
+
+
+/* =====================================================
+   PERSYS — SHARED NOTIFICATION DIALOG DESIGN
+   ===================================================== */
+
+/* Center Add Employee and shared notifications */
+dialog#successAddDialog,
+dialog#masterFileNotificationDialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+
+    width: min(540px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
+
+    box-sizing: border-box;
+    overflow-y: auto;
+
+    border: none;
+    border-radius: 18px;
+    background: #ffffff;
+
+    padding: 32px 30px;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+dialog#successAddDialog::backdrop,
+dialog#masterFileNotificationDialog::backdrop {
+    background: rgba(20, 10, 35, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+/* Entrance animation */
+dialog#successAddDialog[open],
+dialog#masterFileNotificationDialog[open] {
+    animation: persysNotificationEnter 220ms ease-out both;
+}
+
+@keyframes persysNotificationEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Add Employee notification content */
+#successAddDialog .persys-notification-content {
+    text-align: center;
+}
+
+#successAddDialog h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #171717;
+    margin: 0 0 14px;
+}
+
+#successAddDialog p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: #555555;
+    margin: 0 0 12px;
+}
+
+#successAddDialog button {
+    min-height: 48px;
+    min-width: 120px;
+    margin-top: 12px;
+}
+
+/* =====================================================
+   SVG CHECKMARK / X DRAWING ANIMATION
+   ===================================================== */
+
+.persys-notification-icon {
+    margin-bottom: 18px;
+}
+
+.persys-result-svg {
+    width: 82px;
+    height: 82px;
+    display: block;
+    margin: 0 auto;
+    overflow: visible;
+
+    fill: none;
+    stroke: var(--result-color, #22A55A);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Circle */
+.persys-result-circle {
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: persysDrawCircle 650ms ease-out forwards;
+}
+
+/* Checkmark */
+.persys-result-check {
+    stroke-dasharray: 110;
+    stroke-dashoffset: 110;
+    animation: persysDrawSymbol 450ms ease-out 500ms forwards;
+}
+
+/* Error X */
+.persys-result-line {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: persysDrawSymbol 350ms ease-out 500ms forwards;
+}
+
+.persys-result-line:last-child {
+    animation-delay: 650ms;
+}
+
+@keyframes persysDrawCircle {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes persysDrawSymbol {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    dialog#successAddDialog[open],
+    dialog#masterFileNotificationDialog[open],
+    .persys-result-circle,
+    .persys-result-check,
+    .persys-result-line {
+        animation: none;
+    }
+
+    .persys-result-circle,
+    .persys-result-check,
+    .persys-result-line {
+        stroke-dashoffset: 0;
+    }
+}
+
+
+
+/* ============================================
+   MASTER FILE UPLOAD — REDESIGNED DIALOG
+   ============================================ */
+
+dialog#myDialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+
+    width: min(850px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
+
+    padding: 0;
+    border: none;
+    border-radius: 18px;
+    background: #fff;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+#myDialog .master-upload-header {
+    padding: 26px 32px 22px;
+    border-bottom: 1px solid #e7e1eb;
+}
+
+#myDialog .master-upload-header h2 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #222;
+}
+
+#myDialog .master-upload-header p {
+    margin: 0;
+    font-size: 16px;
+    color: #626262;
+    line-height: 1.5;
+}
+
+#myDialog .master-upload-body {
+    padding: 26px 32px 30px;
+}
+
+#myDialog .master-upload-section {
+    margin-bottom: 26px;
+}
+
+#myDialog .master-upload-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #242424;
+}
+
+#myDialog .master-step-number {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 7px;
+    background: #f1e7fb;
+    color: #6509aa;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#myDialog .master-upload-section > p {
+    margin: 0 0 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #555;
+}
+
+#myDialog .btn-download-template {
+    min-height: 46px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+#myDialog .master-upload-dropzone {
+    padding: 26px 20px;
+    border: 2px dashed #bba8cf;
+    border-radius: 12px;
+    background: #fbf9fd;
+    text-align: center;
+}
+
+#myDialog .master-upload-icon {
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: 0 auto 12px;
+    color: #6b0fba;
+}
+
+#myDialog .master-upload-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #242424;
+}
+
+#myDialog .master-upload-format {
+    font-size: 14px;
+    color: #626262;
+    margin: 0 0 14px;
+}
+
+#myDialog #fileUpload {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+    font-size: 15px;
+    cursor: pointer;
+}
+#myDialog #fileUpload::file-selector-button {
+  height: 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    border-radius: 12px;
+    background: #f5c518;
+    color: #171717;
+}
+
+#myDialog .master-selected-file {
+    margin: 14px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #5f169c;
+    overflow-wrap: anywhere;
+}
+
+#myDialog .master-upload-note {
+    margin: 14px 0 0;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#myDialog .master-upload-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+#myDialog .master-upload-actions button {
+    min-height: 48px;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#myDialog .master-upload-cancel {
+    border: 1px solid #cfc7d7;
+    background: white;
+    color: #242424;
+}
+
+#myDialog .master-upload-submit {
+    border: none;
+    background: #f5c518;
+    color: #171717;
+}
+
+#myDialog .master-upload-submit:hover:not(:disabled) {
+    background: #e8b900;
+}
+
+#myDialog .master-upload-submit:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+#myDialog button:focus-visible,
+#myDialog a:focus-visible,
+#myDialog input:focus-visible {
+    outline: 3px solid #6b0fba;
+    outline-offset: 3px;
+}
+
+#myDialog #masterFileStatus:not(:empty) {
+    margin-top: 18px;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+#myDialog #masterFilePreview:not(:empty) {
+    margin-top: 18px;
+}
+
+/* Responsive layout */
+@media (max-width: 600px) {
+    #myDialog .master-upload-header,
+    #myDialog .master-upload-body {
+        padding: 20px;
+    }
+
+    #myDialog .master-upload-header h2 {
+        font-size: 22px;
+    }
+
+    #myDialog .master-upload-actions {
+        flex-direction: column-reverse;
+    }
+
+    #myDialog .master-upload-actions button {
+        width: 100%;
+    }
+}
+
+
+/* ====================================================
+   PERSYS — CREATE ACCOUNT DIALOG
+   ==================================================== */
+
+dialog#createAccountDialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+
+    width: min(760px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
+
+    padding: 0;
+    border: none;
+    border-radius: 18px;
+    background: #ffffff;
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+/* Keep dialog centered without displaying when closed */
+#createAccountDialog:not([open]) {
+    display: none;
+}
+
+#createAccountDialog[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+#createAccountDialog::backdrop {
+    background: rgba(20, 10, 35, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+/* HEADER */
+#createAccountDialog .create-account-header {
+    flex-shrink: 0;
+    padding: 26px 32px 20px;
+    border-bottom: 1px solid #e8e1ec;
+}
+
+#createAccountDialog .create-account-header h2 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #242424;
+}
+
+#createAccountDialog .create-account-header p {
+    margin: 0;
+    color: #606060;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* FORM LAYOUT */
+#createAccountDialog #createAccountForm {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+/* SCROLLABLE CONTENT */
+#createAccountDialog .create-account-body {
+    padding: 26px 32px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+/* SECTIONS */
+#createAccountDialog .create-account-section {
+    margin-bottom: 26px;
+}
+
+#createAccountDialog .create-account-section:last-child {
+    margin-bottom: 0;
+}
+
+#createAccountDialog .create-account-section h3 {
+    color: #6509aa;
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8d8f3;
+}
+
+#createAccountDialog .create-account-section-note {
+    margin: 0 0 18px;
+    color: #666;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* TWO-COLUMN GRID */
+#createAccountDialog .create-account-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 22px;
+}
+
+#createAccountDialog .create-account-full {
+    grid-column: 1 / -1;
+}
+
+/* FIELD LABELS */
+#createAccountDialog .create-account-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #292929;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* INPUTS AND SELECT */
+#createAccountDialog .create-account-field input,
+#createAccountDialog .create-account-field select {
+    width: 100%;
+    min-height: 52px;
+    box-sizing: border-box;
+
+    padding: 12px 14px;
+    border: 1px solid #d2c7d8;
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #242424;
+
+    font-size: 16px;
+    font-family: inherit;
+}
+
+/* READ-ONLY FIELDS */
+#createAccountDialog .create-account-field input[readonly] {
+    background: #f5f3f7;
+    color: #454545;
+    cursor: default;
+}
+
+/* FOCUS STATES */
+#createAccountDialog input:focus-visible,
+#createAccountDialog select:focus-visible,
+#createAccountDialog button:focus-visible {
+    outline: 3px solid #6b0fba;
+    outline-offset: 2px;
+}
+
+/* PASSWORD FIELD */
+#createAccountDialog .create-account-password-wrapper {
+    position: relative;
+}
+
+#createAccountDialog .create-account-password-wrapper input {
+    padding-right: 62px;
+}
+
+#createAccountDialog .create-account-password-toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 46px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #555;
+
+    cursor: pointer;
+}
+
+#createAccountDialog .create-account-password-toggle:hover {
+    background: #f1eaf7;
+    color: #6509aa;
+}
+
+#createAccountDialog .create-account-help {
+    margin: 9px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #666;
+}
+
+/* FOOTER */
+#createAccountDialog .create-account-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+
+    padding: 18px 32px;
+    border-top: 1px solid #e8e1ec;
+    background: #ffffff;
+
+    flex-shrink: 0;
+}
+
+#createAccountDialog .create-account-footer button {
+    min-height: 48px;
+    padding: 12px 22px;
+    border-radius: 9px;
+
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+#createAccountDialog .create-account-cancel {
+    background: #ffffff;
+    color: #242424;
+    border: 1px solid #d2c7d8;
+}
+
+#createAccountDialog .create-account-submit {
+    background: #f5c518;
+    color: #171717;
+    border: none;
+}
+
+#createAccountDialog .create-account-submit:hover {
+    background: #e7b90e;
+}
+
+/* SMALL SCREENS */
+@media (max-width: 600px) {
+    #createAccountDialog .create-account-header,
+    #createAccountDialog .create-account-body,
+    #createAccountDialog .create-account-footer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    #createAccountDialog .create-account-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #createAccountDialog .create-account-full {
+        grid-column: auto;
+    }
+}
