@@ -6,10 +6,13 @@
   "use strict";
 
   const API_URL =
-    "/PERSYS-BACKEND/api/auth/me.php";
+    `${window.PERSYS_CONFIG.API_BASE_URL}/api/auth/me.php`;
 
-  const LOGIN_URL = "/PERSYS-FRONTEND/index.html";
-  const ERROR_URL = "/PERSYS-FRONTEND/error.html";
+  const LOGIN_URL =
+  `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/index.html`;
+
+const ERROR_URL =
+  `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/error.html`;
 
   // Hide protected page content while the session is checked.
   document.documentElement.style.visibility = "hidden";

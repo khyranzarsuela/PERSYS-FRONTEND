@@ -1,9 +1,10 @@
 (function () {
   'use strict';
 
-  const LOGIN_URL = '/PERSYS-FRONTEND/index.html';
+  const LOGIN_URL =
+  `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/index.html`;
   const DASHBOARD_URL =
-    '/PERSYS-FRONTEND/Pages/Admin/adminDashboard.html';
+  `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/Pages/Admin/adminDashboard.html`;
 
   const errorTypes = {
     '404': {
@@ -85,7 +86,7 @@
   // Approved retry destinations for migrated PERSYS pages.
   const ALLOWED_RETRY_PATHS = new Set([
     DASHBOARD_URL,
-    "/PERSYS-FRONTEND/Pages/Admin/adminProfile.html"
+    `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/Pages/Admin/adminProfile.html`
   ]);
 
   // Read the original page from the error URL.

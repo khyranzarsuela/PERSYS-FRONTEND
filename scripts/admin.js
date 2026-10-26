@@ -132,7 +132,7 @@
   }
 
   const API_URL =
-    'http://localhost/PERSYS-BACKEND/api/auth/logout.php';
+    `${window.PERSYS_CONFIG.API_BASE_URL}/api/auth/logout.php`;
 
   function openLogoutModal() {
     modal.style.display = 'flex';
@@ -186,7 +186,9 @@
       }
 
       // Return to the new frontend login page.
-      window.location.replace('/PERSYS-FRONTEND/index.html');
+     window.location.replace(
+  `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/index.html`
+);
 
     } catch (error) {
       console.error('Logout error:', error);

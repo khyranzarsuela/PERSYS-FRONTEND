@@ -242,7 +242,7 @@ masterFileForm.addEventListener('submit', function (event) {
     uploadMasterButton.disabled = true;
 
 
-    fetch('http://localhost/PERSYS-BACKEND/api/admin/uploadMasterFile.php', {
+    fetch(`${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/uploadMasterFile.php`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -739,7 +739,7 @@ masterFilePreview.addEventListener('click', async function (event) {
     try {
 
         const response = await fetch(
-            'http://localhost/PERSYS-BACKEND/api/admin/saveMasterFile.php',
+            `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/saveMasterFile.php`,
             {
                 method: 'POST',
                 credentials: 'include',
@@ -892,7 +892,7 @@ if (closeSuccessBtn) {
    ========================================================= */
 
 const EMPLOYEES_API =
-  "http://localhost/PERSYS-BACKEND/api/admin/employees.php";
+  `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/employees.php`;
 
 document.addEventListener("DOMContentLoaded", async () => {
   const authorized = await window.PERSYSAdminGuard.ready;
@@ -1376,7 +1376,7 @@ function showTableMessage(tableBodyId, colspan, message) {
 async function loadAdminSidebar() {
   try {
     const response = await fetch(
-      "http://localhost/PERSYS-BACKEND/api/auth/me.php",
+      `${window.PERSYS_CONFIG.API_BASE_URL}/api/auth/me.php`,
       {
         method: "GET",
         credentials: "include",
@@ -1417,7 +1417,7 @@ async function loadAdminSidebar() {
    ========================================================= */
 
 const ADD_EMPLOYEE_API =
-  "http://localhost/PERSYS-BACKEND/api/admin/addEmployee.php";
+  `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/addEmployee.php`;
 
 const addEmployeeForm = document.getElementById("addEmployeeForm");
 
@@ -1532,7 +1532,7 @@ if (addEmployeeForm) {
    ========================================================= */
 
 const CREATE_ACCOUNT_API =
-    "http://localhost/PERSYS-BACKEND/api/admin/createAccount.php";
+    `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/createAccount.php`;
 
 const createAccountForm = document.getElementById("createAccountForm");
 
@@ -1852,7 +1852,7 @@ editEmployeeForm?.addEventListener("submit", async function (event) {
 
     try {
         const response = await fetch(
-            "http://localhost/PERSYS-BACKEND/api/admin/updateEmployee.php",
+            `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/updateEmployee.php`,
             {
                 method: "POST",
                 credentials: "include",

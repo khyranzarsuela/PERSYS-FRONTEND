@@ -5,15 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>Error | PERSYS</title>
-  <link rel="stylesheet" href="/PERSYS-FRONTEND/styles/error.css">
-<script src="/PERSYS-FRONTEND/scripts/error.js" defer></script>
+ <script>
+  const persysBase =
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1"
+      ? "/PERSYS-FRONTEND"
+      : "";
+
+  // Ensure all resources resolve from the frontend root.
+  const baseElement = document.createElement("base");
+  baseElement.href = `${location.origin}${persysBase}/`;
+  document.head.appendChild(baseElement);
+</script>
+
+<link rel="stylesheet" href="styles/error.css">
+<script src="scripts/apiConfig.js"></script>
+<script src="scripts/error.js" defer></script>
 </head>
 <body>
   <main class="error-page">
     <section class="error-card" aria-labelledby="error-title">
       <div class="brand">
         <!-- <span class="brand-mark"> -->
-          <img class="brand-mark" src="../../assets/SAC logo.jpg" alt="Logo">
+        <img class="brand-mark" src="assets/SAC logo.jpg" alt="Logo">
         <!-- </span> -->
         <div class="brand-text">
           <strong>PERSYS</strong>
@@ -49,11 +63,11 @@
 
       <div class="error-actions">
         <a class="btn btn-primary" id="primary-action"
-           href="/PERSYS-FRONTEND/index.html">
+          href="index.html">
           Back to Login
         </a>
         <a class="btn btn-secondary" id="secondary-action"
-           href="/PERSYS-FRONTEND/Pages/Admin/adminDashboard.html">
+           href="Pages/Admin/adminDashboard.html">
           Go to Dashboard
         </a>
       </div>

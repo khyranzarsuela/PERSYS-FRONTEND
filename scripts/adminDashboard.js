@@ -1,5 +1,5 @@
 const DASHBOARD_API =
-  "http://localhost/PERSYS-BACKEND/api/admin/dashboard.php";
+  `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/dashboard.php`;
 
 document.addEventListener("DOMContentLoaded", async () => {
   const authorized = await window.PERSYSAdminGuard.ready;

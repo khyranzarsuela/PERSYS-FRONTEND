@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  const BASE_URL = "/PERSYS-FRONTEND";
+  const BASE_URL = window.PERSYS_CONFIG.FRONTEND_BASE_URL;
   const LOGIN_URL = BASE_URL + "/index.html";
   const ERROR_URL = BASE_URL + "/error.html";
 

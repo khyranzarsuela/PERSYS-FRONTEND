@@ -173,16 +173,16 @@
 
     try {
       const response = await fetch(
-        '/PERSYS-BACKEND/api/auth/login.php',
-        {
-          method: 'POST',
-          body: new FormData(loginForm),
-          credentials: 'same-origin',
-          headers: {
-            'Accept': 'application/json'
+          `${window.PERSYS_CONFIG.API_BASE_URL}/api/auth/login.php`,
+          {
+            method: 'POST',
+            body: new FormData(loginForm),
+            credentials: 'include',
+            headers: {
+              'Accept': 'application/json'
+            }
           }
-        }
-      );
+        );
 
       const result = await response.json();
 
@@ -199,8 +199,18 @@
       }
 
       if (result.redirect) {
-        window.location.assign(result.redirect);
-      }
+  let redirectPath = result.redirect;
+
+  // Remove the XAMPP frontend prefix for online deployment.
+  if (!window.PERSYS_CONFIG.isLocal) {
+    redirectPath = redirectPath.replace(
+      /^\/PERSYS-FRONTEND(?=\/|$)/,
+      ""
+    );
+  }
+
+  window.location.assign(redirectPath);
+}
     } catch (error) {
       if (loginMessage) {
         loginMessage.textContent =

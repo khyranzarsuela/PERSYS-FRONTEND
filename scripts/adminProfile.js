@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const API_URL =
-        "http://localhost/PERSYS-BACKEND/api/admin/profile.php";
+        `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/profile.php`;
 
     // Find an element using its ID.
     const byId = (id) => document.getElementById(id);
