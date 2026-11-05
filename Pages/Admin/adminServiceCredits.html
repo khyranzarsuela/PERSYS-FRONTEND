@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BCSHS-SAC | Service Credits</title>
+
+    <!-- Shared Admin Styles -->
+    <link rel="stylesheet" href="../../styles/admin.css">
+
+    <!-- Service Credits Page Styles -->
+    <link rel="stylesheet" href="../../styles/adminServiceCredits.css">
+</head>
+
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        aria-hidden="true">
+    </div>
+
+    <div class="app-shell">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+
+            <img
+                class="sidebar-avatar"
+                src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
+                alt="Admin profile photo">
+
+            <p class="sidebar-name" id="sidebarUsername">
+                Loading...
+            </p>
+
+            <p class="sidebar-role" id="sidebarRole">
+                Loading...
+            </p>
+
+            <div class="sidebar-divider" role="separator"></div>
+
+            <nav aria-label="Main menu">
+                <ul class="sidebar-nav">
+
+                    <li>
+                        <a href="adminDashboard.html" class="nav-item">
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                </svg>
+                            </span>
+                            My Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="adminProfile.html" class="nav-item">
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="8" r="4"/>
+                                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                                </svg>
+                            </span>
+                            Profile
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="adminEmployees.html" class="nav-item">
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="9" cy="8" r="3.5"/>
+                                    <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+                                    <circle cx="17" cy="8" r="2.5"/>
+                                    <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                                </svg>
+                            </span>
+                            Employees
+                        </a>
+                    </li>
+
+                    <!-- ACTIVE PAGE -->
+                    <li>
+                        <a
+                            href="adminServiceCredits.html"
+                            class="nav-item active"
+                            aria-current="page">
+
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="9" r="5"/>
+                                    <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                                </svg>
+                            </span>
+
+                            Service Credits
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="adminTransactions.html" class="nav-item">
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="4" y="2" width="16" height="20" rx="2"/>
+                                    <line x1="8" y1="7" x2="16" y2="7"/>
+                                    <line x1="8" y1="11" x2="16" y2="11"/>
+                                    <line x1="8" y1="15" x2="12" y2="15"/>
+                                </svg>
+                            </span>
+                            Transactions
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="adminSettings.html" class="nav-item">
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                                </svg>
+                            </span>
+                            Settings
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </aside>
+        <!-- END SIDEBAR -->
+
+
+        <!-- MAIN WRAPPER -->
+        <div class="main-wrapper">
+
+            <!-- TOPBAR -->
+            <header class="topbar" role="banner">
+
+                <div class="topbar-icon" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <h1 class="topbar-title">
+                    <svg
+                        style="width:26px;height:26px;stroke:#F5C518;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:8px;"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true">
+
+                        <circle cx="12" cy="9" r="5"/>
+                        <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                    </svg>
+
+                    Service Credits
+                </h1>
+
+                <button
+                    class="hamburger"
+                    id="hamburger"
+                    type="button"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation menu">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+            </header>
+            <!-- END TOPBAR -->
+
+
+            <!-- PAGE CONTENT -->
+            <main class="page-content sc-page" id="mainContent">
+
+                <!-- SERVICE CREDIT STATISTICS -->
+                <div
+                    class="sc-stats"
+                    role="region"
+                    aria-label="Service credit statistics">
+
+                    <div class="sc-stat-card">
+                        <p class="sc-stat-label">
+                            Local Service Credits
+                        </p>
+
+                        <p
+                            class="sc-stat-number"
+                            id="totalLocalCredits">
+                            0.00
+                        </p>
+                    </div>
+
+                    <div class="sc-stat-card">
+                        <p class="sc-stat-label">
+                            National Service Credits
+                        </p>
+
+                        <p
+                            class="sc-stat-number"
+                            id="totalNationalCredits">
+                            0.00
+                        </p>
+                    </div>
+
+                    <div class="sc-stat-card">
+                        <p class="sc-stat-label">
+                            Service Credits Uploads
+                        </p>
+
+                        <p
+                            class="sc-stat-number"
+                            id="totalUploadRecords">
+                            0
+                        </p>
+                    </div>
+
+                </div>
+                <!-- END STATISTICS -->
+
+
+                <!-- IMPORT SERVICE CREDITS -->
+                <section
+                    class="sc-card"
+                    aria-labelledby="importTitle">
+
+                    <h2 class="sc-card-title" id="importTitle">
+                        Import Service Credits
+                    </h2>
+
+                    <div class="sc-upload-inner">
+
+                        <p class="sc-upload-title">
+                            Upload Excel File
+                        </p>
+
+                        <form
+                            id="serviceCreditForm"
+                            enctype="multipart/form-data"
+                            aria-label="Upload service credits form">
+
+                            <input
+                                type="file"
+                                id="excelFileInput"
+                                name="service_credits_file"
+                                accept=".xlsx,.xls"
+                                aria-label="Choose Excel file to upload">
+
+                            <label
+                                for="excelFileInput"
+                                class="btn-choose-file"
+                                role="button"
+                                tabindex="0">
+
+                                Choose Excel File
+                            </label>
+
+                            <button
+                                type="submit"
+                                class="btn-upload"
+                                id="btnUploadServiceCredits">
+
+                                Upload &amp; Preview
+                            </button>
+
+                        </form>
+
+                        <p
+                            class="sc-file-name"
+                            id="scFileName"
+                            aria-live="polite">
+                        </p>
+
+                    </div>
+                </section>
+                <!-- END IMPORT -->
+
+
+                <!-- DATA PREVIEW -->
+                <section
+                    class="sc-card"
+                    aria-labelledby="previewTitle">
+
+                    <h2 class="sc-card-title" id="previewTitle">
+                        Data Preview
+                    </h2>
+
+                    <!-- VALIDATION BANNER -->
+                    <div
+                        class="sc-error-banner"
+                        id="serviceCreditValidationBanner"
+                        role="alert">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+
+                        <span class="sc-error-text">
+                            Upload an Excel file to begin validation.
+                        </span>
+
+                    </div>
+
+
+                    <!-- PREVIEW TABLE -->
+                    <div class="sc-table-wrap">
+
+                        <table
+                            class="sc-table"
+                            aria-label="Service credit data preview">
+
+                            <thead>
+                                <tr>
+                                    <th>Employee Number</th>
+                                    <th>Employee Name</th>
+                                    <th>Activity</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Service Credits</th>
+                                    <th>Nature</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="serviceCreditPreviewBody">
+
+                                <tr>
+                                    <td
+                                        colspan="9"
+                                        style="text-align:center;padding:30px;">
+
+                                        No service credit file uploaded yet.
+
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- SAVE AND POST -->
+                    <div
+                        id="serviceCreditActions"
+                        class="sc-post-actions"
+                        style="display:none;">
+
+                        <button
+                            type="button"
+                            class="btn-upload"
+                            id="btnSaveServiceCredits">
+
+                            Save &amp; Post
+                        </button>
+
+                    </div>
+
+                </section>
+                <!-- END DATA PREVIEW -->
+
+
+                <!-- UPLOAD HISTORY -->
+                <section
+                    class="sc-card"
+                    aria-labelledby="historyTitle">
+
+                    <h2 class="sc-card-title" id="historyTitle">
+                        Upload History
+                    </h2>
+
+                    <div class="sc-table-wrap sc-history-wrap">
+
+                        <table
+                            class="sc-table"
+                            aria-label="Service credit upload history">
+
+                            <thead>
+                                <tr>
+                                    <th>Upload Date</th>
+                                    <th>File Name</th>
+                                    <th>Uploaded By</th>
+                                    <th>Records</th>
+                                    <th>Status</th>
+                                    <th>Posted Date</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="serviceCreditHistoryBody">
+
+                                <tr>
+                                    <td
+                                        colspan="6"
+                                        style="text-align:center;padding:30px;">
+
+                                        Loading upload history...
+
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+                <!-- END UPLOAD HISTORY -->
+
+            </main>
+            <!-- END PAGE CONTENT -->
+
+        </div>
+        <!-- END MAIN WRAPPER -->
+
+    </div>
+    <!-- END APP SHELL -->
+
+
+    <!-- SHARED JAVASCRIPT -->
+    <script src="../../scripts/apiConfig.js"></script>
+    <script src="../../scripts/admin.js"></script>
+    <script src="../../scripts/settings.js"></script>
+
+    <!-- SERVICE CREDITS JAVASCRIPT -->
+    <script src="../../scripts/adminServiceCredits.js"></script>
+
+</body>
+</html>
