@@ -241,6 +241,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
+            // Populate sidebar with admin name/role from session
+            const sidebarUsername = document.getElementById("sidebarUsername");
+            const sidebarRole     = document.getElementById("sidebarRole");
+            if (sidebarUsername && data.admin) sidebarUsername.textContent = data.admin.username;
+            if (sidebarRole     && data.admin) sidebarRole.textContent     = data.admin.role_name;
+
             renderUploadHistory(data.upload_history || []);
 
         } catch (error) {
@@ -298,11 +304,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fileInput) {
         fileInput.addEventListener("change", () => {
             const file = fileInput.files[0];
+            const isValid = file && /\.(xlsx|xls)$/i.test(file.name);
 
             if (fileNameDisplay) {
                 fileNameDisplay.textContent = file
-                    ? file.name
+                    ? (isValid ? `Selected: ${file.name}` : "Unsupported format. Please select an .xlsx or .xls file.")
                     : "No file selected";
+            }
+
+            if (uploadButton) {
+                uploadButton.disabled = !isValid;
             }
 
             hideBanner();

@@ -1,6 +1,7 @@
 /* ============================================================
    PERSYS — ADMIN SERVICE CREDITS
    File: adminServiceCredits.css
+   Follows the same design language as adminEmployees.css
 ============================================================ */
 
 
@@ -11,14 +12,16 @@
 .page-content.sc-page {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     padding: 28px 32px;
     background-color: #f0eef8;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 
 /* ============================================================
-   STAT CARDS
+   STAT CARDS ROW
 ============================================================ */
 
 .sc-stats {
@@ -28,116 +31,232 @@
 }
 
 .sc-stat-card {
-    background-color: #EDE7F6;
+    background: #fff;
+    border: 1px solid #e5dff5;
     border-radius: 14px;
-    padding: 22px 28px 26px;
+    padding: 22px 26px 24px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(107,15,186,0.06);
 }
 
 .sc-stat-label {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 600;
-    color: #333;
+    color: #6b7280;
 }
 
 .sc-stat-number {
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: #111;
-    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #6B0FBA;
+    line-height: 1.1;
 }
 
 
 /* ============================================================
-   SHARED CARD
+   SHARED CARD SHELL
 ============================================================ */
 
 .sc-card {
-    background-color: #EDE7F6;
+    background: #fff;
+    border: 1px solid #e5dff5;
     border-radius: 16px;
-    padding: 24px 28px 28px;
+    padding: 28px 30px;
+    box-shadow: 0 2px 8px rgba(107,15,186,0.06);
 }
 
 .sc-card-title {
-    font-size: 1rem;
+    font-size: 1.0625rem;
     font-weight: 700;
-    color: #111;
-    margin-bottom: 20px;
+    color: #1a0a2e;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f0ebfc;
 }
 
 
 /* ============================================================
-   IMPORT / UPLOAD
+   IMPORT / UPLOAD — master-file-style layout
 ============================================================ */
 
-.sc-upload-inner {
-    background-color: #EDE7F6;
-    border-radius: 12px;
+/* Step sections inside the import card */
+.sc-upload-section {
+    margin-bottom: 28px;
+}
+
+.sc-upload-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.sc-upload-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #1a0a2e;
+    margin: 0 0 8px;
+}
+
+.sc-upload-section p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0 0 16px;
+}
+
+/* Step number badge */
+.sc-step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #6B0FBA;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Download template button — matches masterfile style */
+.btn-download-template-sc {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #167d49;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: background 0.2s ease;
+    border: none;
+}
+
+.btn-download-template-sc:hover {
+    background: #116438;
+    color: #fff;
+}
+
+.btn-download-template-sc svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Dropzone — identical look to master file upload */
+.sc-dropzone {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
-    padding: 36px 20px 40px;
+    gap: 10px;
+    padding: 36px 24px;
+    border: 2px dashed #c4b5d4;
+    border-radius: 12px;
+    background: #faf7ff;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.sc-upload-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #111;
+.sc-dropzone:hover {
+    border-color: #6B0FBA;
+    background: #f3eeff;
+}
+
+.sc-dropzone-icon {
+    width: 44px;
+    height: 44px;
+    stroke: #9b7dca;
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.sc-dropzone-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #6B0FBA;
+    cursor: pointer;
+}
+
+.sc-dropzone-format {
+    font-size: 0.78rem;
+    color: #9ca3af;
 }
 
 #excelFileInput {
     display: none;
 }
 
-.btn-choose-file {
-    display: inline-block;
-    padding: 10px 28px;
-    background-color: #fff;
-    color: #111;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn-choose-file:hover {
-    background-color: #f0ecff;
-    box-shadow: 0 2px 8px rgba(107, 15, 186, 0.15);
-}
-
-.sc-file-name {
+.sc-selected-file {
     font-size: 0.8rem;
-    color: #666;
+    color: #6b7280;
     min-height: 1.2em;
+    text-align: center;
 }
 
-/* Upload button */
+/* Form action row */
+.sc-upload-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
 
+/* Upload & Preview button */
 .btn-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 10px 22px;
     border: none;
     border-radius: 8px;
-    background-color: #6B0FBA;
+    background: #6B0FBA;
     color: #fff;
     font-size: 0.875rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background 0.2s ease;
 }
 
 .btn-upload:hover:not(:disabled) {
-    background-color: #560A96;
+    background: #560A96;
 }
 
 .btn-upload:disabled {
-    background-color: #BDBDBD;
+    background: #BDBDBD;
     color: #F5F5F5;
     cursor: not-allowed;
+}
+
+.btn-upload svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Upload note */
+.sc-upload-note {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin: 12px 0 0;
+    text-align: center;
 }
 
 
@@ -150,93 +269,51 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 18px;
+    padding: 12px 16px;
     border-radius: 10px;
     margin-bottom: 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
 }
 
 .sc-error-banner {
-    background-color: #FFF8E7;
-    border: 2px solid #F5C518;
+    background: #FFF8E7;
+    border: 1.5px solid #F5C518;
+    color: #7A5C00;
 }
 
 .sc-error-banner svg {
-    width: 20px;
-    height: 20px;
+    width: 18px; height: 18px;
     flex-shrink: 0;
-    stroke: #E09B00;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    stroke: #E09B00; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
 
-.sc-error-text {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #7A5C00;
-}
+.sc-error-text { color: #7A5C00; }
 
 .sc-success-banner {
-    background-color: #ECFDF3;
-    border: 2px solid #22A06B;
-}
-
-.sc-success-banner svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    stroke: #16804F;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.sc-success-text {
-    font-size: 0.875rem;
-    font-weight: 600;
+    background: #ECFDF3;
+    border: 1.5px solid #22A06B;
     color: #176B45;
 }
 
-.sc-validation-banner {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 18px;
-    border-radius: 10px;
-    margin-bottom: 18px;
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-.sc-validation-banner.error {
-    background-color: #FFF8E7;
-    border: 2px solid #F5C518;
-    color: #7A5C00;
-}
-
-.sc-validation-banner.success {
-    background-color: #F0FFF5;
-    border: 2px solid #2E9B57;
-    color: #176B37;
-}
-
-.sc-validation-icon {
-    font-size: 1.15rem;
-    font-weight: 700;
+.sc-success-banner svg {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    stroke: #16804F; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
 
 
 /* ============================================================
-   TABLES
+   TABLES (preview + history)
 ============================================================ */
 
 .sc-table-wrap {
-    background-color: #fff;
+    background: #fff;
     border-radius: 10px;
     overflow-x: auto;
-    border: 1px solid #DDD6C8;
+    border: 1px solid #e5dff5;
 }
 
 .sc-table {
@@ -246,39 +323,29 @@
 }
 
 .sc-table thead tr {
-    background-color: #fff;
-    border-bottom: 1.5px solid #E0D8C8;
+    background: #f8f5ff;
+    border-bottom: 1.5px solid #ede8f8;
 }
 
 .sc-table thead th {
     padding: 11px 16px;
     text-align: left;
-    font-weight: 600;
-    color: #333;
+    font-weight: 700;
+    color: #374151;
     white-space: nowrap;
 }
 
-.sc-table tbody tr:nth-child(odd) {
-    background-color: #F3EEFF;
-}
-
-.sc-table tbody tr:nth-child(even) {
-    background-color: #fff;
-}
-
-.sc-table tbody tr:hover {
-    background-color: #E8E0F5;
-}
+.sc-table tbody tr:nth-child(odd)  { background: #faf7ff; }
+.sc-table tbody tr:nth-child(even) { background: #fff; }
+.sc-table tbody tr:hover           { background: #f3eeff; }
 
 .sc-table tbody td {
     padding: 10px 16px;
-    color: #333;
-    border-bottom: 1px solid #EDE8DC;
+    color: #4b5563;
+    border-bottom: 1px solid #f0ebfc;
 }
 
-.sc-table tbody tr:last-child td {
-    border-bottom: none;
-}
+.sc-table tbody tr:last-child td { border-bottom: none; }
 
 
 /* ============================================================
@@ -290,9 +357,9 @@
     min-width: 110px;
     box-sizing: border-box;
     padding: 7px 8px;
-    border: 1px solid #D0C8B8;
+    border: 1px solid #d0c8e8;
     border-radius: 6px;
-    background-color: #fff;
+    background: #fff;
     font-family: inherit;
     font-size: 0.8rem;
     color: #333;
@@ -301,36 +368,22 @@
 
 .sc-preview-input:focus {
     border-color: #6B0FBA;
-    box-shadow: 0 0 0 2px rgba(107, 15, 186, 0.12);
+    box-shadow: 0 0 0 2px rgba(107,15,186,0.12);
 }
 
-.sc-preview-input.activity {
-    min-width: 180px;
-}
-
-.sc-preview-input.name {
-    min-width: 200px;
-}
-
-.sc-preview-input.number {
-    min-width: 150px;
-}
-
-.sc-preview-input.credit {
-    min-width: 90px;
-}
-
-.sc-preview-input.date {
-    min-width: 135px;
-}
+.sc-preview-input.activity { min-width: 180px; }
+.sc-preview-input.name     { min-width: 200px; }
+.sc-preview-input.number   { min-width: 150px; }
+.sc-preview-input.credit   { min-width: 90px; }
+.sc-preview-input.date     { min-width: 135px; }
 
 .sc-preview-select {
     width: 100%;
     min-width: 110px;
     padding: 7px 8px;
-    border: 1px solid #D0C8B8;
+    border: 1px solid #d0c8e8;
     border-radius: 6px;
-    background-color: #fff;
+    background: #fff;
     font-family: inherit;
     font-size: 0.8rem;
     outline: none;
@@ -341,68 +394,11 @@
    ROW VALIDATION
 ============================================================ */
 
-.sc-row-valid {
-    background-color: #F3FFF8 !important;
-}
+.sc-row-valid   { background: #f3fff8 !important; }
+.sc-row-invalid { background: #fff1f1 !important; }
 
-.sc-row-invalid,
-.sc-row-error {
-    background-color: #FFF1F1 !important;
-}
-
-.sc-input-error,
-.sc-import-input.input-error {
-    border: 2px solid #D93025 !important;
-    background-color: #FFF8F8 !important;
-    box-shadow: 0 0 0 2px rgba(217, 48, 37, 0.08);
-}
-
-.sc-import-input.input-valid {
-    border: 2px solid #2E9B57 !important;
-    background-color: #F5FFF8;
-}
-
-.sc-field-error {
-    margin-top: 6px;
-    color: #D32F2F;
-    font-size: 0.72rem;
-    font-weight: 600;
-    line-height: 1.35;
-}
-
-
-/* ============================================================
-   STATUS
-============================================================ */
-
-.sc-status {
-    min-width: 120px;
-    vertical-align: middle;
-}
-
-.sc-status-cell {
-    min-width: 230px;
-    vertical-align: middle !important;
-}
-
-.sc-status-valid {
-    color: #168542;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.sc-status-invalid {
-    color: #D32F2F;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.sc-error-summary {
-    margin-top: 6px;
-    color: #D32F2F;
-    font-size: 0.72rem;
-    line-height: 1.4;
-}
+.sc-status-valid   { color: #168542; font-weight: 700; white-space: nowrap; }
+.sc-status-invalid { color: #D32F2F; font-weight: 700; white-space: nowrap; }
 
 .sc-row-errors {
     display: flex;
@@ -414,54 +410,22 @@
     max-width: 240px;
 }
 
-.sc-error-item {
-    padding-left: 12px;
-    position: relative;
-}
-
-.sc-error-item::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    font-weight: 700;
-}
-
 
 /* ============================================================
    ACTIONS / REMOVE ROW
 ============================================================ */
 
-.sc-action {
-    text-align: center;
-    vertical-align: middle;
-}
-
 .sc-remove-row {
     border: none;
     background: transparent;
     color: #D32F2F;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
     padding: 4px 8px;
 }
 
-.sc-remove-row:hover {
-    color: #A40000;
-}
-
-.edit-delete {
-    color: #CC0000;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    user-select: none;
-}
-
-.edit-none {
-    color: #888;
-    font-size: 1rem;
-}
+.sc-remove-row:hover { color: #A40000; }
 
 
 /* ============================================================
@@ -471,19 +435,15 @@
 .sc-summary {
     margin-bottom: 15px;
     padding: 10px 14px;
-    background-color: #F3EEFF;
+    background: #f3eeff;
     border-radius: 8px;
     font-size: 0.85rem;
     color: #333;
+    border: 1px solid #e0d5f5;
 }
 
-.sc-summary-valid {
-    color: #16804F;
-}
-
-.sc-summary-invalid {
-    color: #C5221F;
-}
+.sc-summary-valid   { color: #16804F; font-weight: 700; }
+.sc-summary-invalid { color: #C5221F; font-weight: 700; }
 
 
 /* ============================================================
@@ -496,33 +456,36 @@
     align-items: center;
     gap: 12px;
     margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #f0ebfc;
 }
 
 #btnSaveServiceCredits {
-    padding: 10px 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
     border: none;
     border-radius: 8px;
-    background-color: #6B0FBA;
+    background: #6B0FBA;
     color: #fff;
     font-size: 0.875rem;
     font-weight: 700;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: background 0.2s ease;
 }
 
-#btnSaveServiceCredits:hover:not(:disabled) {
-    background-color: #560A96;
-}
+#btnSaveServiceCredits:hover:not(:disabled) { background: #560A96; }
 
 #btnSaveServiceCredits:disabled {
-    background-color: #BDBDBD;
+    background: #BDBDBD;
     color: #F5F5F5;
     cursor: not-allowed;
 }
 
 
 /* ============================================================
-   UPLOAD HISTORY
+   UPLOAD HISTORY TABLE
 ============================================================ */
 
 .sc-history-wrap {
@@ -533,15 +496,54 @@
     min-width: 800px;
 }
 
-.sc-history-status-posted {
-    color: #16803A;
-    font-weight: 700;
+.sc-history-status-posted { color: #16803A; font-weight: 700; }
+.sc-history-status-other  { color: #A66A00; font-weight: 700; }
+
+
+/* ============================================================
+   SIDEBAR LOGOUT BUTTON (shared with all admin pages)
+============================================================ */
+
+.sidebar { display: flex; flex-direction: column; }
+
+.sidebar-logout-container {
+    margin-top: auto;
+    padding: 16px 20px 20px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    flex-shrink: 0;
 }
 
-.sc-history-status-other {
-    color: #A66A00;
-    font-weight: 700;
+.sidebar-logout {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    background: transparent;
+    color: #FCA5A5;
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
+
+.sidebar-logout svg {
+    width: 20px; height: 20px; flex-shrink: 0;
+    fill: none; stroke: currentColor; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+}
+
+.sidebar-logout:hover {
+    background: rgba(239,68,68,0.12);
+    border-color: rgba(252,165,165,0.4);
+}
+
+.sidebar-logout:focus-visible { outline: 2px solid #FCA5A5; outline-offset: 3px; }
+.sidebar-logout:disabled { opacity: 0.6; cursor: wait; }
 
 
 /* ============================================================
@@ -549,28 +551,13 @@
 ============================================================ */
 
 @media (max-width: 900px) {
-    .sc-stats {
-        grid-template-columns: 1fr 1fr;
-    }
+    .sc-stats { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 600px) {
-    .sc-stats {
-        grid-template-columns: 1fr;
-    }
-
-    .page-content.sc-page {
-        padding: 20px 16px;
-    }
-
-    .sc-card {
-        padding: 20px 16px;
-    }
-
-    .sc-upload-title {
-        font-size: 1.25rem;
-        text-align: center;
-    }
+    .sc-stats { grid-template-columns: 1fr; }
+    .page-content.sc-page { padding: 18px 16px; }
+    .sc-card { padding: 20px 16px; }
 }
 
 
@@ -580,53 +567,64 @@
 
 html[data-theme="dark"] .sc-stat-card,
 html[data-theme="dark"] .sc-card {
-    background-color: var(--clr-card-bg);
+    background: var(--clr-card-bg);
+    border-color: var(--clr-border-light);
 }
 
-html[data-theme="dark"] .sc-stat-label,
-html[data-theme="dark"] .sc-stat-number,
-html[data-theme="dark"] .sc-card-title,
-html[data-theme="dark"] .sc-upload-title {
-    color: var(--clr-text-dark);
+html[data-theme="dark"] .sc-stat-label  { color: var(--clr-text-mid); }
+html[data-theme="dark"] .sc-stat-number { color: #c084fc; }
+html[data-theme="dark"] .sc-card-title  { color: var(--clr-text-dark); border-color: var(--clr-border-light); }
+
+html[data-theme="dark"] .sc-dropzone {
+    background: #2e2840;
+    border-color: #5b4e7a;
+}
+
+html[data-theme="dark"] .sc-dropzone:hover {
+    background: #342d4a;
+    border-color: #9b7dca;
 }
 
 html[data-theme="dark"] .sc-table-wrap {
-    background-color: var(--clr-card-bg);
+    background: var(--clr-card-bg);
     border-color: var(--clr-border-light);
 }
 
 html[data-theme="dark"] .sc-table thead tr,
 html[data-theme="dark"] .sc-table thead th {
-    background-color: var(--clr-card-bg);
-    color: var(--clr-text-dark);
+    background: #2a2438;
+    color: var(--clr-text-mid);
 }
 
 html[data-theme="dark"] .sc-table tbody td {
-    color: var(--clr-text-dark);
+    color: var(--clr-text-mid);
     border-color: var(--clr-border-light);
 }
 
 html[data-theme="dark"] .sc-table tbody tr:nth-child(odd),
 html[data-theme="dark"] .sc-row-valid {
-    background-color: var(--clr-card-bg) !important;
+    background: var(--clr-card-bg) !important;
 }
 
 html[data-theme="dark"] .sc-table tbody tr:nth-child(even) {
-    background-color: transparent;
+    background: transparent;
 }
 
 html[data-theme="dark"] .sc-preview-input,
 html[data-theme="dark"] .sc-preview-select {
-    background-color: var(--clr-card-bg);
+    background: var(--clr-card-bg);
     color: var(--clr-text-dark);
     border-color: var(--clr-border-light);
 }
 
 html[data-theme="dark"] .sc-summary {
-    background-color: #332b3e;
+    background: #2e2840;
     color: var(--clr-text-dark);
+    border-color: var(--clr-border-light);
 }
 
-html[data-theme="dark"] .sc-file-name {
-    color: var(--clr-text-mid);
+html[data-theme="dark"] .sc-post-actions {
+    border-color: var(--clr-border-light);
 }
+
+html[data-theme="dark"] .sc-selected-file { color: var(--clr-text-mid); }
