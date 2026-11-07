@@ -1,0 +1,214 @@
+/* ============================================================
+   PERSYS — Skeleton Loading Stylesheet
+   Provides shimmer placeholders used while API data loads.
+   Import this after the page's primary stylesheet.
+   ============================================================ */
+
+/* ── 1. SHIMMER KEYFRAME ──────────────────────────────────── */
+@keyframes persys-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+/* ── 2. BASE SKELETON BLOCK ───────────────────────────────── */
+/*
+  Apply .skel to any element you want to shimmer.
+  Width/height are set inline or via modifier classes below.
+*/
+.skel {
+  display: inline-block;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    #e0d8f0 25%,
+    #ede8f8 50%,
+    #e0d8f0 75%
+  );
+  background-size: 600px 100%;
+  animation: persys-shimmer 1.4s ease-in-out infinite;
+  /* Prevent text content from showing through */
+  color: transparent !important;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Dark theme variant */
+html[data-theme="dark"] .skel {
+  background: linear-gradient(
+    90deg,
+    #2e2840 25%,
+    #3a3250 50%,
+    #2e2840 75%
+  );
+  background-size: 600px 100%;
+}
+
+/* ── 3. SKELETON SHAPE MODIFIERS ──────────────────────────── */
+
+/* Full-width line at various heights */
+.skel-line        { display: block; width: 100%; height: 14px; border-radius: 4px; }
+.skel-line-sm     { display: block; width: 60%;  height: 11px; border-radius: 4px; }
+.skel-line-lg     { display: block; width: 80%;  height: 18px; border-radius: 4px; }
+
+/* Circle (avatars, icon circles) */
+.skel-circle      { border-radius: 50%; }
+
+/* Number block (big stat number) */
+.skel-number      { display: block; width: 70px; height: 42px; border-radius: 8px; margin: 0 auto; }
+
+/* Button-shaped block */
+.skel-btn         { display: inline-block; height: 36px; border-radius: 6px; }
+
+/* Card-shaped block */
+.skel-card        { display: block; width: 100%; height: 100%; border-radius: 14px; }
+
+/* Table cell content */
+.skel-cell        { display: block; height: 13px; border-radius: 4px; }
+
+/* ── 4. SKELETON TABLE ROW ────────────────────────────────── */
+/*
+  Usage: <tr class="skel-row"> with <td> containing <span class="skel skel-cell">
+  The row itself sets a min-height via cells.
+*/
+.skel-row td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.skel-row td .skel-cell {
+  width: 80%;
+}
+
+.skel-row td:first-child .skel-cell { width: 55%; }
+.skel-row td:last-child  .skel-cell { width: 40%; }
+
+/* ── 5. SKELETON STAT CARD ────────────────────────────────── */
+.skel-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 22px 20px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5dff5;
+}
+
+.skel-stat-card .skel-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ── 6. SKELETON NOTIFICATION ITEM ───────────────────────── */
+.skel-notif-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── 7. SKELETON PROFILE FIELD ────────────────────────────── */
+.skel-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── 8. LOGIN BUTTON SPINNER ──────────────────────────────── */
+/*
+  Added to the login submit button while the request is in flight.
+  The spinner is a CSS-only pseudo-element — no extra markup needed.
+*/
+.btn-login.is-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+  cursor: wait;
+}
+
+.btn-login.is-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: persys-spin 0.7s linear infinite;
+}
+
+@keyframes persys-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── 9. ACTION BUTTON PROCESSING STATE ────────────────────── */
+/*
+  For any button that starts an async operation: add .is-processing.
+  Works with btn-upload, btn-yellow, .btn-login, etc.
+*/
+.is-processing {
+  position: relative;
+  pointer-events: none;
+  cursor: wait;
+  opacity: 0.85;
+}
+
+.is-processing::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: persys-spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+/* ── 10. INLINE FEEDBACK BANNERS ──────────────────────────── */
+.persys-feedback {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 10px;
+  border-left: 4px solid transparent;
+}
+
+.persys-feedback.is-visible { display: flex; }
+
+.persys-feedback--success {
+  background: #DCFCE7;
+  color: #15803D;
+  border-left-color: #16A34A;
+}
+
+.persys-feedback--error {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border-left-color: #DC2626;
+}
+
+.persys-feedback--info {
+  background: #EDE9FE;
+  color: #5B21B6;
+  border-left-color: #6B0FBA;
+}
+
+.persys-feedback svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

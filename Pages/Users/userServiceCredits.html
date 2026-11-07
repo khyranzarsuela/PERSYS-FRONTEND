@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERSYS | Service Credits</title>
+  <link rel="icon" type="image/x-icon" href="../../assets/SAC logo.jpg" />
+
+  <link rel="stylesheet" href="../../styles/user.css" />
+  <link rel="stylesheet" href="../../styles/skeleton.css" />
+
+  <style>
+    /* =========================================================
+       SIDEBAR LOGOUT BUTTON — shared by all migrated user pages
+       ========================================================= */
+    .sidebar { display: flex; flex-direction: column; }
+
+    .sidebar-logout-container {
+      margin-top: auto;
+      padding: 16px 20px 20px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+    .sidebar-logout {
+      display: flex; align-items: center; justify-content: flex-start;
+      gap: 12px; width: 100%; padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+      background: transparent; color: #FCA5A5;
+      font: inherit; font-weight: 600; text-align: left; cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .sidebar-logout svg {
+      width: 20px; height: 20px; flex-shrink: 0;
+      fill: none; stroke: currentColor; stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .sidebar-logout:hover {
+      background: rgba(239,68,68,0.12);
+      border-color: rgba(252,165,165,0.4);
+    }
+    .sidebar-logout:focus-visible { outline: 2px solid #FCA5A5; outline-offset: 3px; }
+    .sidebar-logout:disabled { opacity: 0.6; cursor: wait; }
+
+    /* =========================================================
+       GLOBAL OVERRIDES
+       ========================================================= */
+    .page-content { display: block; }
+
+    .page-content.service-credits-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 28px 32px;
+      background: #f0eef8;
+      width: 100%;
+      min-height: calc(100vh - var(--topbar-height));
+      box-sizing: border-box;
+    }
+
+    .main-wrapper { flex: 1; min-width: 0; display: flex; flex-direction: column; width: 100%; }
+
+    /* =========================================================
+       SERVICE CREDITS — NEW UI
+       ========================================================= */
+
+    /* ── Page heading ─────────────────────────────────────── */
+    .sc-page-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--clr-text-dark);
+    }
+
+    /* ── 2-column grid (left=Local, right=National) ────────── */
+    .sc-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ── Column wrapper: balance card on top, history below ── */
+    .sc-col { display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── Balance card ─────────────────────────────────────── */
+    .sc-balance-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #e5dff5;
+      padding: 26px 28px;
+      box-shadow: 0 2px 8px rgba(107,15,186,0.07);
+    }
+
+    .sc-balance-card-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a0a2e;
+      margin-bottom: 14px;
+    }
+
+    .sc-balance-current-label {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .sc-balance-current-number {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--clr-purple-topbar);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .sc-balance-stats {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid #f0ebfc;
+      padding-top: 14px;
+    }
+
+    .sc-balance-stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sc-balance-stat + .sc-balance-stat {
+      border-left: 1px solid #f0ebfc;
+      padding-left: 20px;
+    }
+
+    .sc-balance-stat-label {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    .sc-balance-stat-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1a0a2e;
+    }
+
+    /* ── History card ─────────────────────────────────────── */
+    .sc-history-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #e5dff5;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(107,15,186,0.07);
+    }
+
+    .sc-history-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a0a2e;
+      padding: 18px 20px 16px;
+      border-bottom: 1px solid #f0ebfc;
+    }
+
+    /* Table inside history card */
+    .sc-history-card .sc-hist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+    }
+
+    .sc-history-card .sc-hist-table th {
+      background: #f8f5ff;
+      color: #374151;
+      font-size: 0.775rem;
+      font-weight: 700;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid #ede8f8;
+      white-space: nowrap;
+    }
+
+    .sc-history-card .sc-hist-table td {
+      padding: 10px 14px;
+      color: #4b5563;
+      border-bottom: 1px solid #f5f2fc;
+      vertical-align: middle;
+    }
+
+    .sc-history-card .sc-hist-table tr:last-child td { border-bottom: none; }
+    .sc-history-card .sc-hist-table tr:hover td { background: #faf7ff; }
+
+    .sc-history-card .sc-hist-table .empty-row td {
+      text-align: center;
+      color: #9ca3af;
+      font-style: italic;
+      padding: 28px 14px;
+    }
+
+    /* Status badges — compact pill style */
+    .sc-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+    .sc-badge--earned   { background: #DCFCE7; color: #15803D; }
+    .sc-badge--deducted { background: #FEE2E2; color: #B91C1C; }
+
+    /* ── Pagination inside each history card ──────────────── */
+    .sc-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 14px;
+      border-top: 1px solid #f0ebfc;
+      background: #fff;
+    }
+
+    .sc-pagination-info {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .sc-pagination-btns {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: wrap;
+    }
+
+    .sc-page-btn {
+      min-width: 30px;
+      height: 30px;
+      padding: 0 8px;
+      border: 1.5px solid #e5dff5;
+      border-radius: 6px;
+      background: #fff;
+      color: #6b7280;
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .sc-page-btn:hover:not(:disabled) {
+      background: #f0eaf8;
+      border-color: var(--clr-purple-topbar);
+      color: var(--clr-purple-topbar);
+    }
+    .sc-page-btn--active {
+      background: var(--clr-purple-topbar);
+      border-color: var(--clr-purple-topbar);
+      color: #fff;
+      cursor: default;
+    }
+    .sc-page-btn--active:hover { background: var(--clr-purple-topbar); color: #fff; }
+    .sc-page-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+    .sc-page-ellipsis {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 30px; height: 30px;
+      font-size: 0.8rem; color: #9ca3af;
+      user-select: none;
+    }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 1000px) {
+      .sc-two-col { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .page-content.service-credits-content { padding: 14px 16px; }
+    }
+
+    /* ── Dark theme ───────────────────────────────────────── */
+    html[data-theme="dark"] .sc-balance-card,
+    html[data-theme="dark"] .sc-history-card {
+      background: var(--clr-card-bg);
+      border-color: var(--clr-border-light);
+    }
+    html[data-theme="dark"] .sc-balance-card-heading,
+    html[data-theme="dark"] .sc-history-heading { color: var(--clr-text-dark); }
+    html[data-theme="dark"] .sc-history-card .sc-hist-table th { background: #2a2438; color: var(--clr-text-mid); }
+    html[data-theme="dark"] .sc-history-card .sc-hist-table td { color: var(--clr-text-mid); border-color: #362d4a; }
+    html[data-theme="dark"] .sc-page-btn { background: var(--clr-card-bg); border-color: var(--clr-border-light); color: var(--clr-text-mid); }
+    html[data-theme="dark"] .sc-pagination { background: var(--clr-card-bg); border-color: var(--clr-border-light); }
+  </style>
+
+  <script src="../../scripts/apiConfig.js"></script>
+  <script src="../../scripts/userGuard.js"></script>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="User navigation">
+
+      <img
+        class="sidebar-avatar"
+        src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=U"
+        alt="User profile photo"
+      />
+      <p class="sidebar-name" id="userUsername">Loading...</p>
+      <p class="sidebar-role" id="userRole">Loading...</p>
+
+      <div class="sidebar-divider" role="separator"></div>
+
+      <nav aria-label="Main menu">
+        <ul class="sidebar-nav">
+
+          <li>
+            <a href="userDashboard.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3"  y="3"  width="7" height="7" rx="1"/>
+                  <rect x="14" y="3"  width="7" height="7" rx="1"/>
+                  <rect x="3"  y="14" width="7" height="7" rx="1"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+              </span>
+              My Dashboard
+            </a>
+          </li>
+
+          <li>
+            <a href="userProfile.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </span>
+              Profile
+            </a>
+          </li>
+
+          <li>
+            <a href="userServiceCredits.html" class="nav-item active" aria-current="page">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="9" r="5"/>
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                </svg>
+              </span>
+              Service Credits
+            </a>
+          </li>
+
+          <!-- Request — TODO: update to userRequest.html once migrated -->
+          <li>
+            <a href="userRequest.php" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <line x1="8"  y1="7"  x2="16" y2="7"/>
+                  <line x1="8"  y1="11" x2="16" y2="11"/>
+                  <line x1="8"  y1="15" x2="12" y2="15"/>
+                </svg>
+              </span>
+              Request
+            </a>
+          </li>
+
+          <!-- Settings — TODO: update to userSettings.html once migrated -->
+          <li>
+            <a href="userSettings.php" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
+                           2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                           1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                           A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33
+                           l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06
+                           A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1
+                           H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9
+                           a1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                           a2 2 0 0 1 2.83-2.83l.06.06
+                           A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51
+                           V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51
+                           1.65 1.65 0 0 0 1.82-.33l.06-.06
+                           a2 2 0 0 1 2.83 2.83l-.06.06
+                           A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                </svg>
+              </span>
+              Settings
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      <div class="sidebar-logout-container">
+        <button type="button" class="btn-logout sidebar-logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <div class="main-wrapper">
+
+      <!-- TOPBAR -->
+      <header class="topbar" role="banner">
+        <span class="topbar-svg-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </span>
+        <h1 class="topbar-title">Service Credits</h1>
+
+        <button
+          class="hamburger"
+          id="hamburger"
+          type="button"
+          aria-controls="sidebar"
+          aria-expanded="false"
+          aria-label="Toggle navigation menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <main class="page-content service-credits-content" id="mainContent">
+
+        <!-- TWO-COLUMN LAYOUT ────────────────────────────── -->
+        <div class="sc-two-col">
+
+          <!-- ── LEFT COLUMN: LOCAL ─────────────────────── -->
+          <div class="sc-col">
+
+            <!-- Local Balance Card -->
+            <div class="sc-balance-card">
+              <div class="sc-balance-card-heading">Local Service Credits</div>
+              <div class="sc-balance-current-label">Current Balance</div>
+              <div class="sc-balance-current-number" id="scLocalBalance"><span class="skel skel-number" style="width:110px;height:40px" aria-hidden="true"></span></div>
+              <div class="sc-balance-stats">
+                <div class="sc-balance-stat">
+                  <span class="sc-balance-stat-label">Overall Earned</span>
+                  <span class="sc-balance-stat-value" id="scLocalEarned"><span class="skel skel-line-sm" aria-hidden="true"></span></span>
+                </div>
+                <div class="sc-balance-stat">
+                  <span class="sc-balance-stat-label">Total Used</span>
+                  <span class="sc-balance-stat-value" id="scLocalUsed"><span class="skel skel-line-sm" aria-hidden="true"></span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Local Credit History -->
+            <div class="sc-history-card">
+              <div class="sc-history-heading">Local Credit History</div>
+              <table class="sc-hist-table" aria-label="Local service credit history">
+                <thead>
+                  <tr>
+                    <th>Request Date</th>
+                    <th>Credit Type</th>
+                    <th>Service Activity</th>
+                    <th>Status</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
+                <tbody id="scLocalBody">
+                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
+                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:80%"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
+                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:60%"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
+                </tbody>
+              </table>
+              <div
+                class="sc-pagination"
+                id="scLocalPagination"
+                role="navigation"
+                aria-label="Local history pagination"
+                hidden
+              ></div>
+            </div>
+
+          </div>
+          <!-- END LEFT COLUMN ─────────────────────────── -->
+
+          <!-- ── RIGHT COLUMN: NATIONAL ────────────────── -->
+          <div class="sc-col">
+
+            <!-- National Balance Card -->
+            <div class="sc-balance-card">
+              <div class="sc-balance-card-heading">National Service Credits</div>
+              <div class="sc-balance-current-label">Current Balance</div>
+              <div class="sc-balance-current-number" id="scNationalBalance"><span class="skel skel-number" style="width:110px;height:40px" aria-hidden="true"></span></div>
+              <div class="sc-balance-stats">
+                <div class="sc-balance-stat">
+                  <span class="sc-balance-stat-label">Overall Earned</span>
+                  <span class="sc-balance-stat-value" id="scNationalEarned"><span class="skel skel-line-sm" aria-hidden="true"></span></span>
+                </div>
+                <div class="sc-balance-stat">
+                  <span class="sc-balance-stat-label">Total Used</span>
+                  <span class="sc-balance-stat-value" id="scNationalUsed"><span class="skel skel-line-sm" aria-hidden="true"></span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- National Credit History -->
+            <div class="sc-history-card">
+              <div class="sc-history-heading">National Credit History</div>
+              <table class="sc-hist-table" aria-label="National service credit history">
+                <thead>
+                  <tr>
+                    <th>Request Date</th>
+                    <th>Credit Type</th>
+                    <th>Service Activity</th>
+                    <th>Status</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
+                <tbody id="scNationalBody">
+                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
+                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:75%"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
+                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:55%"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
+                </tbody>
+              </table>
+              <div
+                class="sc-pagination"
+                id="scNationalPagination"
+                role="navigation"
+                aria-label="National history pagination"
+                hidden
+              ></div>
+            </div>
+
+          </div>
+          <!-- END RIGHT COLUMN ─────────────────────────── -->
+
+        </div>
+        <!-- END TWO-COLUMN LAYOUT ─────────────────────── -->
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Logout Confirmation Modal -->
+  <div
+    class="modal-overlay"
+    id="logoutModal"
+    style="display: none;"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="logoutModalTitle"
+  >
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="logoutModalTitle">Log Out</h2>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to log out?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelLogoutBtn" class="btn-secondary">Cancel</button>
+        <button type="button" id="confirmLogoutBtn" class="btn-yellow">Log Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../scripts/user.js"></script>
+  <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/userServiceCredits.js"></script>
+  <script src="../../scripts/settings.js"></script>
+</body>
+</html>

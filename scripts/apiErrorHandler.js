@@ -12,7 +12,10 @@
   // Only these pages are permitted as retry destinations.
   const ALLOWED_RETRY_PATHS = new Set([
     BASE_URL + "/Pages/Admin/adminDashboard.html",
-    BASE_URL + "/Pages/Admin/adminProfile.html"
+    BASE_URL + "/Pages/Admin/adminProfile.html",
+    BASE_URL + "/Pages/Users/userDashboard.html",
+    BASE_URL + "/Pages/Users/userProfile.html",
+    BASE_URL + "/Pages/Users/userServiceCredits.html"
   ]);
 
   function getSafeRetryPath() {

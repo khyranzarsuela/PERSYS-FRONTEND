@@ -971,6 +971,7 @@ ul, ol {
   display: flex;
   flex-direction: column;
   gap: var(--gap-lg);
+  background: #f0eef8;
 }
 .sc-page-heading { font-size: 1.125rem; font-weight: 700; color: var(--clr-text-dark); }
 .credit-balance-cards {

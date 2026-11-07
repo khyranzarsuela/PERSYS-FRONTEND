@@ -160,23 +160,96 @@
    ============================================================ */
 
 /* ── LOGOUT MODAL — present on any page with .btn-logout ──── */
+/* Uses the same fetch-based pattern as admin.js.             */
 (function () {
   'use strict';
-  if (typeof $ === 'undefined') return;
-  if (!$('.btn-logout').length) return;
 
-  $('.btn-logout').on('click', function () {
-    $('#logoutModal').css('display', 'flex');
+  const logoutButtons = document.querySelectorAll('.btn-logout');
+  const modal         = document.getElementById('logoutModal');
+  const cancelButton  = document.getElementById('cancelLogoutBtn');
+  const confirmButton = document.getElementById('confirmLogoutBtn');
+
+  // Pages without a logout button or modal do not need this handler.
+  if (
+    !logoutButtons.length ||
+    !modal ||
+    !cancelButton ||
+    !confirmButton
+  ) {
+    return;
+  }
+
+  const API_URL =
+    `${window.PERSYS_CONFIG.API_BASE_URL}/api/auth/logout.php`;
+
+  function openLogoutModal() {
+    modal.style.display = 'flex';
+    confirmButton.disabled = false;
+    confirmButton.textContent = 'Log Out';
+  }
+
+  function closeLogoutModal() {
+    modal.style.display = 'none';
+  }
+
+  logoutButtons.forEach(function (button) {
+    button.addEventListener('click', openLogoutModal);
   });
-  $('#cancelLogoutBtn').on('click', function () {
-    $('#logoutModal').hide();
+
+  cancelButton.addEventListener('click', closeLogoutModal);
+
+  // Clicking the dark backdrop closes the modal.
+  modal.addEventListener('click', function (event) {
+    if (event.target === modal) {
+      closeLogoutModal();
+    }
   });
-  $('#confirmLogoutBtn').on('click', function () {
-    window.location.href = '/PERSYS/Pages/Users/logout.php';
+
+  // Escape closes the confirmation modal.
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && modal.style.display !== 'none') {
+      closeLogoutModal();
+    }
   });
-  // Close on overlay click (but not on modal-box click)
-  $('#logoutModal').on('click', function (e) {
-    if ($(e.target).is('#logoutModal')) $(this).hide();
+
+  confirmButton.addEventListener('click', async function () {
+    confirmButton.disabled = true;
+    confirmButton.textContent = 'Logging out...';
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json'
+        }
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || 'Unable to log out. Please try again.'
+        );
+      }
+
+      // Return to the login page.
+      window.location.replace(
+        `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/index.html`
+      );
+
+    } catch (error) {
+      console.error('Logout error:', error);
+
+      confirmButton.disabled = false;
+      confirmButton.textContent = 'Log Out';
+
+      alert(
+        error.message === 'Failed to fetch'
+          ? 'Unable to connect to the logout API. Check that XAMPP is running.'
+          : error.message
+      );
+    }
   });
 })();
 

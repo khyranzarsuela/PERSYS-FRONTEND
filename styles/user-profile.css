@@ -13,7 +13,7 @@
   flex-direction: column;
   gap: var(--gap-lg);
   padding: var(--gap-xl);
-  background-color: var(--clr-cream-bg);
+  background: #f0eef8;
 }
 
 /* ── 2. PROFILE CARD (shared shell for all three sections) ─── */

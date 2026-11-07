@@ -169,7 +169,12 @@
       'button[type="submit"], input[type="submit"]'
     );
 
-    if (submitButton) submitButton.disabled = true;
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.classList.add('is-loading');
+      submitButton.dataset.originalText = submitButton.textContent;
+      submitButton.textContent = 'Signing in...';
+    }
 
     try {
       const response = await fetch(
@@ -220,7 +225,11 @@
         alert('Unable to contact the server. Please try again.');
       }
     } finally {
-      if (submitButton) submitButton.disabled = false;
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.classList.remove('is-loading');
+        submitButton.textContent = submitButton.dataset.originalText || 'Login';
+      }
     }
   });
 
