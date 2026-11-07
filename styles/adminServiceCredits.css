@@ -1,0 +1,632 @@
+/* ============================================================
+   PERSYS — ADMIN SERVICE CREDITS
+   File: adminServiceCredits.css
+============================================================ */
+
+
+/* ============================================================
+   PAGE CONTENT
+============================================================ */
+
+.page-content.sc-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 28px 32px;
+    background-color: var(--clr-cream-bg);
+}
+
+
+/* ============================================================
+   STAT CARDS
+============================================================ */
+
+.sc-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.sc-stat-card {
+    background-color: #EDE7F6;
+    border-radius: 14px;
+    padding: 22px 28px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sc-stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.sc-stat-number {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #111;
+    text-align: center;
+}
+
+
+/* ============================================================
+   SHARED CARD
+============================================================ */
+
+.sc-card {
+    background-color: #EDE7F6;
+    border-radius: 16px;
+    padding: 24px 28px 28px;
+}
+
+.sc-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   IMPORT / UPLOAD
+============================================================ */
+
+.sc-upload-inner {
+    background-color: #EDE7F6;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 36px 20px 40px;
+}
+
+.sc-upload-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111;
+}
+
+#excelFileInput {
+    display: none;
+}
+
+.btn-choose-file {
+    display: inline-block;
+    padding: 10px 28px;
+    background-color: #fff;
+    color: #111;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1.5px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-choose-file:hover {
+    background-color: #f0ecff;
+    box-shadow: 0 2px 8px rgba(107, 15, 186, 0.15);
+}
+
+.sc-file-name {
+    font-size: 0.8rem;
+    color: #666;
+    min-height: 1.2em;
+}
+
+/* Upload button */
+
+.btn-upload {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    background-color: #6B0FBA;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-upload:hover:not(:disabled) {
+    background-color: #560A96;
+}
+
+.btn-upload:disabled {
+    background-color: #BDBDBD;
+    color: #F5F5F5;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   VALIDATION BANNERS
+============================================================ */
+
+.sc-error-banner,
+.sc-success-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+}
+
+.sc-error-banner {
+    background-color: #FFF8E7;
+    border: 2px solid #F5C518;
+}
+
+.sc-error-banner svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke: #E09B00;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.sc-error-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #7A5C00;
+}
+
+.sc-success-banner {
+    background-color: #ECFDF3;
+    border: 2px solid #22A06B;
+}
+
+.sc-success-banner svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke: #16804F;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.sc-success-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #176B45;
+}
+
+.sc-validation-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.sc-validation-banner.error {
+    background-color: #FFF8E7;
+    border: 2px solid #F5C518;
+    color: #7A5C00;
+}
+
+.sc-validation-banner.success {
+    background-color: #F0FFF5;
+    border: 2px solid #2E9B57;
+    color: #176B37;
+}
+
+.sc-validation-icon {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   TABLES
+============================================================ */
+
+.sc-table-wrap {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow-x: auto;
+    border: 1px solid #DDD6C8;
+}
+
+.sc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+.sc-table thead tr {
+    background-color: #fff;
+    border-bottom: 1.5px solid #E0D8C8;
+}
+
+.sc-table thead th {
+    padding: 11px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+}
+
+.sc-table tbody tr:nth-child(odd) {
+    background-color: #F3EEFF;
+}
+
+.sc-table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.sc-table tbody tr:hover {
+    background-color: #E8E0F5;
+}
+
+.sc-table tbody td {
+    padding: 10px 16px;
+    color: #333;
+    border-bottom: 1px solid #EDE8DC;
+}
+
+.sc-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ============================================================
+   EDITABLE PREVIEW INPUTS
+============================================================ */
+
+.sc-preview-input {
+    width: 100%;
+    min-width: 110px;
+    box-sizing: border-box;
+    padding: 7px 8px;
+    border: 1px solid #D0C8B8;
+    border-radius: 6px;
+    background-color: #fff;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: #333;
+    outline: none;
+}
+
+.sc-preview-input:focus {
+    border-color: #6B0FBA;
+    box-shadow: 0 0 0 2px rgba(107, 15, 186, 0.12);
+}
+
+.sc-preview-input.activity {
+    min-width: 180px;
+}
+
+.sc-preview-input.name {
+    min-width: 200px;
+}
+
+.sc-preview-input.number {
+    min-width: 150px;
+}
+
+.sc-preview-input.credit {
+    min-width: 90px;
+}
+
+.sc-preview-input.date {
+    min-width: 135px;
+}
+
+.sc-preview-select {
+    width: 100%;
+    min-width: 110px;
+    padding: 7px 8px;
+    border: 1px solid #D0C8B8;
+    border-radius: 6px;
+    background-color: #fff;
+    font-family: inherit;
+    font-size: 0.8rem;
+    outline: none;
+}
+
+
+/* ============================================================
+   ROW VALIDATION
+============================================================ */
+
+.sc-row-valid {
+    background-color: #F3FFF8 !important;
+}
+
+.sc-row-invalid,
+.sc-row-error {
+    background-color: #FFF1F1 !important;
+}
+
+.sc-input-error,
+.sc-import-input.input-error {
+    border: 2px solid #D93025 !important;
+    background-color: #FFF8F8 !important;
+    box-shadow: 0 0 0 2px rgba(217, 48, 37, 0.08);
+}
+
+.sc-import-input.input-valid {
+    border: 2px solid #2E9B57 !important;
+    background-color: #F5FFF8;
+}
+
+.sc-field-error {
+    margin-top: 6px;
+    color: #D32F2F;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.sc-status {
+    min-width: 120px;
+    vertical-align: middle;
+}
+
+.sc-status-cell {
+    min-width: 230px;
+    vertical-align: middle !important;
+}
+
+.sc-status-valid {
+    color: #168542;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sc-status-invalid {
+    color: #D32F2F;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sc-error-summary {
+    margin-top: 6px;
+    color: #D32F2F;
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+.sc-row-errors {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #C5221F;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    max-width: 240px;
+}
+
+.sc-error-item {
+    padding-left: 12px;
+    position: relative;
+}
+
+.sc-error-item::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   ACTIONS / REMOVE ROW
+============================================================ */
+
+.sc-action {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.sc-remove-row {
+    border: none;
+    background: transparent;
+    color: #D32F2F;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.sc-remove-row:hover {
+    color: #A40000;
+}
+
+.edit-delete {
+    color: #CC0000;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+}
+
+.edit-none {
+    color: #888;
+    font-size: 1rem;
+}
+
+
+/* ============================================================
+   PREVIEW SUMMARY
+============================================================ */
+
+.sc-summary {
+    margin-bottom: 15px;
+    padding: 10px 14px;
+    background-color: #F3EEFF;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #333;
+}
+
+.sc-summary-valid {
+    color: #16804F;
+}
+
+.sc-summary-invalid {
+    color: #C5221F;
+}
+
+
+/* ============================================================
+   SAVE & POST
+============================================================ */
+
+.sc-post-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+#btnSaveServiceCredits {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    background-color: #6B0FBA;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#btnSaveServiceCredits:hover:not(:disabled) {
+    background-color: #560A96;
+}
+
+#btnSaveServiceCredits:disabled {
+    background-color: #BDBDBD;
+    color: #F5F5F5;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   UPLOAD HISTORY
+============================================================ */
+
+.sc-history-wrap {
+    overflow-x: auto;
+}
+
+.sc-history-wrap .sc-table {
+    min-width: 800px;
+}
+
+.sc-history-status-posted {
+    color: #16803A;
+    font-weight: 700;
+}
+
+.sc-history-status-other {
+    color: #A66A00;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 900px) {
+    .sc-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .sc-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .page-content.sc-page {
+        padding: 20px 16px;
+    }
+
+    .sc-card {
+        padding: 20px 16px;
+    }
+
+    .sc-upload-title {
+        font-size: 1.25rem;
+        text-align: center;
+    }
+}
+
+
+/* ============================================================
+   DARK MODE
+============================================================ */
+
+html[data-theme="dark"] .sc-stat-card,
+html[data-theme="dark"] .sc-card {
+    background-color: var(--clr-card-bg);
+}
+
+html[data-theme="dark"] .sc-stat-label,
+html[data-theme="dark"] .sc-stat-number,
+html[data-theme="dark"] .sc-card-title,
+html[data-theme="dark"] .sc-upload-title {
+    color: var(--clr-text-dark);
+}
+
+html[data-theme="dark"] .sc-table-wrap {
+    background-color: var(--clr-card-bg);
+    border-color: var(--clr-border-light);
+}
+
+html[data-theme="dark"] .sc-table thead tr,
+html[data-theme="dark"] .sc-table thead th {
+    background-color: var(--clr-card-bg);
+    color: var(--clr-text-dark);
+}
+
+html[data-theme="dark"] .sc-table tbody td {
+    color: var(--clr-text-dark);
+    border-color: var(--clr-border-light);
+}
+
+html[data-theme="dark"] .sc-table tbody tr:nth-child(odd),
+html[data-theme="dark"] .sc-row-valid {
+    background-color: var(--clr-card-bg) !important;
+}
+
+html[data-theme="dark"] .sc-table tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+
+html[data-theme="dark"] .sc-preview-input,
+html[data-theme="dark"] .sc-preview-select {
+    background-color: var(--clr-card-bg);
+    color: var(--clr-text-dark);
+    border-color: var(--clr-border-light);
+}
+
+html[data-theme="dark"] .sc-summary {
+    background-color: #332b3e;
+    color: var(--clr-text-dark);
+}
+
+html[data-theme="dark"] .sc-file-name {
+    color: var(--clr-text-mid);
+}
