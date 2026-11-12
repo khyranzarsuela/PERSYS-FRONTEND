@@ -188,10 +188,10 @@ function renderRecentLeaves(requests, tbody) {
     badge.textContent = lr.status;
     tdStatus.appendChild(badge);
 
-    // View link — TODO: update href once userRequest.html is migrated
+    // View link
     const tdView = document.createElement("td");
     const link = document.createElement("a");
-    link.href = "userRequest.php";
+    link.href = "userRequest.html";
     link.textContent = "View";
     tdView.appendChild(link);
 

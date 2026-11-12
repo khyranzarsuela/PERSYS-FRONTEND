@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERSYS | Transactions</title>
+  <link rel="icon" type="image/x-icon" href="../../assets/SAC logo.jpg" />
+
+  <link rel="stylesheet" href="../../styles/admin.css" />
+  <link rel="stylesheet" href="../../styles/skeleton.css" />
+
+  <style>
+    /* =========================================================
+       SIDEBAR LOGOUT BUTTON
+       ========================================================= */
+    .sidebar { display: flex; flex-direction: column; }
+
+    .sidebar-logout-container {
+      margin-top: auto;
+      padding: 16px 20px 20px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+    .sidebar-logout {
+      display: flex; align-items: center; gap: 12px;
+      width: 100%; padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+      background: transparent; color: #FCA5A5;
+      font: inherit; font-weight: 600; cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .sidebar-logout svg {
+      width: 20px; height: 20px; flex-shrink: 0;
+      fill: none; stroke: currentColor; stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .sidebar-logout:hover {
+      background: rgba(239,68,68,0.12);
+      border-color: rgba(252,165,165,0.4);
+    }
+    .sidebar-logout:focus-visible { outline: 2px solid #FCA5A5; outline-offset: 3px; }
+    .sidebar-logout:disabled { opacity: 0.6; cursor: wait; }
+
+    /* =========================================================
+       PAGE LAYOUT
+       ========================================================= */
+    .page-content.tx-page {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 28px 32px;
+      background: #f0eef8;
+      width: 100%;
+      min-height: calc(100vh - var(--topbar-height));
+      box-sizing: border-box;
+    }
+
+    .main-wrapper { flex: 1; min-width: 0; display: flex; flex-direction: column; width: 100%; }
+    .page-content { display: block; }
+
+    /* =========================================================
+       MAIN CARD
+       ========================================================= */
+    .tx-card {
+      background: #fff;
+      border: 1px solid #e5dff5;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(107,15,186,0.07);
+    }
+
+    .tx-card-header {
+      background: #2D0057;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tx-card-header-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .tx-card-body { padding: 24px 24px 28px; }
+
+    /* =========================================================
+       TOOLBAR
+       ========================================================= */
+    .tx-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tx-search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 400px;
+    }
+
+    .tx-search-wrap input {
+      width: 100%;
+      padding: 10px 42px 10px 16px;
+      border: 1.5px solid #d0c8e8;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: #444;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .tx-search-wrap input::placeholder { color: #aaa; }
+    .tx-search-wrap input:focus {
+      border-color: #6B0FBA;
+      box-shadow: 0 0 0 3px rgba(107,15,186,0.12);
+    }
+
+    .tx-search-icon {
+      position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px;
+      stroke: #999; fill: none; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .tx-filter-wrap { position: relative; display: inline-block; }
+
+    .tx-filter-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      background: #F5C518; color: #1a1a1a;
+      font-size: 0.875rem; font-weight: 700;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .tx-filter-btn:hover { background: #e6b800; }
+    .tx-filter-btn svg {
+      width: 13px; height: 13px;
+      stroke: #1a1a1a; fill: none; stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.2s;
+    }
+    .tx-filter-wrap.is-open .tx-filter-btn svg { transform: rotate(180deg); }
+
+    .tx-dropdown-panel {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px); left: 0;
+      min-width: 140px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      z-index: 20;
+      overflow: hidden;
+    }
+    .tx-filter-wrap.is-open .tx-dropdown-panel { display: block; }
+
+    .tx-dropdown-panel button {
+      display: block; width: 100%;
+      padding: 9px 16px;
+      text-align: left; font-size: 0.8125rem; color: #333;
+      background: none; border: none; cursor: pointer;
+    }
+    .tx-dropdown-panel button:hover { background: #f3eeff; }
+
+    /* =========================================================
+       TABLE
+       ========================================================= */
+    .tx-table-wrap {
+      overflow-x: auto;
+      border: 1px solid #e5dff5;
+      border-radius: 10px;
+    }
+
+    .tx-table {
+      width: 100%; min-width: 700px;
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+    }
+
+    .tx-table thead tr { background: #f8f5ff; border-bottom: 1.5px solid #ede8f8; }
+    .tx-table thead th {
+      padding: 12px 16px; text-align: left;
+      font-weight: 700; color: #374151; white-space: nowrap;
+    }
+
+    .tx-table tbody tr:nth-child(odd)  { background: #faf7ff; }
+    .tx-table tbody tr:nth-child(even) { background: #fff; }
+    .tx-table tbody tr:hover           { background: #f3eeff; }
+
+    .tx-table tbody td {
+      padding: 11px 16px; color: #4b5563;
+      border-bottom: 1px solid #f0ebfc;
+    }
+    .tx-table tbody tr:last-child td { border-bottom: none; }
+
+    .tx-view-btn {
+      background: none; border: none;
+      color: #6B0FBA; font-size: 0.8125rem; font-weight: 600;
+      cursor: pointer; padding: 0;
+      text-decoration: underline;
+      transition: opacity 0.15s;
+    }
+    .tx-view-btn:hover { opacity: 0.7; }
+
+    /* =========================================================
+       PAGINATION
+       ========================================================= */
+    .tx-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px 20px;
+      border-top: 1px solid #f0ebfc;
+      background: #fff;
+    }
+
+    .tx-pagination-info { font-size: 0.8125rem; color: #9ca3af; }
+
+    .tx-pagination-btns { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+
+    .tx-page-btn {
+      min-width: 34px; height: 34px; padding: 0 10px;
+      border: 1.5px solid #e5dff5; border-radius: 6px;
+      background: #fff; color: #6b7280;
+      font: inherit; font-size: 0.8125rem; font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .tx-page-btn:hover:not(:disabled) {
+      background: #f0eaf8;
+      border-color: #6B0FBA;
+      color: #6B0FBA;
+    }
+    .tx-page-btn--active {
+      background: #6B0FBA; border-color: #6B0FBA; color: #fff; cursor: default;
+    }
+    .tx-page-btn--active:hover { background: #6B0FBA; color: #fff; }
+    .tx-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .tx-page-ellipsis {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 34px; height: 34px;
+      font-size: 0.875rem; color: #9ca3af; user-select: none;
+    }
+
+    /* =========================================================
+       MODAL
+       ========================================================= */
+    .tx-modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .tx-modal-overlay.is-open { display: flex; }
+
+    .tx-modal {
+      background: #fff;
+      border-radius: 14px;
+      width: 100%; max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px 36px 28px;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    }
+    .tx-modal::-webkit-scrollbar { width: 5px; }
+    .tx-modal::-webkit-scrollbar-track { background: #f5f0ff; }
+    .tx-modal::-webkit-scrollbar-thumb { background: #c0a8e0; border-radius: 10px; }
+
+    .tx-modal-close {
+      position: absolute; top: 18px; right: 20px;
+      background: none; border: none;
+      font-size: 1.25rem; color: #666; cursor: pointer;
+      padding: 4px 6px; border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .tx-modal-close:hover { background: #f0f0f0; color: #333; }
+
+    .tx-modal-title { font-size: 1.25rem; font-weight: 700; color: #111; margin-bottom: 18px; }
+
+    .tx-detail-row {
+      display: flex; gap: 16px; margin-bottom: 6px; font-size: 0.875rem;
+    }
+    .tx-detail-label { font-weight: 700; color: #111; min-width: 160px; flex-shrink: 0; }
+    .tx-detail-value { color: #555; }
+
+    .tx-section-heading {
+      font-size: 1rem; font-weight: 700; color: #111; margin: 20px 0 10px;
+    }
+    .tx-divider { height: 1px; background: #eee; margin: 4px 0 16px; }
+
+    /* Status dot */
+    .tx-status-dot {
+      display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; margin-right: 6px; vertical-align: middle;
+    }
+    .tx-status-text { vertical-align: middle; }
+
+    /* Form 6 / download */
+    .tx-btn-download {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px;
+      background: #2ECC40; color: #fff;
+      font-size: 0.875rem; font-weight: 700;
+      border: none; border-radius: 8px; cursor: pointer;
+      margin-bottom: 14px;
+      transition: background 0.2s;
+    }
+    .tx-btn-download:hover { background: #27ae38; }
+    .tx-btn-download svg {
+      width: 15px; height: 15px; stroke: #fff; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .tx-doc-pending-note { font-size: 0.8rem; color: #888; font-style: italic; margin-bottom: 8px; }
+
+    .tx-doc-unavailable {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.8125rem; color: #CC2200; margin-bottom: 14px;
+    }
+    .tx-doc-unavailable svg {
+      width: 14px; height: 14px; stroke: #CC2200; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* Credit pool select */
+    .tx-credit-select {
+      width: 100%; max-width: 240px;
+      padding: 8px 10px;
+      border: 1px solid #d0c8e8; border-radius: 6px;
+      background: #fff; font: inherit; color: #333;
+    }
+    .tx-credit-select:focus { outline: 2px solid rgba(107,15,186,0.2); border-color: #6B0FBA; }
+    .tx-credit-select:disabled { background: #f1f1f1; color: #777; cursor: not-allowed; }
+
+    /* Audit trail */
+    .tx-audit { margin-top: 14px; font-size: 0.875rem; }
+    .tx-audit-row { display: flex; gap: 16px; margin-bottom: 4px; }
+    .tx-audit-label { font-weight: 700; color: #111; min-width: 110px; }
+    .tx-audit-value { color: #555; }
+
+    /* Finalization row */
+    .tx-action-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      gap: 12px; margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #eee;
+    }
+
+    .tx-btn-save {
+      padding: 11px 28px;
+      background: #6B0FBA; color: #fff;
+      font-size: 0.9rem; font-weight: 700;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .tx-btn-save:hover:not(:disabled) { background: #560A96; }
+    .tx-btn-save:disabled { background: #BDBDBD; cursor: not-allowed; }
+
+    .tx-muted { font-size: 0.8rem; color: #9ca3af; margin-top: 10px; }
+
+    /* ── State-driven CSS rules ──────────────────────────────── */
+
+    /* Pending */
+    .tx-modal[data-status="pending"] .tx-status-dot  { background: #F5C518; }
+    .tx-modal[data-status="pending"] .tx-doc-pending-note  { display: block; }
+    .tx-modal[data-status="pending"] .tx-btn-download       { display: none; }
+    .tx-modal[data-status="pending"] .tx-doc-unavailable    { display: none; }
+    .tx-modal[data-status="pending"] .tx-audit              { display: none; }
+
+    /* Approved */
+    .tx-modal[data-status="approved"] .tx-status-dot  { background: #2ECC40; }
+    .tx-modal[data-status="approved"] .tx-doc-pending-note  { display: none; }
+    .tx-modal[data-status="approved"] .tx-btn-download       { display: inline-flex; }
+    .tx-modal[data-status="approved"] .tx-doc-unavailable    { display: none; }
+    .tx-modal[data-status="approved"] .tx-audit              { display: block; }
+
+    /* Rejected */
+    .tx-modal[data-status="rejected"] .tx-status-dot  { background: #E31C1C; }
+    .tx-modal[data-status="rejected"] .tx-doc-pending-note  { display: none; }
+    .tx-modal[data-status="rejected"] .tx-btn-download       { display: none; }
+    .tx-modal[data-status="rejected"] .tx-doc-unavailable    { display: inline-flex; }
+    .tx-modal[data-status="rejected"] .tx-audit              { display: block; }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .page-content.tx-page { padding: 18px 16px; }
+      .tx-modal { padding: 24px 20px 20px; }
+      .tx-detail-label { min-width: 120px; }
+    }
+    @media (max-width: 500px) {
+      .tx-action-row { flex-direction: column; }
+      .tx-btn-save   { width: 100%; text-align: center; }
+    }
+
+    /* Dark theme */
+    html[data-theme="dark"] .tx-card,
+    html[data-theme="dark"] .tx-modal {
+      background: var(--clr-card-bg);
+      border-color: var(--clr-border-light);
+    }
+    html[data-theme="dark"] .tx-table tbody tr:nth-child(odd)  { background: var(--clr-card-bg); }
+    html[data-theme="dark"] .tx-table tbody tr:nth-child(even) { background: transparent; }
+    html[data-theme="dark"] .tx-table thead tr { background: #2a2438; }
+    html[data-theme="dark"] .tx-table thead th { color: var(--clr-text-mid); }
+    html[data-theme="dark"] .tx-table tbody td { color: var(--clr-text-mid); border-color: var(--clr-border-light); }
+    html[data-theme="dark"] .tx-pagination { background: var(--clr-card-bg); border-color: var(--clr-border-light); }
+    html[data-theme="dark"] .tx-page-btn { background: var(--clr-card-bg); border-color: var(--clr-border-light); color: var(--clr-text-mid); }
+  </style>
+
+  <script src="../../scripts/apiConfig.js"></script>
+  <script src="../../scripts/adminGuard.js"></script>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+
+      <img
+        class="sidebar-avatar"
+        src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
+        alt="Admin profile photo"
+      />
+      <p class="sidebar-name" id="adminUsername">Loading...</p>
+      <p class="sidebar-role" id="adminRole">Loading...</p>
+
+      <div class="sidebar-divider" role="separator"></div>
+
+      <nav aria-label="Main menu">
+        <ul class="sidebar-nav">
+
+          <li>
+            <a href="adminDashboard.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7" rx="1"/>
+                  <rect x="14" y="3" width="7" height="7" rx="1"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+              </span>
+              My Dashboard
+            </a>
+          </li>
+
+          <li>
+            <a href="adminProfile.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </span>
+              Profile
+            </a>
+          </li>
+
+          <li>
+            <a href="adminEmployees.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="9" cy="8" r="3.5"/>
+                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+                  <circle cx="17" cy="8" r="2.5"/>
+                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                </svg>
+              </span>
+              Employees
+            </a>
+          </li>
+
+          <li>
+            <a href="adminServiceCredits.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="9" r="5"/>
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                </svg>
+              </span>
+              Service Credits
+            </a>
+          </li>
+
+          <li>
+            <a href="adminTransactions.html" class="nav-item active" aria-current="page">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <line x1="8"  y1="7"  x2="16" y2="7"/>
+                  <line x1="8"  y1="11" x2="16" y2="11"/>
+                  <line x1="8"  y1="15" x2="12" y2="15"/>
+                </svg>
+              </span>
+              Transactions
+            </a>
+          </li>
+
+          <li>
+            <a href="adminSettings.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
+                           2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                           1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                           A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33
+                           l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06
+                           A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1
+                           H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9
+                           a1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                           a2 2 0 0 1 2.83-2.83l.06.06
+                           A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51
+                           V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51
+                           1.65 1.65 0 0 0 1.82-.33l.06-.06
+                           a2 2 0 0 1 2.83 2.83l-.06.06
+                           A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                </svg>
+              </span>
+              Settings
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      <div class="sidebar-logout-container">
+        <button type="button" class="btn-logout sidebar-logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <div class="main-wrapper">
+
+      <!-- TOPBAR -->
+      <header class="topbar" role="banner">
+        <!-- <div class="topbar-icon" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div> -->
+        <h1 class="topbar-title">
+          <svg style="width:24px;height:24px;stroke:#F5C518;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:8px;"
+               viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="2" width="16" height="20" rx="2"/>
+            <line x1="8"  y1="7"  x2="16" y2="7"/>
+            <line x1="8"  y1="11" x2="16" y2="11"/>
+            <line x1="8"  y1="15" x2="12" y2="15"/>
+          </svg>
+          Transactions
+        </h1>
+        <button
+          class="hamburger"
+          id="hamburger"
+          type="button"
+          aria-controls="sidebar"
+          aria-expanded="false"
+          aria-label="Toggle navigation menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <main class="page-content tx-page" id="mainContent">
+
+        <div class="tx-card">
+
+          <!-- Card header -->
+          <div class="tx-card-header">
+            <p class="tx-card-header-title">Leave Request Transactions</p>
+          </div>
+
+          <!-- Card body -->
+          <div class="tx-card-body">
+
+            <!-- Toolbar -->
+            <div class="tx-toolbar" role="toolbar" aria-label="Transaction filters">
+
+              <div class="tx-search-wrap">
+                <input
+                  type="search"
+                  id="txSearch"
+                  placeholder="Search by name, leave type, status…"
+                  aria-label="Search transactions"
+                  autocomplete="off"
+                />
+                <svg class="tx-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+                </svg>
+              </div>
+
+              <!-- Status dropdown -->
+              <div class="tx-filter-wrap" id="statusDropWrap">
+                <button type="button" class="tx-filter-btn" id="statusDropBtn"
+                        aria-haspopup="listbox" aria-expanded="false">
+                  Status
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                <div class="tx-dropdown-panel" role="listbox" id="statusDropPanel">
+                  <button type="button" role="option">All</button>
+                  <button type="button" role="option">Pending</button>
+                  <button type="button" role="option">Approved</button>
+                  <button type="button" role="option">Rejected</button>
+                </div>
+              </div>
+
+              <!-- Type dropdown -->
+              <div class="tx-filter-wrap" id="typeDropWrap">
+                <button type="button" class="tx-filter-btn" id="typeDropBtn"
+                        aria-haspopup="listbox" aria-expanded="false">
+                  Type
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                <div class="tx-dropdown-panel" role="listbox" id="typeDropPanel">
+                  <button type="button" role="option">All</button>
+                  <button type="button" role="option">Local</button>
+                  <button type="button" role="option">National</button>
+                </div>
+              </div>
+
+            </div>
+            <!-- END TOOLBAR -->
+
+            <!-- Table -->
+            <div class="tx-table-wrap">
+              <table class="tx-table" aria-label="Leave request transactions">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Leave Type</th>
+                    <th>Date Filed</th>
+                    <th>Service Credits</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <!-- Skeleton rows while data loads -->
+                <tbody id="txTableBody">
+                  <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:65%"></span></td>
+                    <td><span class="skel skel-cell" style="width:60%"></span></td>
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:55%"></span></td>
+                    <td><span class="skel skel-cell" style="width:40%"></span></td>
+                  </tr>
+                  <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                    <td><span class="skel skel-cell" style="width:60%"></span></td>
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:55%"></span></td>
+                    <td><span class="skel skel-cell" style="width:40%"></span></td>
+                  </tr>
+                  <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:50%"></span></td>
+                    <td><span class="skel skel-cell" style="width:60%"></span></td>
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:55%"></span></td>
+                    <td><span class="skel skel-cell" style="width:40%"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              class="tx-pagination"
+              id="txPagination"
+              role="navigation"
+              aria-label="Transaction pagination"
+              hidden
+            ></div>
+
+          </div><!-- END CARD BODY -->
+        </div><!-- END TX CARD -->
+
+        <!-- Logout Modal -->
+        <div
+          class="modal-overlay"
+          id="logoutModal"
+          style="display:none;"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="logoutModalTitle"
+        >
+          <div class="modal-box">
+            <div class="modal-header">
+              <h2 id="logoutModalTitle">Log Out</h2>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="cancelLogoutBtn" class="btn-secondary">Cancel</button>
+              <button type="button" id="confirmLogoutBtn" class="btn-yellow">Log Out</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       REQUEST DETAILS MODAL
+       data-status="pending|approved|rejected" on .tx-modal
+       drives CSS visibility of sections.
+  ══════════════════════════════════════════════════════ -->
+  <div
+    class="tx-modal-overlay"
+    id="txModalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="txModalTitle"
+    tabindex="-1"
+  >
+    <div class="tx-modal" id="txModal" data-status="pending" tabindex="-1">
+
+      <button type="button" class="tx-modal-close" id="txModalClose" aria-label="Close">&#10005;</button>
+
+      <h2 class="tx-modal-title" id="txModalTitle">Request Details</h2>
+
+      <!-- Transaction Number + Status -->
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Transaction #</span>
+        <span class="tx-detail-value" id="txRequestNumber">—</span>
+      </div>
+      <div class="tx-detail-row" style="margin-bottom:4px;">
+        <span class="tx-detail-label">Status</span>
+        <span class="tx-detail-value">
+          <span class="tx-status-dot" aria-hidden="true"></span>
+          <span class="tx-status-text" id="txStatusText"></span>
+        </span>
+      </div>
+
+      <div class="tx-divider"></div>
+
+      <!-- Employee Information -->
+      <h3 class="tx-section-heading">Employee Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Name</span>
+        <span class="tx-detail-value" id="txEmployeeName">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Number</span>
+        <span class="tx-detail-value" id="txEmployeeNumber">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Position</span>
+        <span class="tx-detail-value" id="txPosition">—</span>
+      </div>
+
+      <!-- Request Information -->
+      <h3 class="tx-section-heading">Request Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Leave Type</span>
+        <span class="tx-detail-value" id="txLeaveType">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Reason</span>
+        <span class="tx-detail-value" id="txReason">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Start Date</span>
+        <span class="tx-detail-value" id="txStartDate">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">End Date</span>
+        <span class="tx-detail-value" id="txEndDate">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Total Days</span>
+        <span class="tx-detail-value" id="txTotalDays">—</span>
+      </div>
+
+      <!-- Service Credit Information -->
+      <h3 class="tx-section-heading">Service Credit Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Credit Type</span>
+        <span class="tx-detail-value" id="txCreditType">Not selected</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Current Balance</span>
+        <span class="tx-detail-value" id="txCurrentBalance">Select a credit pool</span>
+      </div>
+      <!-- Deduction pool — shown only when Approved is selected -->
+      <div class="tx-detail-row" id="txCreditPoolGroup" hidden>
+        <label class="tx-detail-label" for="txDeductionPool">Deduct From</label>
+        <select id="txDeductionPool" class="tx-credit-select">
+          <option value="">-- Select Credit Pool --</option>
+          <option value="1">Local Service Credits</option>
+          <option value="2">National Service Credits</option>
+        </select>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Deduction</span>
+        <span class="tx-detail-value" id="txDeductionAmount">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Remaining Balance</span>
+        <span class="tx-detail-value" id="txRemainingBalance">—</span>
+      </div>
+
+      <!-- Submitted Document / Form 6 -->
+      <h3 class="tx-section-heading">Submitted Document</h3>
+
+      <!-- Generate Form 6 (Pending + Approved) -->
+      <div id="txForm6Actions">
+        <button type="button" class="tx-btn-download" id="txGenerateForm6">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="8" y1="13" x2="16" y2="13"/>
+            <line x1="8" y1="17" x2="12" y2="17"/>
+          </svg>
+          Generate / Print Form 6
+        </button>
+      </div>
+
+      <!-- Pending note -->
+      <p class="tx-doc-pending-note">
+        This file is available for download and print.
+      </p>
+
+      <!-- Rejected: file unavailable -->
+      <div class="tx-doc-unavailable" aria-live="polite">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        File download and print not available for rejected requests.
+      </div>
+
+      <!-- Audit trail (Approved / Rejected) -->
+      <div class="tx-audit" aria-live="polite">
+        <div class="tx-audit-row">
+          <span class="tx-audit-label" id="txAuditByLabel">Reviewed By:</span>
+          <span class="tx-audit-value" id="txReviewedBy">—</span>
+        </div>
+        <div class="tx-audit-row">
+          <span class="tx-audit-label" id="txAuditOnLabel">Reviewed On:</span>
+          <span class="tx-audit-value" id="txReviewedAt">—</span>
+        </div>
+      </div>
+
+      <!-- Admin finalization controls (Pending only) -->
+      <div class="tx-action-row" id="txFinalizationControls" hidden>
+        <div>
+          <label for="txFinalStatus" style="font-size:0.8125rem;font-weight:700;color:#111;display:block;margin-bottom:6px;">
+            Final Decision
+          </label>
+          <select id="txFinalStatus" class="tx-credit-select">
+            <option value="">Select decision</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <button type="button" class="tx-btn-save" id="txBtnSaveDecision">
+          Save Final Decision
+        </button>
+      </div>
+
+      <p id="txFinalizationNote" class="tx-muted" hidden>
+        This request has already been finalized and cannot be changed.
+      </p>
+
+    </div><!-- END .tx-modal -->
+  </div>
+  <!-- END MODAL -->
+
+  <script src="../../scripts/admin.js"></script>
+  <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/adminTransactions.js"></script>
+  <script src="../../scripts/settings.js"></script>
+</body>
+</html>

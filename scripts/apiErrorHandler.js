@@ -15,7 +15,8 @@
     BASE_URL + "/Pages/Admin/adminProfile.html",
     BASE_URL + "/Pages/Users/userDashboard.html",
     BASE_URL + "/Pages/Users/userProfile.html",
-    BASE_URL + "/Pages/Users/userServiceCredits.html"
+    BASE_URL + "/Pages/Users/userServiceCredits.html",
+    BASE_URL + "/Pages/Users/userRequest.html"
   ]);
 
   function getSafeRetryPath() {
