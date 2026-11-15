@@ -24,18 +24,16 @@
 
 
 .profile-content .profile-hero {
-    background:
-        linear-gradient(
-            90deg,
-            rgba(37, 0, 68, 0.94) 0%,
-            rgba(75, 8, 125, 0.82) 55%,
-            rgba(75, 8, 125, 0.35) 100%
-        ),
-        url("../assets/SAC.jpg");
+  background:
+    linear-gradient(90deg,
+      rgba(37, 0, 68, 0.94) 0%,
+      rgba(75, 8, 125, 0.82) 55%,
+      rgba(75, 8, 125, 0.35) 100%),
+    url("../assets/banner-img.jpg");
 
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .profile-hero-pattern {
@@ -44,13 +42,11 @@
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 85% 10%, rgba(255,255,255,.18), transparent 27%),
-    radial-gradient(circle at 95% 100%, rgba(245,197,24,.17), transparent 30%),
-    repeating-linear-gradient(
-      135deg,
+    radial-gradient(circle at 85% 10%, rgba(255, 255, 255, .18), transparent 27%),
+    radial-gradient(circle at 95% 100%, rgba(245, 197, 24, .17), transparent 30%),
+    repeating-linear-gradient(135deg,
       transparent 0 34px,
-      rgba(255,255,255,.025) 35px 36px
-    );
+      rgba(255, 255, 255, .025) 35px 36px);
 }
 
 .profile-hero-content {
@@ -66,13 +62,13 @@
   width: 112px;
   height: 112px;
   flex: 0 0 112px;
-  border: 4px solid rgba(255,255,255,.8);
+  border: 4px solid rgba(255, 255, 255, .8);
   border-radius: 50%;
   background: #f5c518;
   color: #481071;
   font-size: 2.4rem;
   font-weight: 800;
-  box-shadow: 0 7px 22px rgba(0,0,0,.15);
+  box-shadow: 0 7px 22px rgba(0, 0, 0, .15);
 }
 
 .profile-hero-details {
@@ -108,7 +104,7 @@
   margin-top: 23px;
 }
 
-.profile-hero-meta > span {
+.profile-hero-meta>span {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -148,8 +144,8 @@
 
 .profile-content .profile-hero-edit {
   align-self: flex-start;
-  border-color: rgba(255,255,255,.4);
-  background: rgba(255,255,255,.14);
+  border-color: rgba(255, 255, 255, .4);
+  background: rgba(255, 255, 255, .14);
   color: #fff;
 }
 
@@ -331,6 +327,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+
   .profile-hero,
   .profile-panel {
     animation: profile-appear .4s ease both;
@@ -341,6 +338,7 @@
       opacity: 0;
       transform: translateY(9px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -354,36 +352,36 @@
    ============================================ */
 
 .topbar .topbar-person-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    width: 30px;
-    height: 30px;
-    flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
 
-    color: #f5c518;
+  color: #f5c518;
 }
 
 .topbar .topbar-person-icon svg {
-    display: block;
+  display: block;
 
-    width: 26px;
-    height: 26px;
+  width: 26px;
+  height: 26px;
 
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* Profile topbar alignment */
 
 .topbar:has(.topbar-person-icon) {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 
@@ -392,41 +390,41 @@
    ============================================================ */
 
 html[data-theme="dark"] .page-content.profile-content {
-    background: var(--clr-cream-bg) !important;
+  background: var(--clr-cream-bg) !important;
 }
 
 html[data-theme="dark"] .profile-content .profile-panel {
-    background: #1e1926 !important;
-    border-color: #484052 !important;
-    color: #ffffff !important;
+  background: #1e1926 !important;
+  border-color: #484052 !important;
+  color: #ffffff !important;
 }
 
 html[data-theme="dark"] .profile-panel-header {
-    border-bottom-color: #484052 !important;
+  border-bottom-color: #484052 !important;
 }
 
 html[data-theme="dark"] .profile-panel-icon {
-    background: #36294d !important;
-    color: #F5C518 !important;
+  background: #36294d !important;
+  color: #F5C518 !important;
 }
 
 html[data-theme="dark"] .profile-panel-heading h3,
 html[data-theme="dark"] .profile-field dd {
-    color: #ffffff !important;
+  color: #ffffff !important;
 }
 
 html[data-theme="dark"] .profile-panel-heading p,
 html[data-theme="dark"] .profile-field dt {
-    color: #d0c9db !important;
+  color: #d0c9db !important;
 }
 
 html[data-theme="dark"] .profile-content .profile-edit-btn:not(.profile-hero-edit) {
-    background: #2b2436 !important;
-    border-color: #484052 !important;
-    color: #F5C518 !important;
+  background: #2b2436 !important;
+  border-color: #484052 !important;
+  color: #F5C518 !important;
 }
 
 html[data-theme="dark"] .profile-status:not(.is-active):not(.is-inactive) {
-    background: #2b2436 !important;
-    color: #e2d9f3 !important;
+  background: #2b2436 !important;
+  color: #e2d9f3 !important;
 }
