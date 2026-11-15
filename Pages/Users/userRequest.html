@@ -111,6 +111,7 @@
 
   <script src="../../scripts/apiConfig.js"></script>
   <script src="../../scripts/userGuard.js"></script>
+  <link rel="stylesheet" href="../../styles/switchAccount.css" />
 </head>
 <body>
 
@@ -186,9 +187,9 @@
             </a>
           </li>
 
-          <!-- Settings — TODO: update to userSettings.html once migrated -->
+          <!-- Settings -->
           <li>
-            <a href="userSettings.php" class="nav-item">
+            <a href="userSettings.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="3"/>
@@ -363,11 +364,14 @@
         </div>
 
         <div class="form-group">
-          <label for="leaveReason">Reason / Details</label>
+          <label for="leaveReason">
+            Reason / Details
+            <span id="leaveReasonRequiredBadge" style="display:none;color:#DC2626;font-size:0.78rem;margin-left:4px;">*required</span>
+            <span id="leaveReasonOptionalHint" style="color:#9ca3af;font-size:0.78rem;font-weight:400;margin-left:4px;">(optional)</span>
+          </label>
           <textarea
             id="leaveReason"
             name="reason_details"
-            required
             placeholder="Briefly describe your reason..."
           ></textarea>
         </div>
@@ -593,5 +597,6 @@
   <script src="../../scripts/apiErrorHandler.js"></script>
   <script src="../../scripts/userRequest.js"></script>
   <script src="../../scripts/settings.js"></script>
+  <script src="../../scripts/switchAccount.js"></script>
 </body>
 </html>

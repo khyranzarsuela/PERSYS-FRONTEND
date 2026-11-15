@@ -421,10 +421,140 @@
     html[data-theme="dark"] .tx-table tbody td { color: var(--clr-text-mid); border-color: var(--clr-border-light); }
     html[data-theme="dark"] .tx-pagination { background: var(--clr-card-bg); border-color: var(--clr-border-light); }
     html[data-theme="dark"] .tx-page-btn { background: var(--clr-card-bg); border-color: var(--clr-border-light); color: var(--clr-text-mid); }
+
+    /* =========================================================
+       INLINE TABLE COMPONENTS
+       ========================================================= */
+
+    /* Employee cell */
+    .tx-emp-name  { font-weight: 700; color: #1a0a2e; font-size: 0.875rem; }
+    .tx-emp-sub   { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
+
+    /* Leave details cell */
+    .tx-leave-type { font-size: 0.875rem; color: #374151; font-weight: 600; }
+    .tx-leave-sub  { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
+
+    /* Deduct From cell */
+    .tx-deduct-cell { vertical-align: middle; min-width: 180px; }
+
+    .tx-pool-select {
+      width: 100%; max-width: 200px;
+      padding: 6px 8px;
+      border: 1.5px solid #d0c8e8; border-radius: 6px;
+      background: #fff; font: inherit; font-size: 0.8rem; color: #374151; cursor: pointer;
+    }
+    .tx-pool-select:focus {
+      outline: none; border-color: #6B0FBA;
+      box-shadow: 0 0 0 2px rgba(107,15,186,0.12);
+    }
+
+    .tx-balance-hint { font-size: 0.75rem; font-weight: 600; margin-top: 4px; min-height: 1em; }
+    .tx-bal-ok  { color: #16A34A; }
+    .tx-bal-low { color: #DC2626; }
+
+    .tx-deduct-static { font-size: 0.8125rem; font-weight: 600; }
+    .tx-deduct-approved { color: #374151; }
+    .tx-deduct-rejected { color: #9ca3af; font-style: italic; }
+
+    /* Status badge */
+    .tx-status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 700; white-space: nowrap;
+    }
+    .tx-status-pending  { background: #FFF8E1; color: #92400E; }
+    .tx-status-approved { background: #DCFCE7; color: #15803D; }
+    .tx-status-rejected { background: #FEE2E2; color: #B91C1C; }
+
+    .tx-status-dot-inline {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0; display: inline-block;
+    }
+    .tx-status-pending  .tx-status-dot-inline { background: #F59E0B; }
+    .tx-status-approved .tx-status-dot-inline { background: #16A34A; }
+    .tx-status-rejected .tx-status-dot-inline { background: #DC2626; }
+
+    /* Actions cell */
+    .tx-actions-cell { white-space: nowrap; vertical-align: middle; }
+
+    .tx-inline-approve,
+    .tx-inline-reject,
+    .tx-inline-form6,
+    .tx-inline-view {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 11px; border-radius: 6px;
+      font: inherit; font-size: 0.775rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap; margin-right: 3px;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .tx-inline-approve { background: #16A34A; color: #fff; border: none; }
+    .tx-inline-approve:hover:not(:disabled) { background: #15803D; }
+    .tx-inline-approve:disabled { background: #d1fae5; color: #6ee7b7; cursor: not-allowed; }
+
+    .tx-inline-reject { background: #DC2626; color: #fff; border: none; }
+    .tx-inline-reject:hover { background: #B91C1C; }
+
+    .tx-inline-form6 { background: transparent; color: #6B0FBA; border: 1.5px solid #6B0FBA; }
+    .tx-inline-form6:hover { background: #f3eeff; }
+
+    .tx-inline-view { background: transparent; color: #6B0FBA; border: 1.5px solid #d0c8e8; }
+    .tx-inline-view:hover { background: #f3eeff; border-color: #6B0FBA; }
+
+    .tx-inline-approve svg, .tx-inline-reject svg,
+    .tx-inline-form6 svg, .tx-inline-view svg {
+      width: 12px; height: 12px; flex-shrink: 0;
+      fill: none; stroke: currentColor; stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* =========================================================
+       READ-ONLY MODAL FOOTER
+       ========================================================= */
+    .tx-modal-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 12px;
+      margin-top: 24px; padding-top: 16px;
+      border-top: 1px solid #eee;
+    }
+    .tx-modal-status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 700;
+      border: 1.5px solid currentColor;
+    }
+    .tx-modal-status-pill.tx-status-pending  { color: #92400E; background: #FFF8E1; }
+    .tx-modal-status-pill.tx-status-approved { color: #15803D; background: #DCFCE7; }
+    .tx-modal-status-pill.tx-status-rejected { color: #B91C1C; background: #FEE2E2; }
+
+    .tx-modal-close-btn {
+      padding: 9px 24px;
+      background: transparent; border: 1.5px solid #d0c8e8; border-radius: 8px;
+      color: #6b7280; font: inherit; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s;
+    }
+    .tx-modal-close-btn:hover { background: #f3eeff; border-color: #6B0FBA; color: #6B0FBA; }
+
+    /* Modal state rules — repeated here to override old ones */
+    .tx-modal[data-status="pending"]  .tx-status-dot { background: #F59E0B; }
+    .tx-modal[data-status="approved"] .tx-status-dot { background: #16A34A; }
+    .tx-modal[data-status="rejected"] .tx-status-dot { background: #DC2626; }
+
+    .tx-modal[data-status="pending"]  .tx-audit { display: none; }
+    .tx-modal[data-status="approved"] .tx-audit { display: block; }
+    .tx-modal[data-status="rejected"] .tx-audit { display: block; }
+
+    @media (max-width: 1100px) {
+      .tx-actions-cell { white-space: normal; }
+      .tx-inline-approve, .tx-inline-reject,
+      .tx-inline-form6, .tx-inline-view { margin-bottom: 3px; }
+    }
+    html[data-theme="dark"] .tx-pool-select { background: var(--clr-card-bg); color: var(--clr-text-mid); border-color: var(--clr-border-light); }
+    html[data-theme="dark"] .tx-emp-name { color: var(--clr-text-dark); }
   </style>
 
   <script src="../../scripts/apiConfig.js"></script>
   <script src="../../scripts/adminGuard.js"></script>
+  <link rel="stylesheet" href="../../styles/switchAccount.css" />
 </head>
 <body>
 
@@ -511,6 +641,19 @@
                 </svg>
               </span>
               Transactions
+            </a>
+          </li>
+
+          <li>
+            <a href="adminHistory.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+                  <polyline points="3 3 3 8 8 8"/>
+                  <polyline points="12 7 12 12 15 15"/>
+                </svg>
+              </span>
+              History
             </a>
           </li>
 
@@ -628,7 +771,7 @@
                   <button type="button" role="option">All</button>
                   <button type="button" role="option">Pending</button>
                   <button type="button" role="option">Approved</button>
-                  <button type="button" role="option">Rejected</button>
+                  <button type="button" role="option">Disapproved</button>
                 </div>
               </div>
 
@@ -645,6 +788,7 @@
                   <button type="button" role="option">All</button>
                   <button type="button" role="option">Local</button>
                   <button type="button" role="option">National</button>
+                  <button type="button" role="option">Wellness</button>
                 </div>
               </div>
 
@@ -657,11 +801,10 @@
                 <thead>
                   <tr>
                     <th>Employee</th>
-                    <th>Leave Type</th>
-                    <th>Date Filed</th>
-                    <th>Service Credits</th>
+                    <th>Leave Details</th>
+                    <th>Deduct From</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <!-- Skeleton rows while data loads -->
@@ -670,25 +813,22 @@
                     <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:65%"></span></td>
                     <td><span class="skel skel-cell" style="width:60%"></span></td>
-                    <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:55%"></span></td>
-                    <td><span class="skel skel-cell" style="width:40%"></span></td>
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
                   </tr>
                   <tr class="skel-row" aria-hidden="true">
                     <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:70%"></span></td>
                     <td><span class="skel skel-cell" style="width:60%"></span></td>
-                    <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:55%"></span></td>
-                    <td><span class="skel skel-cell" style="width:40%"></span></td>
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
                   </tr>
                   <tr class="skel-row" aria-hidden="true">
                     <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:50%"></span></td>
                     <td><span class="skel skel-cell" style="width:60%"></span></td>
-                    <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:55%"></span></td>
-                    <td><span class="skel skel-cell" style="width:40%"></span></td>
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
                   </tr>
                 </tbody>
               </table>
@@ -734,7 +874,7 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════
-       REQUEST DETAILS MODAL
+       REQUEST DETAILS MODAL — READ ONLY
        data-status="pending|approved|rejected" on .tx-modal
        drives CSS visibility of sections.
   ══════════════════════════════════════════════════════ -->
@@ -748,11 +888,14 @@
   >
     <div class="tx-modal" id="txModal" data-status="pending" tabindex="-1">
 
+      <!-- Hidden input stores request id for Form 6 -->
+      <input type="hidden" id="txModalRequestId" value="" />
+
       <button type="button" class="tx-modal-close" id="txModalClose" aria-label="Close">&#10005;</button>
 
       <h2 class="tx-modal-title" id="txModalTitle">Request Details</h2>
 
-      <!-- Transaction Number + Status -->
+      <!-- Transaction Number + Status dot -->
       <div class="tx-detail-row">
         <span class="tx-detail-label">Transaction #</span>
         <span class="tx-detail-value" id="txRequestNumber">—</span>
@@ -813,16 +956,7 @@
       </div>
       <div class="tx-detail-row">
         <span class="tx-detail-label">Current Balance</span>
-        <span class="tx-detail-value" id="txCurrentBalance">Select a credit pool</span>
-      </div>
-      <!-- Deduction pool — shown only when Approved is selected -->
-      <div class="tx-detail-row" id="txCreditPoolGroup" hidden>
-        <label class="tx-detail-label" for="txDeductionPool">Deduct From</label>
-        <select id="txDeductionPool" class="tx-credit-select">
-          <option value="">-- Select Credit Pool --</option>
-          <option value="1">Local Service Credits</option>
-          <option value="2">National Service Credits</option>
-        </select>
+        <span class="tx-detail-value" id="txCurrentBalance">—</span>
       </div>
       <div class="tx-detail-row">
         <span class="tx-detail-label">Deduction</span>
@@ -836,25 +970,20 @@
       <!-- Submitted Document / Form 6 -->
       <h3 class="tx-section-heading">Submitted Document</h3>
 
-      <!-- Generate Form 6 (Pending + Approved) -->
-      <div id="txForm6Actions">
-        <button type="button" class="tx-btn-download" id="txGenerateForm6">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="8" y1="13" x2="16" y2="13"/>
-            <line x1="8" y1="17" x2="12" y2="17"/>
-          </svg>
-          Generate / Print Form 6
-        </button>
-      </div>
+      <button type="button" class="tx-btn-download" id="txModalForm6">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="8" y1="13" x2="16" y2="13"/>
+          <line x1="8" y1="17" x2="12" y2="17"/>
+        </svg>
+        Generate / Print Form 6
+      </button>
 
-      <!-- Pending note -->
       <p class="tx-doc-pending-note">
         This file is available for download and print.
       </p>
 
-      <!-- Rejected: file unavailable -->
       <div class="tx-doc-unavailable" aria-live="polite">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -866,35 +995,24 @@
       <!-- Audit trail (Approved / Rejected) -->
       <div class="tx-audit" aria-live="polite">
         <div class="tx-audit-row">
-          <span class="tx-audit-label" id="txAuditByLabel">Reviewed By:</span>
+          <span class="tx-audit-label">Reviewed By:</span>
           <span class="tx-audit-value" id="txReviewedBy">—</span>
         </div>
         <div class="tx-audit-row">
-          <span class="tx-audit-label" id="txAuditOnLabel">Reviewed On:</span>
+          <span class="tx-audit-label">Reviewed On:</span>
           <span class="tx-audit-value" id="txReviewedAt">—</span>
         </div>
       </div>
 
-      <!-- Admin finalization controls (Pending only) -->
-      <div class="tx-action-row" id="txFinalizationControls" hidden>
-        <div>
-          <label for="txFinalStatus" style="font-size:0.8125rem;font-weight:700;color:#111;display:block;margin-bottom:6px;">
-            Final Decision
-          </label>
-          <select id="txFinalStatus" class="tx-credit-select">
-            <option value="">Select decision</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-        </div>
-        <button type="button" class="tx-btn-save" id="txBtnSaveDecision">
-          Save Final Decision
+      <!-- Modal footer — status pill left, Close button right -->
+      <div class="tx-modal-footer">
+        <span class="tx-modal-status-pill tx-status-pending" id="txModalStatusBadge">
+          Status: —
+        </span>
+        <button type="button" class="tx-modal-close-btn" id="txModalCloseFooter">
+          Close
         </button>
       </div>
-
-      <p id="txFinalizationNote" class="tx-muted" hidden>
-        This request has already been finalized and cannot be changed.
-      </p>
 
     </div><!-- END .tx-modal -->
   </div>
@@ -904,5 +1022,6 @@
   <script src="../../scripts/apiErrorHandler.js"></script>
   <script src="../../scripts/adminTransactions.js"></script>
   <script src="../../scripts/settings.js"></script>
+  <script src="../../scripts/switchAccount.js"></script>
 </body>
 </html>

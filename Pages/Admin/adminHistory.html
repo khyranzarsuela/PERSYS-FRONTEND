@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERSYS | Transaction History</title>
+  <link rel="icon" type="image/x-icon" href="../../assets/SAC logo.jpg" />
+
+  <link rel="stylesheet" href="../../styles/admin.css" />
+  <link rel="stylesheet" href="../../styles/skeleton.css" />
+
+  <style>
+    /* =========================================================
+       SIDEBAR LOGOUT BUTTON
+       ========================================================= */
+    .sidebar { display: flex; flex-direction: column; }
+
+    .sidebar-logout-container {
+      margin-top: auto;
+      padding: 16px 20px 20px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+    .sidebar-logout {
+      display: flex; align-items: center; gap: 12px;
+      width: 100%; padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+      background: transparent; color: #FCA5A5;
+      font: inherit; font-weight: 600; cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .sidebar-logout svg {
+      width: 20px; height: 20px; flex-shrink: 0;
+      fill: none; stroke: currentColor; stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .sidebar-logout:hover {
+      background: rgba(239,68,68,0.12);
+      border-color: rgba(252,165,165,0.4);
+    }
+    .sidebar-logout:focus-visible { outline: 2px solid #FCA5A5; outline-offset: 3px; }
+    .sidebar-logout:disabled { opacity: 0.6; cursor: wait; }
+
+    /* =========================================================
+       PAGE LAYOUT
+       ========================================================= */
+    .page-content.tx-history-page {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 28px 32px;
+      background: #f0eef8;
+      width: 100%;
+      min-height: calc(100vh - var(--topbar-height));
+      box-sizing: border-box;
+    }
+
+    .main-wrapper { flex: 1; min-width: 0; display: flex; flex-direction: column; width: 100%; }
+    .page-content { display: block; }
+
+    /* =========================================================
+       TOP FILTER CARD (Toggle Header + Search/Dropdown Toolbar)
+       ========================================================= */
+    .tx-filter-card {
+      background: #fff;
+      border: 1px solid #e5dff5;
+      border-radius: 16px;
+      overflow: visible;
+      box-shadow: 0 2px 10px rgba(107,15,186,0.07);
+    }
+
+    .tx-toggle-bar {
+      background: #2D0057;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      border-radius: 15px 15px 0 0;
+    }
+
+    .tx-mode-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 7px 10px 7px 16px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.16);
+      color: #e5e7eb;
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+    }
+
+    .tx-mode-pill:hover {
+      background: rgba(255,255,255,0.24);
+    }
+
+    .tx-mode-pill.is-active {
+      background: #F5C518;
+      border-color: #F5C518;
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+
+    .tx-mode-switch-track {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 36px;
+      height: 20px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.32);
+      padding: 2px;
+      box-sizing: border-box;
+      transition: background 0.2s;
+    }
+
+    .tx-mode-pill.is-active .tx-mode-switch-track {
+      background: #7A5900;
+      justify-content: flex-end;
+    }
+
+    .tx-mode-switch-knob {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    .tx-mode-switch-knob svg {
+      width: 10px;
+      height: 10px;
+      stroke: #7A5900;
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .tx-mode-pill.is-active .tx-mode-switch-knob svg {
+      opacity: 1;
+    }
+
+    .tx-filter-card-body {
+      padding: 18px 24px;
+    }
+
+    /* =========================================================
+       MAIN TABLE CARD
+       ========================================================= */
+    .tx-card {
+      background: #fff;
+      border: 1px solid #e5dff5;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(107,15,186,0.07);
+    }
+
+    .tx-card-header {
+      background: #2D0057;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tx-card-header-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+    }
+
+    .tx-card-body {
+      padding: 0;
+    }
+
+    /* =========================================================
+       TOOLBAR
+       ========================================================= */
+    .tx-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tx-search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+      max-width: 380px;
+    }
+
+    .tx-search-wrap input {
+      width: 100%;
+      padding: 10px 42px 10px 16px;
+      border: 1.5px solid #d0c8e8;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: #444;
+      background: #fff;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .tx-search-wrap input::placeholder { color: #aaa; }
+    .tx-search-wrap input:focus {
+      border-color: #6B0FBA;
+      box-shadow: 0 0 0 3px rgba(107,15,186,0.12);
+    }
+
+    .tx-search-icon {
+      position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px;
+      stroke: #999; fill: none; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .tx-filter-wrap { position: relative; display: inline-block; }
+
+    .tx-filter-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      background: #F5C518; color: #1a1a1a;
+      font-size: 0.875rem; font-weight: 700;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .tx-filter-btn:hover { background: #e6b800; }
+    .tx-filter-btn svg {
+      width: 13px; height: 13px;
+      stroke: #1a1a1a; fill: none; stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.2s;
+    }
+    .tx-filter-wrap.is-open .tx-filter-btn svg { transform: rotate(180deg); }
+
+    .tx-dropdown-panel {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px); left: 0;
+      min-width: 150px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      z-index: 30;
+      overflow: hidden;
+    }
+    .tx-filter-wrap.is-open .tx-dropdown-panel { display: block; }
+
+    .tx-dropdown-panel button {
+      display: block; width: 100%;
+      padding: 9px 16px;
+      text-align: left; font-size: 0.8125rem; color: #333;
+      background: none; border: none; cursor: pointer;
+    }
+    .tx-dropdown-panel button:hover { background: #f3eeff; }
+
+    /* =========================================================
+       TABLE
+       ========================================================= */
+    .tx-table-wrap {
+      overflow-x: auto;
+    }
+
+    .tx-table {
+      width: 100%; min-width: 720px;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    .tx-table thead tr { background: #f8f5ff; border-bottom: 1.5px solid #ede8f8; }
+    .tx-table thead th {
+      padding: 13px 20px; text-align: left;
+      font-weight: 700; color: #1f2937; white-space: nowrap;
+    }
+
+    .tx-table tbody tr:nth-child(odd)  { background: #faf7ff; }
+    .tx-table tbody tr:nth-child(even) { background: #fff; }
+    .tx-table tbody tr:hover           { background: #f3eeff; }
+
+    .tx-table tbody td {
+      padding: 13px 20px; color: #374151;
+      border-bottom: 1px solid #f0ebfc;
+      vertical-align: middle;
+    }
+    .tx-table tbody tr:last-child td { border-bottom: none; }
+
+    /* Service Credit file name styling */
+    .sc-history-filename {
+      color: #3b5998;
+      font-weight: 500;
+    }
+
+    /* Status badges */
+    .tx-status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 11px; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 700; white-space: nowrap;
+    }
+    .tx-status-pending  { background: #FFF8E1; color: #92400E; }
+    .tx-status-approved { background: #DCFCE7; color: #15803D; }
+    .tx-status-rejected { background: #FEE2E2; color: #B91C1C; }
+
+    .sc-status-posted {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      background: #DCFCE7;
+      color: #15803D;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .tx-status-dot-inline {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0; display: inline-block;
+    }
+    .tx-status-pending  .tx-status-dot-inline { background: #F59E0B; }
+    .tx-status-approved .tx-status-dot-inline { background: #16A34A; }
+    .tx-status-rejected .tx-status-dot-inline { background: #DC2626; }
+
+    /* Employee & Leave Details cells */
+    .tx-emp-name  { font-weight: 700; color: #1a0a2e; font-size: 0.875rem; }
+    .tx-emp-sub   { font-size: 0.75rem; color: #6b7280; margin-top: 2px; }
+    .tx-leave-type { font-size: 0.875rem; color: #1f2937; font-weight: 600; }
+    .tx-leave-sub  { font-size: 0.75rem; color: #6b7280; margin-top: 2px; }
+
+    .tx-deduct-static { font-size: 0.84rem; font-weight: 500; }
+    .tx-deduct-approved { color: #1f2937; }
+    .tx-deduct-rejected { color: #9ca3af; font-style: italic; }
+
+    /* Actions cell */
+    .tx-actions-cell { white-space: nowrap; vertical-align: middle; }
+
+    .tx-inline-form6,
+    .tx-inline-view {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 12px; border-radius: 6px;
+      font: inherit; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap; margin-right: 4px;
+      transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+    }
+
+    .tx-inline-form6 { background: #fff; color: #6B0FBA; border: 1.5px solid #9d74c7; }
+    .tx-inline-form6:hover { background: #f3eeff; border-color: #6B0FBA; }
+
+    .tx-inline-view { background: #fff; color: #6B0FBA; border: 1.5px solid #9d74c7; }
+    .tx-inline-view:hover { background: #f3eeff; border-color: #6B0FBA; }
+
+    .tx-inline-form6 svg, .tx-inline-view svg {
+      width: 12px; height: 12px; flex-shrink: 0;
+      fill: none; stroke: currentColor; stroke-width: 2.2;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* =========================================================
+       PAGINATION
+       ========================================================= */
+    .tx-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px 20px;
+      border-top: 1px solid #f0ebfc;
+      background: #fff;
+    }
+
+    .tx-pagination-info { font-size: 0.8125rem; color: #9ca3af; }
+    .tx-pagination-btns { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+
+    .tx-page-btn {
+      min-width: 34px; height: 34px; padding: 0 10px;
+      border: 1.5px solid #e5dff5; border-radius: 6px;
+      background: #fff; color: #6b7280;
+      font: inherit; font-size: 0.8125rem; font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .tx-page-btn:hover:not(:disabled) {
+      background: #f0eaf8;
+      border-color: #6B0FBA;
+      color: #6B0FBA;
+    }
+    .tx-page-btn--active {
+      background: #6B0FBA; border-color: #6B0FBA; color: #fff; cursor: default;
+    }
+    .tx-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .tx-page-ellipsis {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 34px; height: 34px;
+      font-size: 0.875rem; color: #9ca3af; user-select: none;
+    }
+
+    /* =========================================================
+       MODAL (Leave Request View Details)
+       ========================================================= */
+    .tx-modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .tx-modal-overlay.is-open { display: flex; }
+
+    .tx-modal {
+      background: #fff;
+      border-radius: 14px;
+      width: 100%; max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px 36px 28px;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    }
+
+    .tx-modal-close {
+      position: absolute; top: 18px; right: 20px;
+      background: none; border: none;
+      font-size: 1.25rem; color: #666; cursor: pointer;
+      padding: 4px 6px; border-radius: 4px;
+    }
+    .tx-modal-close:hover { background: #f0f0f0; color: #333; }
+
+    .tx-modal-title { font-size: 1.25rem; font-weight: 700; color: #111; margin-bottom: 18px; }
+
+    .tx-detail-row {
+      display: flex; gap: 16px; margin-bottom: 6px; font-size: 0.875rem;
+    }
+    .tx-detail-label { font-weight: 700; color: #111; min-width: 160px; flex-shrink: 0; }
+    .tx-detail-value { color: #555; }
+
+    .tx-section-heading {
+      font-size: 1rem; font-weight: 700; color: #111; margin: 20px 0 10px;
+    }
+    .tx-divider { height: 1px; background: #eee; margin: 4px 0 16px; }
+
+    .tx-status-dot {
+      display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; margin-right: 6px; vertical-align: middle;
+    }
+    .tx-status-text { vertical-align: middle; }
+
+    .tx-btn-download {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px;
+      background: #2ECC40; color: #fff;
+      font-size: 0.875rem; font-weight: 700;
+      border: none; border-radius: 8px; cursor: pointer;
+      margin-bottom: 14px;
+    }
+    .tx-btn-download:hover { background: #27ae38; }
+    .tx-btn-download svg {
+      width: 15px; height: 15px; stroke: #fff; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .tx-doc-pending-note { font-size: 0.8rem; color: #888; font-style: italic; margin-bottom: 8px; }
+
+    .tx-doc-unavailable {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.8125rem; color: #CC2200; margin-bottom: 14px;
+    }
+    .tx-doc-unavailable svg {
+      width: 14px; height: 14px; stroke: #CC2200; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .tx-audit { margin-top: 14px; font-size: 0.875rem; }
+    .tx-audit-row { display: flex; gap: 16px; margin-bottom: 4px; }
+    .tx-audit-label { font-weight: 700; color: #111; min-width: 110px; }
+    .tx-audit-value { color: #555; }
+
+    .tx-modal-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 12px;
+      margin-top: 24px; padding-top: 16px;
+      border-top: 1px solid #eee;
+    }
+    .tx-modal-status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 700;
+      border: 1.5px solid currentColor;
+    }
+    .tx-modal-status-pill.tx-status-pending  { color: #92400E; background: #FFF8E1; }
+    .tx-modal-status-pill.tx-status-approved { color: #15803D; background: #DCFCE7; }
+    .tx-modal-status-pill.tx-status-rejected { color: #B91C1C; background: #FEE2E2; }
+
+    .tx-modal-close-btn {
+      padding: 9px 24px;
+      background: transparent; border: 1.5px solid #d0c8e8; border-radius: 8px;
+      color: #6b7280; font: inherit; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer;
+    }
+    .tx-modal-close-btn:hover { background: #f3eeff; border-color: #6B0FBA; color: #6B0FBA; }
+
+    .tx-modal[data-status="approved"] .tx-status-dot { background: #16A34A; }
+    .tx-modal[data-status="approved"] .tx-doc-pending-note { display: none; }
+    .tx-modal[data-status="approved"] .tx-btn-download { display: inline-flex; }
+    .tx-modal[data-status="approved"] .tx-doc-unavailable { display: none; }
+    .tx-modal[data-status="approved"] .tx-audit { display: block; }
+
+    .tx-modal[data-status="rejected"] .tx-status-dot { background: #DC2626; }
+    .tx-modal[data-status="rejected"] .tx-doc-pending-note { display: none; }
+    .tx-modal[data-status="rejected"] .tx-btn-download { display: none; }
+    .tx-modal[data-status="rejected"] .tx-doc-unavailable { display: inline-flex; }
+    .tx-modal[data-status="rejected"] .tx-audit { display: block; }
+
+    /* =========================================================
+       SERVICE CREDIT RECIPIENTS MODAL
+       ========================================================= */
+    .sc-recipients-modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px 32px 24px;
+      position: relative;
+      box-shadow: 0 12px 44px rgba(0, 0, 0, 0.28);
+      box-sizing: border-box;
+    }
+
+    .sc-recipients-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #111827;
+      margin: 0 0 14px;
+      padding-right: 28px;
+    }
+
+    .sc-recipients-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 26px;
+      font-size: 0.9rem;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .sc-recipients-meta strong {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .sc-recipients-subtitle {
+      margin: 0 0 16px;
+      font-size: 0.84rem;
+      color: #4b5563;
+    }
+
+    .sc-recipients-table-box {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .sc-recipients-table-scroll {
+      max-height: 290px;
+      overflow-y: auto;
+    }
+
+    .sc-recipients-table-scroll::-webkit-scrollbar { width: 6px; }
+    .sc-recipients-table-scroll::-webkit-scrollbar-track { background: #f3f4f6; }
+    .sc-recipients-table-scroll::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 999px; }
+
+    .sc-recipients-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    .sc-recipients-table thead tr {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .sc-recipients-table thead th {
+      padding: 11px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+    }
+
+    .sc-recipients-table tbody tr {
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .sc-recipients-table tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .sc-recipients-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .sc-recipients-table tbody td {
+      padding: 12px 14px;
+      color: #1f2937;
+      vertical-align: middle;
+    }
+
+    .sc-added-credits-val {
+      font-weight: 700;
+      color: #8a6d1b;
+      white-space: nowrap;
+    }
+
+    .sc-recipients-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .sc-recipients-nav-btns {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sc-recipients-page-btn {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #fff;
+      color: #374151;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .sc-recipients-page-btn:hover:not(:disabled) {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+
+    .sc-recipients-page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .sc-recipients-page-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sc-recipients-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+
+    .btn-sc-recipients-close {
+      padding: 9px 22px;
+      background: #F5C518;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-sc-recipients-close:hover {
+      background: #e6b800;
+    }
+
+    @media (max-width: 768px) {
+      .page-content.tx-history-page { padding: 18px 16px; }
+      .tx-modal, .sc-recipients-modal { padding: 24px 20px 20px; }
+      .tx-detail-label { min-width: 120px; }
+    }
+  </style>
+
+  <script src="../../scripts/apiConfig.js"></script>
+  <script src="../../scripts/adminGuard.js"></script>
+  <link rel="stylesheet" href="../../styles/switchAccount.css" />
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+
+      <img
+        class="sidebar-avatar"
+        src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
+        alt="Admin profile photo"
+      />
+      <p class="sidebar-name" id="adminUsername">Loading...</p>
+      <p class="sidebar-role" id="adminRole">Loading...</p>
+
+      <div class="sidebar-divider" role="separator"></div>
+
+      <nav aria-label="Main menu">
+        <ul class="sidebar-nav">
+
+          <li>
+            <a href="adminDashboard.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7" rx="1"/>
+                  <rect x="14" y="3" width="7" height="7" rx="1"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+              </span>
+              My Dashboard
+            </a>
+          </li>
+
+          <li>
+            <a href="adminProfile.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </span>
+              Profile
+            </a>
+          </li>
+
+          <li>
+            <a href="adminEmployees.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="9" cy="8" r="3.5"/>
+                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+                  <circle cx="17" cy="8" r="2.5"/>
+                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                </svg>
+              </span>
+              Employees
+            </a>
+          </li>
+
+          <li>
+            <a href="adminServiceCredits.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="9" r="5"/>
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                </svg>
+              </span>
+              Service Credits
+            </a>
+          </li>
+
+          <li>
+            <a href="adminTransactions.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <line x1="8"  y1="7"  x2="16" y2="7"/>
+                  <line x1="8"  y1="11" x2="16" y2="11"/>
+                  <line x1="8"  y1="15" x2="12" y2="15"/>
+                </svg>
+              </span>
+              Transactions
+            </a>
+          </li>
+
+          <li>
+            <a href="adminHistory.html" class="nav-item active" aria-current="page">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+                  <polyline points="3 3 3 8 8 8"/>
+                  <polyline points="12 7 12 12 15 15"/>
+                </svg>
+              </span>
+              History
+            </a>
+          </li>
+
+          <li>
+            <a href="adminSettings.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
+                           2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                           1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                           A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33
+                           l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06
+                           A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1
+                           H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9
+                           a1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                           a2 2 0 0 1 2.83-2.83l.06.06
+                           A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51
+                           V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51
+                           1.65 1.65 0 0 0 1.82-.33l.06-.06
+                           a2 2 0 0 1 2.83 2.83l-.06.06
+                           A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                </svg>
+              </span>
+              Settings
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      <div class="sidebar-logout-container">
+        <button type="button" class="btn-logout sidebar-logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <div class="main-wrapper">
+
+      <!-- TOPBAR -->
+      <header class="topbar" role="banner">
+        <h1 class="topbar-title">
+          <svg style="width:24px;height:24px;stroke:#F5C518;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:8px;"
+               viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+            <polyline points="3 3 3 8 8 8"/>
+            <polyline points="12 7 12 12 15 15"/>
+          </svg>
+          Transaction History
+        </h1>
+        <button
+          class="hamburger"
+          id="hamburger"
+          type="button"
+          aria-controls="sidebar"
+          aria-expanded="false"
+          aria-label="Toggle navigation menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <main class="page-content tx-history-page" id="mainContent">
+
+        <!-- ── TOP FILTER CARD ────────────────────────────── -->
+        <section class="tx-filter-card" aria-label="Transaction history filters">
+
+          <!-- Mode Toggle Header -->
+          <div class="tx-toggle-bar" role="tablist" aria-label="History category">
+            <button
+              type="button"
+              id="btnShowServiceCredits"
+              class="tx-mode-pill"
+              role="tab"
+              aria-selected="false"
+              data-mode="service-credits"
+            >
+              <span>Filter/ Show Service Credits</span>
+              <span class="tx-mode-switch-track" aria-hidden="true">
+                <span class="tx-mode-switch-knob">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              id="btnShowLeaveRequests"
+              class="tx-mode-pill is-active"
+              role="tab"
+              aria-selected="true"
+              data-mode="leave-requests"
+            >
+              <span>Show Leave Requests</span>
+              <span class="tx-mode-switch-track" aria-hidden="true">
+                <span class="tx-mode-switch-knob">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </span>
+            </button>
+          </div>
+
+          <!-- Search + Dropdowns -->
+          <div class="tx-filter-card-body">
+            <div class="tx-toolbar" role="toolbar" aria-label="Search and filter history">
+
+              <div class="tx-search-wrap">
+                <input
+                  type="search"
+                  id="historySearch"
+                  placeholder="Search by name, type, status..."
+                  aria-label="Search transaction history"
+                  autocomplete="off"
+                />
+                <svg class="tx-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+                </svg>
+              </div>
+
+              <!-- Type dropdown -->
+              <div class="tx-filter-wrap" id="historyTypeDropWrap">
+                <button type="button" class="tx-filter-btn" id="historyTypeDropBtn"
+                        aria-haspopup="listbox" aria-expanded="false">
+                  <span id="historyTypeDropLabel">Type: All</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                <div class="tx-dropdown-panel" role="listbox" id="historyTypeDropPanel"></div>
+              </div>
+
+              <!-- Status dropdown -->
+              <div class="tx-filter-wrap" id="historyStatusDropWrap">
+                <button type="button" class="tx-filter-btn" id="historyStatusDropBtn"
+                        aria-haspopup="listbox" aria-expanded="false">
+                  <span id="historyStatusDropLabel">Status: All</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                <div class="tx-dropdown-panel" role="listbox" id="historyStatusDropPanel"></div>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ── HISTORY TABLE CARD ─────────────────────────── -->
+        <section class="tx-card" aria-labelledby="historyTableTitle">
+
+          <div class="tx-card-header">
+            <h2 class="tx-card-header-title" id="historyTableTitle">Leave Request History</h2>
+          </div>
+
+          <div class="tx-card-body">
+
+            <!-- Leave Request History Table -->
+            <div class="tx-table-wrap" id="leaveHistoryTableWrap">
+              <table class="tx-table" aria-label="Leave request history">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Leave Details</th>
+                    <th>Deduct From</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="leaveHistoryTableBody">
+                  <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:65%"></span></td>
+                    <td><span class="skel skel-cell" style="width:60%"></span></td>
+                    <td><span class="skel skel-cell" style="width:55%"></span></td>
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  </tr>
+                  <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                    <td><span class="skel skel-cell" style="width:60%"></span></td>
+                    <td><span class="skel skel-cell" style="width:55%"></span></td>
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Service Credit Upload History Table -->
+            <div class="tx-table-wrap" id="scHistoryTableWrap" hidden>
+              <table class="tx-table" aria-label="Service credit upload history">
+                <thead>
+                  <tr>
+                    <th>Upload Date</th>
+                    <th>File Name</th>
+                    <th>Uploaded By</th>
+                    <th>Records</th>
+                    <th>Status</th>
+                    <th>Posted Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="scHistoryTableBody">
+                  <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell"></span></td>
+                    <td><span class="skel skel-cell" style="width:60%"></span></td>
+                    <td><span class="skel skel-cell" style="width:40%"></span></td>
+                    <td><span class="skel skel-cell" style="width:55%"></span></td>
+                    <td><span class="skel skel-cell" style="width:50%"></span></td>
+                    <td><span class="skel skel-cell" style="width:50%"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              class="tx-pagination"
+              id="historyPagination"
+              role="navigation"
+              aria-label="History pagination"
+              hidden
+            ></div>
+
+          </div>
+        </section>
+
+        <!-- Logout Modal -->
+        <div
+          class="modal-overlay"
+          id="logoutModal"
+          style="display:none;"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="logoutModalTitle"
+        >
+          <div class="modal-box">
+            <div class="modal-header">
+              <h2 id="logoutModalTitle">Log Out</h2>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="cancelLogoutBtn" class="btn-secondary">Cancel</button>
+              <button type="button" id="confirmLogoutBtn" class="btn-yellow">Log Out</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       REQUEST DETAILS MODAL — READ ONLY
+  ══════════════════════════════════════════════════════ -->
+  <div
+    class="tx-modal-overlay"
+    id="txModalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="txModalTitle"
+    tabindex="-1"
+  >
+    <div class="tx-modal" id="txModal" data-status="approved" tabindex="-1">
+
+      <input type="hidden" id="txModalRequestId" value="" />
+
+      <button type="button" class="tx-modal-close" id="txModalClose" aria-label="Close">&#10005;</button>
+
+      <h2 class="tx-modal-title" id="txModalTitle">Request Details</h2>
+
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Transaction #</span>
+        <span class="tx-detail-value" id="txRequestNumber">—</span>
+      </div>
+      <div class="tx-detail-row" style="margin-bottom:4px;">
+        <span class="tx-detail-label">Status</span>
+        <span class="tx-detail-value">
+          <span class="tx-status-dot" aria-hidden="true"></span>
+          <span class="tx-status-text" id="txStatusText"></span>
+        </span>
+      </div>
+
+      <div class="tx-divider"></div>
+
+      <h3 class="tx-section-heading">Employee Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Name</span>
+        <span class="tx-detail-value" id="txEmployeeName">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Number</span>
+        <span class="tx-detail-value" id="txEmployeeNumber">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Position</span>
+        <span class="tx-detail-value" id="txPosition">—</span>
+      </div>
+
+      <h3 class="tx-section-heading">Request Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Leave Type</span>
+        <span class="tx-detail-value" id="txLeaveType">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Reason</span>
+        <span class="tx-detail-value" id="txReason">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Start Date</span>
+        <span class="tx-detail-value" id="txStartDate">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">End Date</span>
+        <span class="tx-detail-value" id="txEndDate">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Total Days</span>
+        <span class="tx-detail-value" id="txTotalDays">—</span>
+      </div>
+
+      <h3 class="tx-section-heading">Service Credit Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Credit Type</span>
+        <span class="tx-detail-value" id="txCreditType">Not selected</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Current Balance</span>
+        <span class="tx-detail-value" id="txCurrentBalance">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Deduction</span>
+        <span class="tx-detail-value" id="txDeductionAmount">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Remaining Balance</span>
+        <span class="tx-detail-value" id="txRemainingBalance">—</span>
+      </div>
+
+      <h3 class="tx-section-heading">Submitted Document</h3>
+
+      <button type="button" class="tx-btn-download" id="txModalForm6">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="8" y1="13" x2="16" y2="13"/>
+          <line x1="8" y1="17" x2="12" y2="17"/>
+        </svg>
+        Generate / Print Form 6
+      </button>
+
+      <p class="tx-doc-pending-note">
+        This file is available for download and print.
+      </p>
+
+      <div class="tx-doc-unavailable" aria-live="polite">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        File download and print not available for disapproved requests.
+      </div>
+
+      <div class="tx-audit" aria-live="polite">
+        <div class="tx-audit-row">
+          <span class="tx-audit-label">Reviewed By:</span>
+          <span class="tx-audit-value" id="txReviewedBy">—</span>
+        </div>
+        <div class="tx-audit-row">
+          <span class="tx-audit-label">Reviewed On:</span>
+          <span class="tx-audit-value" id="txReviewedAt">—</span>
+        </div>
+      </div>
+
+      <div class="tx-modal-footer">
+        <span class="tx-modal-status-pill tx-status-approved" id="txModalStatusBadge">
+          Status: —
+        </span>
+        <button type="button" class="tx-modal-close-btn" id="txModalCloseFooter">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SERVICE CREDIT RECIPIENTS MODAL
+  ══════════════════════════════════════════════════════ -->
+  <div
+    class="tx-modal-overlay"
+    id="scRecipientsModalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="scRecipientsModalTitle"
+    tabindex="-1"
+  >
+    <div class="sc-recipients-modal" id="scRecipientsModal" tabindex="-1">
+      <button
+        type="button"
+        class="tx-modal-close"
+        id="scRecipientsCloseBtn"
+        aria-label="Close"
+      >&#10005;</button>
+
+      <h2 class="sc-recipients-title" id="scRecipientsModalTitle">
+        Service Credit Recipients
+      </h2>
+
+      <div class="sc-recipients-meta">
+        <span><strong>File Name:</strong> <span id="scRecipientsFileName">—</span></span>
+        <span><strong>Upload Date:</strong> <span id="scRecipientsUploadDate">—</span></span>
+      </div>
+
+      <p class="sc-recipients-subtitle">
+        The following employees have received added service credits from this upload.
+      </p>
+
+      <div class="sc-recipients-table-box">
+        <div class="sc-recipients-table-scroll">
+          <table class="sc-recipients-table" aria-label="Service credit recipients">
+            <thead>
+              <tr>
+                <th>Employee ID</th>
+                <th>Employee Name</th>
+                <th>Current Role</th>
+                <th>Credit Type</th>
+                <th>Added Credits</th>
+              </tr>
+            </thead>
+            <tbody id="scRecipientsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sc-recipients-pagination" id="scRecipientsPagination">
+        <span id="scRecipientsPageInfo">Showing 0 of 0 records</span>
+        <div class="sc-recipients-nav-btns">
+          <button
+            type="button"
+            class="sc-recipients-page-btn"
+            id="scRecipientsPrevBtn"
+            aria-label="Previous page"
+            disabled
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button
+            type="button"
+            class="sc-recipients-page-btn"
+            id="scRecipientsNextBtn"
+            aria-label="Next page"
+            disabled
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="sc-recipients-footer">
+        <button
+          type="button"
+          class="btn-sc-recipients-close"
+          id="scRecipientsFooterCloseBtn"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../scripts/admin.js"></script>
+  <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/adminHistory.js"></script>
+  <script src="../../scripts/settings.js"></script>
+  <script src="../../scripts/switchAccount.js"></script>
+</body>
+</html>

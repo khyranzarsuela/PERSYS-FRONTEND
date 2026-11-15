@@ -1050,6 +1050,198 @@ html[data-theme="dark"] .modal-review-row {
 html[data-theme="dark"] .modal-review-label { color: var(--clr-text-dark); }
 html[data-theme="dark"] .modal-review-value { color: var(--clr-text-mid); }
 
+/* Additional dark mode coverage for Dashboard, History, Service Credits, Employees, and Transactions */
+html[data-theme="dark"] .page-content,
+html[data-theme="dark"] .page-content.tx-page,
+html[data-theme="dark"] .page-content.tx-history-page,
+html[data-theme="dark"] .page-content.sc-page,
+html[data-theme="dark"] .page-content.employees-page,
+html[data-theme="dark"] .page-content.transactions-page {
+  background-color: var(--clr-cream-bg) !important;
+  color: #ffffff !important;
+}
+
+/* Dashboard notifications & stat cards */
+html[data-theme="dark"] .notif-link {
+  color: #F5C518 !important;
+}
+html[data-theme="dark"] .notif-link svg {
+  stroke: #F5C518 !important;
+}
+
+/* Cards & Modals across Transactions and History */
+html[data-theme="dark"] .tx-card,
+html[data-theme="dark"] .tx-filter-card,
+html[data-theme="dark"] .tx-table-card,
+html[data-theme="dark"] .tx-modal,
+html[data-theme="dark"] .sc-upload-history-card,
+html[data-theme="dark"] .sc-recipients-dialog,
+html[data-theme="dark"] .sc-recipients-modal,
+html[data-theme="dark"] .sc-card,
+html[data-theme="dark"] .emp-card {
+  background-color: #1e1926 !important;
+  border-color: #484052 !important;
+  color: #ffffff !important;
+}
+
+/* Search inputs, selects, & dropdown panels */
+html[data-theme="dark"] .tx-search-wrap input,
+html[data-theme="dark"] .tx-search-input,
+html[data-theme="dark"] .tx-pool-select,
+html[data-theme="dark"] .tx-credit-select {
+  background-color: #2b2436 !important;
+  border-color: #484052 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .tx-search-wrap input::placeholder,
+html[data-theme="dark"] .tx-search-input::placeholder {
+  color: #a89ec0 !important;
+}
+
+html[data-theme="dark"] .tx-dropdown-panel,
+html[data-theme="dark"] .tx-dropdown-menu {
+  background-color: #2b2436 !important;
+  border-color: #484052 !important;
+}
+
+html[data-theme="dark"] .tx-dropdown-panel button {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .tx-dropdown-panel button:hover {
+  background-color: #3d3252 !important;
+}
+
+/* Table wrappers, headers, rows, and cells */
+html[data-theme="dark"] .tx-table-wrap,
+html[data-theme="dark"] .sc-recipients-table-box,
+html[data-theme="dark"] .sc-recipients-table-wrap {
+  background-color: #1e1926 !important;
+  border-color: #484052 !important;
+}
+
+html[data-theme="dark"] .tx-table thead tr,
+html[data-theme="dark"] .tx-table thead th,
+html[data-theme="dark"] .tx-data-table th,
+html[data-theme="dark"] .sc-upload-table th,
+html[data-theme="dark"] .sc-recipients-table thead tr,
+html[data-theme="dark"] .sc-recipients-table thead th {
+  background-color: #2f273d !important;
+  color: #ffffff !important;
+  border-color: #484052 !important;
+}
+
+html[data-theme="dark"] .tx-table tbody tr:nth-child(odd),
+html[data-theme="dark"] .sc-recipients-table tbody tr:nth-child(odd) {
+  background-color: #26212e !important;
+}
+
+html[data-theme="dark"] .tx-table tbody tr:nth-child(even),
+html[data-theme="dark"] .sc-recipients-table tbody tr:nth-child(even) {
+  background-color: #1e1926 !important;
+}
+
+html[data-theme="dark"] .tx-table tbody tr:hover,
+html[data-theme="dark"] .tx-data-table tbody tr:hover td,
+html[data-theme="dark"] .sc-upload-table tbody tr:hover td,
+html[data-theme="dark"] .sc-recipients-table tbody tr:hover,
+html[data-theme="dark"] .sc-recipients-table tbody tr:hover td {
+  background-color: #362d47 !important;
+}
+
+html[data-theme="dark"] .tx-table tbody td,
+html[data-theme="dark"] .tx-data-table td,
+html[data-theme="dark"] .sc-upload-table td,
+html[data-theme="dark"] .sc-recipients-table tbody td {
+  color: #ffffff !important;
+  border-color: #3b3347 !important;
+}
+
+/* Text elements inside Transactions & History tables and modals */
+html[data-theme="dark"] .tx-emp-name,
+html[data-theme="dark"] .tx-leave-type,
+html[data-theme="dark"] .tx-deduct-approved,
+html[data-theme="dark"] .tx-modal-title,
+html[data-theme="dark"] .tx-detail-label,
+html[data-theme="dark"] .tx-section-heading,
+html[data-theme="dark"] .tx-audit-label,
+html[data-theme="dark"] .sc-recipients-title,
+html[data-theme="dark"] .sc-recipients-meta,
+html[data-theme="dark"] .sc-recipients-meta strong,
+html[data-theme="dark"] .sc-recipients-meta-item strong {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .tx-emp-sub,
+html[data-theme="dark"] .tx-leave-sub,
+html[data-theme="dark"] .tx-detail-value,
+html[data-theme="dark"] .tx-audit-value,
+html[data-theme="dark"] .tx-pagination-info,
+html[data-theme="dark"] .tx-doc-pending-note,
+html[data-theme="dark"] .sc-recipients-subtitle,
+html[data-theme="dark"] .sc-recipients-pagination {
+  color: #d0c9db !important;
+}
+
+html[data-theme="dark"] .tx-divider,
+html[data-theme="dark"] .tx-action-row,
+html[data-theme="dark"] .tx-modal-footer {
+  border-color: #484052 !important;
+  background-color: transparent !important;
+}
+
+html[data-theme="dark"] .tx-inline-form6,
+html[data-theme="dark"] .tx-inline-view,
+html[data-theme="dark"] .tx-modal-close-btn {
+  background-color: #2b2436 !important;
+  color: #F5C518 !important;
+  border-color: #F5C518 !important;
+}
+
+html[data-theme="dark"] .tx-inline-form6:hover,
+html[data-theme="dark"] .tx-inline-view:hover,
+html[data-theme="dark"] .tx-modal-close-btn:hover {
+  background-color: #3b314b !important;
+}
+
+html[data-theme="dark"] .tx-view-btn,
+html[data-theme="dark"] .sc-history-filename {
+  color: #d8b4fe !important;
+}
+
+html[data-theme="dark"] .sc-added-credits-val {
+  color: #F5C518 !important;
+}
+
+html[data-theme="dark"] .tx-modal-close,
+html[data-theme="dark"] .sc-recipients-close {
+  color: #ffffff !important;
+}
+
+/* Pagination bars & buttons */
+html[data-theme="dark"] .tx-pagination,
+html[data-theme="dark"] .sc-upload-pagination {
+  background-color: #1e1926 !important;
+  border-color: #484052 !important;
+  color: #d0c9db !important;
+}
+
+html[data-theme="dark"] .tx-page-btn:not(.tx-page-btn--active),
+html[data-theme="dark"] .sc-upload-page-btn:not(.sc-upload-page-btn--active),
+html[data-theme="dark"] .sc-recipients-page-btn {
+  background-color: #2b2436 !important;
+  border-color: #484052 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .tx-page-btn--active,
+html[data-theme="dark"] .sc-upload-page-btn--active {
+  background-color: #8b3dff !important;
+  border-color: #8b3dff !important;
+  color: #ffffff !important;
+}
+
 
 /* =========================================================
    GLOBAL SIDEBAR LOGOUT BUTTON

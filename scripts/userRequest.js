@@ -167,7 +167,21 @@ function wireModals() {
     $('totalLeaveDays').value  = '';
     $('leaveReason').value     = '';
     clearFormErrors();
+    updateReasonRequirement('');  // reset hint to optional
     showModal('leaveFormModal');
+  });
+
+  // ── Leave type change → update reason requirement hint ────
+  $('leaveTypeSelect').addEventListener('change', () => {
+    const selectedText = $('leaveTypeSelect').selectedOptions[0]?.text ?? '';
+    updateReasonRequirement(selectedText);
+    // Clear any existing reason error when type changes
+    const reasonField = $('leaveReason');
+    if (reasonField) {
+      reasonField.classList.remove('field-input-error');
+      const errEl = reasonField.parentElement.querySelector('.field-error-msg');
+      if (errEl) errEl.remove();
+    }
   });
 
   // ── Date inputs → recalculate weekdays ────────────────────
@@ -215,8 +229,24 @@ function wireModals() {
       showFieldError('totalLeaveDays', 'Must have at least 1 weekday.');
       valid = false;
     }
-    if (!reason) {
-      showFieldError('leaveReason', 'Please provide a reason.');
+
+    // Reason is required only when leave type is "Others"
+    const isOthers = leaveTypeName.trim().toLowerCase() === 'others';
+    if (isOthers && !reason) {
+      showFieldError('leaveReason', 'Please provide a reason for "Others" leave type.');
+      valid = false;
+    }
+
+    // Wellness cap — when leave type is "Others" and reason contains
+    // the word "wellness" (case-insensitive), max 3 days allowed.
+    if (isOthers && reason && /wellness/i.test(reason) && totalDays > 3) {
+      showFieldError('leaveReason',
+        'Wellness leave is limited to a maximum of 3 days. ' +
+        `You entered ${totalDays} day(s).`
+      );
+      showFieldError('totalLeaveDays',
+        'Maximum 3 days allowed for Wellness leave.'
+      );
       valid = false;
     }
 
@@ -230,7 +260,7 @@ function wireModals() {
     $('reviewStartDate').textContent = formatDate(startDate);
     $('reviewEndDate').textContent   = formatDate(endDate);
     $('reviewTotalDays').textContent = totalDays;
-    $('reviewReason').textContent    = reason;
+    $('reviewReason').textContent    = reason || 'Not provided';
 
     hideModal('leaveFormModal');
     showModal('reviewLeaveModal');
@@ -339,6 +369,25 @@ function wireModals() {
   if (closeErrBtn) {
     closeErrBtn.addEventListener('click', () => hideModal('submitErrorModal'));
   }
+}
+
+/* ── Reason requirement toggle ──────────────────────────────── */
+
+/**
+ * Shows "(optional)" or "*required" next to the Reason label
+ * depending on whether "Others" is selected.
+ */
+function updateReasonRequirement(leaveTypeName) {
+  const isOthers    = leaveTypeName.trim().toLowerCase() === 'others';
+  const requiredEl  = document.getElementById('leaveReasonRequiredBadge');
+  const optionalEl  = document.getElementById('leaveReasonOptionalHint');
+  const textarea    = document.getElementById('leaveReason');
+
+  if (requiredEl) requiredEl.style.display = isOthers ? 'inline' : 'none';
+  if (optionalEl) optionalEl.style.display = isOthers ? 'none'   : 'inline';
+  if (textarea)   textarea.placeholder     = isOthers
+    ? 'Required — briefly describe your reason…'
+    : 'Optional — briefly describe your reason…';
 }
 
 /* ── Silently refresh the table after a successful submit ───── */

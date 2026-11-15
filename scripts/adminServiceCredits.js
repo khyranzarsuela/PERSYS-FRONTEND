@@ -49,8 +49,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const API = {
         summary: `${API_BASE}/admin/serviceCredits/summary.php`,
         upload: `${API_BASE}/admin/serviceCredits/upload.php`,
-        post: `${API_BASE}/admin/serviceCredits/post.php`
+        post: `${API_BASE}/admin/serviceCredits/post.php`,
+        batchRecipients: `${API_BASE}/admin/serviceCredits/batchRecipients.php`
     };
+
+    const HISTORY_ROWS_PER_PAGE = 15;
+    const SC_RECIPIENTS_PER_PAGE = 5;
 
     // --------------------------------------------------
     // 2. ELEMENT REFERENCES
@@ -81,6 +85,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "serviceCreditHistoryBody"
     );
 
+    const historyPagination = document.getElementById(
+        "scHistoryPagination"
+    );
+
     const localCreditsElement = document.getElementById(
         "totalLocalCredits"
     );
@@ -96,6 +104,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Current preview data.
     let previewRows = [];
     let previewFileName = "";
+
+    // Upload history pagination & modal state.
+    let uploadHistoryRecords = [];
+    let uploadHistoryPage = 1;
+    let scModalRecipients = [];
+    let scModalPage = 1;
 
     // --------------------------------------------------
     // 3. GENERAL HELPERS
@@ -255,46 +269,394 @@ document.addEventListener("DOMContentLoaded", () => {
             if (historyBody) {
                 historyBody.innerHTML = `
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7" style="text-align:center;padding:32px;color:#9ca3af;font-style:italic;">
                             Unable to load upload history.
                         </td>
                     </tr>
                 `;
             }
+            if (historyPagination) {
+                historyPagination.hidden = true;
+            }
         }
     }
 
+    function parseHistoryTimestamp(val) {
+        if (!val) return 0;
+        const d = new Date(String(val).replace(" ", "T"));
+        const ms = d.getTime();
+        return Number.isFinite(ms) ? ms : 0;
+    }
+
     function renderUploadHistory(records) {
+        const list = Array.isArray(records) ? [...records] : [];
+
+        // Sort newest upload at the top
+        list.sort((a, b) => {
+            const timeA = parseHistoryTimestamp(a.uploaded_at) || parseHistoryTimestamp(a.posted_at);
+            const timeB = parseHistoryTimestamp(b.uploaded_at) || parseHistoryTimestamp(b.posted_at);
+            if (timeB !== timeA) return timeB - timeA;
+            return Number(b.upload_batch_id || 0) - Number(a.upload_batch_id || 0);
+        });
+
+        uploadHistoryRecords = list;
+        uploadHistoryPage = 1;
+        renderUploadHistoryPage();
+    }
+
+    function renderUploadHistoryPage() {
         if (!historyBody) return;
 
-        if (!records.length) {
-            historyBody.innerHTML = `
-                <tr>
-                    <td colspan="6">No upload records found.</td>
-                </tr>
-            `;
+        const total = uploadHistoryRecords.length;
+        const totalPages = Math.max(1, Math.ceil(total / HISTORY_ROWS_PER_PAGE));
+        uploadHistoryPage = Math.min(Math.max(1, uploadHistoryPage), totalPages);
+
+        historyBody.replaceChildren();
+
+        if (!total) {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = 7;
+            td.style.cssText = "text-align:center;padding:32px;color:#9ca3af;font-style:italic;";
+            td.textContent = "No service credit upload records found.";
+            tr.appendChild(td);
+            historyBody.appendChild(tr);
+
+            if (historyPagination) {
+                historyPagination.hidden = true;
+            }
             return;
         }
 
-        historyBody.innerHTML = records.map(record => {
-            const status = String(record.status || "UNKNOWN");
-            const statusClass = status.toLowerCase();
+        const start = (uploadHistoryPage - 1) * HISTORY_ROWS_PER_PAGE;
+        const slice = uploadHistoryRecords.slice(start, start + HISTORY_ROWS_PER_PAGE);
 
-            return `
-                <tr>
-                    <td>${escapeHtml(record.file_name || "—")}</td>
-                    <td>${escapeHtml(record.uploaded_by_name || "—")}</td>
-                    <td>${escapeHtml(record.record_count ?? 0)}</td>
-                    <td>
-                        <span class="sc-status-${escapeHtml(statusClass)}">
-                            ${escapeHtml(status)}
-                        </span>
-                    </td>
-                    <td>${escapeHtml(record.uploaded_at || "—")}</td>
-                    <td>${escapeHtml(record.posted_at || "—")}</td>
-                </tr>
-            `;
-        }).join("");
+        slice.forEach(record => {
+            historyBody.appendChild(buildUploadHistoryRow(record));
+        });
+
+        renderUploadHistoryPagination(uploadHistoryPage, totalPages);
+    }
+
+    function buildUploadHistoryRow(rec) {
+        const tr = document.createElement("tr");
+
+        // Col 1: Upload Date
+        const tdUploadDate = document.createElement("td");
+        tdUploadDate.textContent = rec.uploaded_at || "—";
+
+        // Col 2: File Name
+        const tdFileName = document.createElement("td");
+        const fileSpan = document.createElement("span");
+        fileSpan.className = "sc-history-filename";
+        fileSpan.textContent = rec.file_name || "—";
+        tdFileName.appendChild(fileSpan);
+
+        // Col 3: Uploaded By
+        const tdUploadedBy = document.createElement("td");
+        tdUploadedBy.textContent = rec.uploaded_by_name || "—";
+
+        // Col 4: Records
+        const tdRecords = document.createElement("td");
+        tdRecords.textContent = String(rec.record_count ?? 0);
+
+        // Col 5: Status
+        const tdStatus = document.createElement("td");
+        const statusPill = document.createElement("span");
+        statusPill.className = "sc-status-posted";
+        statusPill.textContent = String(rec.status || "POSTED").toUpperCase();
+        tdStatus.appendChild(statusPill);
+
+        // Col 6: Posted Date
+        const tdPostedDate = document.createElement("td");
+        tdPostedDate.textContent = rec.posted_at || "—";
+
+        // Col 7: Actions (View button opens Service Credit Recipients modal)
+        const tdActions = document.createElement("td");
+        tdActions.className = "sc-actions-cell";
+        const viewBtn = document.createElement("button");
+        viewBtn.type = "button";
+        viewBtn.className = "sc-inline-view";
+        viewBtn.textContent = "View";
+        viewBtn.addEventListener("click", () => openScRecipientsModal(rec));
+        tdActions.appendChild(viewBtn);
+
+        tr.append(
+            tdUploadDate,
+            tdFileName,
+            tdUploadedBy,
+            tdRecords,
+            tdStatus,
+            tdPostedDate,
+            tdActions
+        );
+
+        return tr;
+    }
+
+    function renderUploadHistoryPagination(page, totalPages) {
+        if (!historyPagination) return;
+        historyPagination.replaceChildren();
+
+        if (totalPages <= 1) {
+            historyPagination.hidden = true;
+            return;
+        }
+        historyPagination.hidden = false;
+
+        const total = uploadHistoryRecords.length;
+        const start = (page - 1) * HISTORY_ROWS_PER_PAGE + 1;
+        const end = Math.min(page * HISTORY_ROWS_PER_PAGE, total);
+
+        const info = document.createElement("span");
+        info.className = "sc-pagination-info";
+        info.textContent = `Showing ${start}–${end} of ${total}`;
+
+        const group = document.createElement("div");
+        group.className = "sc-pagination-btns";
+
+        group.append(
+            makeHistoryPagBtn("← Prev", page <= 1, () => {
+                uploadHistoryPage--;
+                renderUploadHistoryPage();
+            }),
+            ...buildHistoryPageRange(page, totalPages).map(p => {
+                if (p === "…") {
+                    const el = document.createElement("span");
+                    el.className = "sc-page-ellipsis";
+                    el.textContent = "…";
+                    return el;
+                }
+                return makeHistoryPagBtn(
+                    String(p),
+                    false,
+                    () => {
+                        uploadHistoryPage = p;
+                        renderUploadHistoryPage();
+                    },
+                    p === page
+                );
+            }),
+            makeHistoryPagBtn("Next →", page >= totalPages, () => {
+                uploadHistoryPage++;
+                renderUploadHistoryPage();
+            })
+        );
+
+        historyPagination.append(info, group);
+    }
+
+    function buildHistoryPageRange(current, total) {
+        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+        const pages = [];
+        const left = Math.max(2, current - 1);
+        const right = Math.min(total - 1, current + 1);
+        pages.push(1);
+        if (left > 2) pages.push("…");
+        for (let i = left; i <= right; i++) pages.push(i);
+        if (right < total - 1) pages.push("…");
+        pages.push(total);
+        return pages;
+    }
+
+    function makeHistoryPagBtn(label, disabled, onClick, isActive = false) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = label;
+        btn.disabled = disabled;
+        btn.className = "sc-page-btn" + (isActive ? " sc-page-btn--active" : "");
+        if (!disabled) btn.addEventListener("click", onClick);
+        return btn;
+    }
+
+    // --------------------------------------------------
+    // 4B. SERVICE CREDIT RECIPIENTS MODAL
+    // --------------------------------------------------
+
+    function setModalText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value ?? "—";
+    }
+
+    function wireScRecipientsModal() {
+        const overlay = document.getElementById("scRecipientsModalOverlay");
+        const closeBtn = document.getElementById("scRecipientsCloseBtn");
+        const footerCloseBtn = document.getElementById("scRecipientsFooterCloseBtn");
+        const prevBtn = document.getElementById("scRecipientsPrevBtn");
+        const nextBtn = document.getElementById("scRecipientsNextBtn");
+
+        closeBtn?.addEventListener("click", closeScRecipientsModal);
+        footerCloseBtn?.addEventListener("click", closeScRecipientsModal);
+        overlay?.addEventListener("click", event => {
+            if (event.target === overlay) closeScRecipientsModal();
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && overlay?.classList.contains("is-open")) {
+                closeScRecipientsModal();
+            }
+        });
+
+        prevBtn?.addEventListener("click", () => {
+            if (scModalPage > 1) {
+                scModalPage--;
+                renderScRecipientsModalPage();
+            }
+        });
+
+        nextBtn?.addEventListener("click", () => {
+            const totalPages = Math.max(
+                1,
+                Math.ceil(scModalRecipients.length / SC_RECIPIENTS_PER_PAGE)
+            );
+            if (scModalPage < totalPages) {
+                scModalPage++;
+                renderScRecipientsModalPage();
+            }
+        });
+    }
+
+    async function openScRecipientsModal(rec) {
+        const overlay = document.getElementById("scRecipientsModalOverlay");
+        const modal = document.getElementById("scRecipientsModal");
+        const tbody = document.getElementById("scRecipientsTableBody");
+        const pageInfo = document.getElementById("scRecipientsPageInfo");
+        const prevBtn = document.getElementById("scRecipientsPrevBtn");
+        const nextBtn = document.getElementById("scRecipientsNextBtn");
+
+        if (!overlay || !modal) return;
+
+        setModalText("scRecipientsFileName", rec.file_name || "—");
+        setModalText("scRecipientsUploadDate", rec.uploaded_at || "—");
+
+        scModalRecipients = [];
+        scModalPage = 1;
+
+        if (tbody) {
+            tbody.innerHTML =
+                `<tr><td colspan="5" style="text-align:center;padding:24px;color:#6b7280;">
+                   Loading recipients...
+                 </td></tr>`;
+        }
+        if (pageInfo) pageInfo.textContent = "Showing 0 of 0 records";
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+
+        overlay.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+        modal.focus();
+
+        const batchId = Number(rec.upload_batch_id || 0);
+        if (batchId <= 0) {
+            renderScRecipientsEmpty("No recipient records found for this upload.");
+            return;
+        }
+
+        try {
+            const result = await fetchJson(
+                `${API.batchRecipients}?upload_batch_id=${encodeURIComponent(batchId)}`
+            );
+
+            const batch = result.data?.batch;
+            if (batch) {
+                setModalText("scRecipientsFileName", batch.file_name || rec.file_name || "—");
+                setModalText("scRecipientsUploadDate", batch.uploaded_at || rec.uploaded_at || "—");
+            }
+
+            scModalRecipients = Array.isArray(result.data?.recipients)
+                ? result.data.recipients
+                : [];
+            scModalPage = 1;
+            renderScRecipientsModalPage();
+        } catch (error) {
+            console.error("Batch recipients load error:", error);
+            renderScRecipientsEmpty(
+                error.message || "Unable to load service credit recipients."
+            );
+        }
+    }
+
+    function renderScRecipientsEmpty(message) {
+        const tbody = document.getElementById("scRecipientsTableBody");
+        const pageInfo = document.getElementById("scRecipientsPageInfo");
+        const prevBtn = document.getElementById("scRecipientsPrevBtn");
+        const nextBtn = document.getElementById("scRecipientsNextBtn");
+
+        if (tbody) {
+            tbody.replaceChildren();
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = 5;
+            td.style.cssText = "text-align:center;padding:24px;color:#9ca3af;font-style:italic;";
+            td.textContent = message;
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        }
+        if (pageInfo) pageInfo.textContent = "Showing 0 of 0 records";
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+    }
+
+    function renderScRecipientsModalPage() {
+        const tbody = document.getElementById("scRecipientsTableBody");
+        const pageInfo = document.getElementById("scRecipientsPageInfo");
+        const prevBtn = document.getElementById("scRecipientsPrevBtn");
+        const nextBtn = document.getElementById("scRecipientsNextBtn");
+
+        if (!tbody) return;
+
+        const total = scModalRecipients.length;
+        if (total === 0) {
+            renderScRecipientsEmpty("No employees received service credits in this upload.");
+            return;
+        }
+
+        const totalPages = Math.max(1, Math.ceil(total / SC_RECIPIENTS_PER_PAGE));
+        scModalPage = Math.min(Math.max(1, scModalPage), totalPages);
+
+        const startIdx = (scModalPage - 1) * SC_RECIPIENTS_PER_PAGE;
+        const endIdx = Math.min(startIdx + SC_RECIPIENTS_PER_PAGE, total);
+        const slice = scModalRecipients.slice(startIdx, endIdx);
+
+        tbody.replaceChildren();
+
+        slice.forEach(item => {
+            const tr = document.createElement("tr");
+
+            const tdId = document.createElement("td");
+            tdId.textContent = item.employee_number || "—";
+
+            const tdName = document.createElement("td");
+            tdName.textContent = item.employee_name || "—";
+
+            const tdRole = document.createElement("td");
+            tdRole.textContent = item.current_role || "—";
+
+            const tdCreditType = document.createElement("td");
+            tdCreditType.textContent = item.credit_type || "—";
+
+            const tdCredits = document.createElement("td");
+            const creditsSpan = document.createElement("span");
+            creditsSpan.className = "sc-added-credits-val";
+            const num = Number(item.credit_amount ?? 0);
+            const formattedNum = Number.isFinite(num) ? num.toFixed(1) : "0.0";
+            creditsSpan.textContent = `+${formattedNum} Credits`;
+            tdCredits.appendChild(creditsSpan);
+
+            tr.append(tdId, tdName, tdRole, tdCreditType, tdCredits);
+            tbody.appendChild(tr);
+        });
+
+        if (pageInfo) {
+            pageInfo.textContent = `Showing ${startIdx + 1}-${endIdx} of ${total} records`;
+        }
+        if (prevBtn) prevBtn.disabled = scModalPage <= 1;
+        if (nextBtn) nextBtn.disabled = scModalPage >= totalPages;
+    }
+
+    function closeScRecipientsModal() {
+        document.getElementById("scRecipientsModalOverlay")?.classList.remove("is-open");
+        document.body.style.overflow = "";
     }
 
     // --------------------------------------------------
@@ -876,5 +1238,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // 12. INITIAL PAGE LOAD
     // --------------------------------------------------
 
+    wireScRecipientsModal();
     loadSummary();
 });

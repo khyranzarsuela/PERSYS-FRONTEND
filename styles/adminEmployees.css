@@ -921,6 +921,7 @@ dialog#addEmployeeDialog {
    ========================================================= */
 
 .view-account-dialog {
+    position: relative;
     width: min(560px, calc(100vw - 32px));
     max-height: 85vh;
     overflow-y: auto;
@@ -943,15 +944,258 @@ dialog#addEmployeeDialog {
 }
 
 .view-account-subtitle {
-    margin: 0 0 24px;
+    margin: 0 0 18px;
     color: #666;
     font-size: 14px;
+}
+
+/* 2-Tab Navigation Bar */
+.view-account-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-bottom: 1.5px solid #e5e5e5;
+    margin-bottom: 20px;
+}
+
+.view-account-tab {
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-bottom: 2.5px solid transparent;
+    padding: 10px 12px 11px;
+    margin-bottom: -1.5px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: #777;
+    cursor: pointer;
+    text-align: center;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.view-account-tab:hover {
+    color: #4b0082;
+}
+
+.view-account-tab.is-active {
+    color: #4b0082;
+    font-weight: 700;
+    border-bottom-color: #4b0082;
+}
+
+.view-account-pane[hidden] {
+    display: none !important;
 }
 
 .view-account-dialog h3 {
     margin: 20px 0 14px;
     font-size: 15px;
     font-weight: 700;
+}
+
+/* Account Actions Tab Sections */
+.account-action-section h3 {
+    margin: 6px 0 6px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f1f1f;
+}
+
+.account-action-desc {
+    margin: 0 0 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #4b5563;
+}
+
+.btn-account-deactivate,
+.btn-account-activate,
+.btn-account-promote,
+.btn-account-demote {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-account-deactivate {
+    background: #fff;
+    color: #b42318;
+    border: 1.25px solid #c84b43;
+}
+
+.btn-account-deactivate:hover:not(:disabled) {
+    background: #fef3f2;
+    border-color: #b42318;
+}
+
+.btn-account-activate {
+    background: #fff;
+    color: #16803c;
+    border: 1.25px solid #16803c;
+}
+
+.btn-account-activate:hover:not(:disabled) {
+    background: #ecfdf3;
+}
+
+.btn-account-promote {
+    background: #5b0fa8;
+    color: #fff;
+    border: 1.5px solid #d49b27;
+    box-shadow: 0 1px 3px rgba(91, 15, 168, 0.2);
+}
+
+.btn-account-promote:hover:not(:disabled) {
+    background: #4b0082;
+    box-shadow: 0 0 0 2px rgba(212, 155, 39, 0.25);
+}
+
+.btn-account-demote {
+    background: #fff;
+    color: #5b0fa8;
+    border: 1.25px solid #5b0fa8;
+}
+
+.btn-account-demote:hover:not(:disabled) {
+    background: #f5effc;
+}
+
+.btn-account-deactivate:disabled,
+.btn-account-activate:disabled,
+.btn-account-promote:disabled,
+.btn-account-demote:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.account-action-btn-icon {
+    flex-shrink: 0;
+}
+
+.account-self-action-hint {
+    margin: 14px 0 0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+/* Confirmation Modal Overlay inside #viewAccountDialog */
+.account-action-confirm-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 24, 27, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 14px;
+    z-index: 20;
+}
+
+.account-action-confirm-overlay[hidden] {
+    display: none !important;
+}
+
+.account-action-confirm-card {
+    width: min(390px, 100%);
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px 24px 20px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    box-sizing: border-box;
+}
+
+.account-action-confirm-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.account-action-confirm-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #18181b;
+}
+
+.account-action-confirm-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #d99b26;
+}
+
+.account-action-confirm-message {
+    margin: 0 0 20px;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: #3f3f46;
+}
+
+.account-action-confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-account-confirm-cancel {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid #d4d4d8;
+    background: #fff;
+    color: #52525b;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-account-confirm-cancel:hover:not(:disabled) {
+    background: #f4f4f5;
+}
+
+.btn-account-confirm-submit {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    background: #5b0fa8;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-account-confirm-submit:hover:not(:disabled) {
+    background: #4b0082;
+}
+
+.btn-account-confirm-submit.is-danger {
+    background: #b42318;
+}
+
+.btn-account-confirm-submit.is-danger:hover:not(:disabled) {
+    background: #912018;
+}
+
+.btn-account-confirm-cancel:disabled,
+.btn-account-confirm-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .view-account-grid {
@@ -2596,4 +2840,245 @@ dialog#createAccountDialog {
     #createAccountDialog .create-account-full {
         grid-column: auto;
     }
+}
+
+
+/* ============================================================
+   PERSYS — DARK MODE FOR EMPLOYEES PAGE & DIALOGS
+   ============================================================ */
+
+html[data-theme="dark"] .page-content.employees-page {
+    background-color: var(--clr-cream-bg) !important;
+}
+
+/* Main Records Card */
+html[data-theme="dark"] .records-card,
+html[data-theme="dark"] .employees-page .records-card {
+    background: #1e1926 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .records-title,
+html[data-theme="dark"] .employees-page .records-title {
+    color: #ffffff !important;
+}
+
+/* Search Bar & Filter Button */
+html[data-theme="dark"] .search-wrap input,
+html[data-theme="dark"] .employees-page .search-wrap input {
+    background: #2b2436 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .search-wrap input::placeholder,
+html[data-theme="dark"] .employees-page .search-wrap input::placeholder {
+    color: #a89ec0 !important;
+}
+
+html[data-theme="dark"] .search-icon {
+    stroke: #c4b5fd !important;
+}
+
+html[data-theme="dark"] .employees-page .btn-filter,
+html[data-theme="dark"] .btn-filter {
+    background: #2b2436 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .employees-page .btn-filter svg,
+html[data-theme="dark"] .btn-filter svg {
+    stroke: #ffffff !important;
+}
+
+html[data-theme="dark"] .employees-page .btn-filter:hover {
+    background: #382f47 !important;
+    border-color: #F5C518 !important;
+}
+
+/* Table Container & Scrollbar */
+html[data-theme="dark"] .table-scroll-wrap,
+html[data-theme="dark"] .records-card .table-scroll-wrap {
+    border-color: #484052 !important;
+    background: #1e1926 !important;
+}
+
+html[data-theme="dark"] .table-scroll-wrap::-webkit-scrollbar-track {
+    background: #17131d !important;
+}
+
+html[data-theme="dark"] .table-scroll-wrap::-webkit-scrollbar-thumb {
+    background: #5b4e70 !important;
+}
+
+/* Employee & Account Table Headers & Rows */
+html[data-theme="dark"] .emp-table thead tr,
+html[data-theme="dark"] .employees-page .emp-table thead tr,
+html[data-theme="dark"] .emp-table thead th,
+html[data-theme="dark"] .employees-page .emp-table thead th {
+    background: #2f273d !important;
+    color: #ffffff !important;
+    border-color: #484052 !important;
+    box-shadow: 0 2px 0 #484052 !important;
+}
+
+html[data-theme="dark"] .emp-table tbody tr:nth-child(odd),
+html[data-theme="dark"] .employees-page .emp-table tbody tr:nth-child(odd) {
+    background: #26212e !important;
+}
+
+html[data-theme="dark"] .emp-table tbody tr:nth-child(even),
+html[data-theme="dark"] .employees-page .emp-table tbody tr:nth-child(even) {
+    background: #1e1926 !important;
+}
+
+html[data-theme="dark"] .emp-table tbody tr:hover,
+html[data-theme="dark"] .employees-page .emp-table tbody tr:hover {
+    background: #362d47 !important;
+}
+
+html[data-theme="dark"] .emp-table tbody td,
+html[data-theme="dark"] .employees-page .emp-table tbody td {
+    color: #ffffff !important;
+    border-bottom-color: #3b3347 !important;
+}
+
+/* Pagination Controls */
+html[data-theme="dark"] .pagination-info,
+html[data-theme="dark"] .employees-page .pagination-info,
+html[data-theme="dark"] .pagination-controls label,
+html[data-theme="dark"] .employees-page .pagination-controls label {
+    color: #e2d9f3 !important;
+}
+
+html[data-theme="dark"] .pagination-select,
+html[data-theme="dark"] .employees-page .pagination-select,
+html[data-theme="dark"] .pagination-button:not(.is-active),
+html[data-theme="dark"] .employees-page .pagination-button:not(.is-active) {
+    background: #2b2436 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .pagination-button:hover:not(:disabled):not(.is-active) {
+    background: #3b314b !important;
+}
+
+html[data-theme="dark"] .pagination-button.is-active,
+html[data-theme="dark"] .employees-page .pagination-button.is-active {
+    background: #8b3dff !important;
+    border-color: #8b3dff !important;
+    color: #ffffff !important;
+}
+
+/* All Employee & Account Dialogs */
+html[data-theme="dark"] dialog#addEmployeeDialog,
+html[data-theme="dark"] dialog#editEmployeeDialog,
+html[data-theme="dark"] dialog#createAccountDialog,
+html[data-theme="dark"] dialog#viewAccountDialog,
+html[data-theme="dark"] dialog#myDialog,
+html[data-theme="dark"] dialog#masterFileNotificationDialog,
+html[data-theme="dark"] dialog#successAddDialog,
+html[data-theme="dark"] .view-account-dialog,
+html[data-theme="dark"] .account-action-confirm-card {
+    background: #26212e !important;
+    color: #ffffff !important;
+    border: 1px solid #484052 !important;
+}
+
+html[data-theme="dark"] #addEmployeeDialog .ae-dialog-header,
+html[data-theme="dark"] #addEmployeeDialog .ae-dialog-footer,
+html[data-theme="dark"] #createAccountDialog .create-account-header,
+html[data-theme="dark"] #createAccountDialog .create-account-footer,
+html[data-theme="dark"] #myDialog .master-upload-header {
+    background: #26212e !important;
+    border-color: #484052 !important;
+}
+
+html[data-theme="dark"] #addEmployeeDialog .ae-dialog-header h2,
+html[data-theme="dark"] #editEmployeeDialog h2,
+html[data-theme="dark"] #createAccountDialog .create-account-header h2,
+html[data-theme="dark"] #myDialog .master-upload-header h2,
+html[data-theme="dark"] #myDialog .master-upload-section h3,
+html[data-theme="dark"] #myDialog .master-upload-label,
+html[data-theme="dark"] .view-account-dialog h2,
+html[data-theme="dark"] .view-account-dialog h3,
+html[data-theme="dark"] .account-action-section h3,
+html[data-theme="dark"] .account-action-confirm-header h3,
+html[data-theme="dark"] #successAddDialog h2,
+html[data-theme="dark"] .master-notification-content h2 {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] #addEmployeeDialog .ae-dialog-header p,
+html[data-theme="dark"] #createAccountDialog .create-account-header p,
+html[data-theme="dark"] #createAccountDialog .create-account-section-note,
+html[data-theme="dark"] #createAccountDialog .create-account-help,
+html[data-theme="dark"] #myDialog .master-upload-header p,
+html[data-theme="dark"] #myDialog .master-upload-section > p,
+html[data-theme="dark"] #myDialog .master-upload-format,
+html[data-theme="dark"] #myDialog .master-upload-note,
+html[data-theme="dark"] .view-account-subtitle,
+html[data-theme="dark"] .view-account-grid label,
+html[data-theme="dark"] .account-action-desc,
+html[data-theme="dark"] .account-action-confirm-message,
+html[data-theme="dark"] #successAddDialog p,
+html[data-theme="dark"] .master-notification-content p {
+    color: #d0c9db !important;
+}
+
+html[data-theme="dark"] #addEmployeeDialog .ae-section h3,
+html[data-theme="dark"] #createAccountDialog .create-account-section h3 {
+    color: #F5C518 !important;
+    border-bottom-color: #484052 !important;
+}
+
+html[data-theme="dark"] .add-emp-field label,
+html[data-theme="dark"] #addEmployeeDialog .add-emp-field label,
+html[data-theme="dark"] #createAccountDialog .create-account-field label,
+html[data-theme="dark"] .view-account-grid p {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .add-emp-field input,
+html[data-theme="dark"] .add-emp-field select,
+html[data-theme="dark"] #addEmployeeDialog .add-emp-field input,
+html[data-theme="dark"] #addEmployeeDialog .add-emp-field select,
+html[data-theme="dark"] #createAccountDialog .create-account-field input,
+html[data-theme="dark"] #createAccountDialog .create-account-field select,
+html[data-theme="dark"] .import-input {
+    background: #1e1926 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] #myDialog .master-upload-dropzone {
+    background: #1e1926 !important;
+    border-color: #5b4e70 !important;
+}
+
+html[data-theme="dark"] .view-account-tabs,
+html[data-theme="dark"] .view-account-dialog hr {
+    border-color: #484052 !important;
+}
+
+html[data-theme="dark"] .view-account-tab {
+    color: #c4b5fd !important;
+}
+
+html[data-theme="dark"] .view-account-tab.is-active {
+    color: #F5C518 !important;
+    border-bottom-color: #F5C518 !important;
+}
+
+html[data-theme="dark"] #addEmployeeDialog .btn-add-emp-cancel,
+html[data-theme="dark"] .btn-add-emp-cancel,
+html[data-theme="dark"] #createAccountDialog .create-account-cancel,
+html[data-theme="dark"] #myDialog .master-upload-cancel,
+html[data-theme="dark"] .btn-account-confirm-cancel {
+    background: #2b2436 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
 }

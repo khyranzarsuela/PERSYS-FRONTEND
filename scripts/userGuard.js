@@ -1,7 +1,13 @@
 /* ============================================================
    PERSYS — Shared User Authentication Guard
-   Mirrors adminGuard.js but allows role_id 2 (Teaching) and
-   role_id 3 (Non-Teaching). Exposes window.PERSYSUserGuard.
+   ------------------------------------------------------------
+   User pages require the USER VIEW. That is:
+     - Teaching (2) / Non-Teaching (3) accounts, always
+     - Admins (1) who switched to user view via Switch Account
+
+   - Not logged in                     → login page
+   - Admin currently in admin view     → admin dashboard
+   - Anything else                     → 403 error page
    ============================================================ */
 
 (function () {
@@ -10,14 +16,15 @@
   const API_URL =
     `${window.PERSYS_CONFIG.API_BASE_URL}/api/auth/me.php`;
 
-  const LOGIN_URL =
-    `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/index.html`;
-
-  const ERROR_URL =
-    `${window.PERSYS_CONFIG.FRONTEND_BASE_URL}/error.html`;
+  const BASE = window.PERSYS_CONFIG.FRONTEND_BASE_URL;
+  const LOGIN_URL = `${BASE}/index.html`;
+  const ERROR_URL = `${BASE}/error.html`;
+  const ADMIN_DASHBOARD_URL = `${BASE}/Pages/Admin/adminDashboard.html`;
 
   // Hide protected page content while the session is checked.
   document.documentElement.style.visibility = "hidden";
+
+  let sessionData = null;
 
   async function verifyUserSession() {
     try {
@@ -25,9 +32,7 @@
         method: "GET",
         credentials: "include",
         cache: "no-store",
-        headers: {
-          Accept: "application/json"
-        }
+        headers: { Accept: "application/json" }
       });
 
       if (response.status === 401) {
@@ -52,32 +57,39 @@
         return false;
       }
 
-      const roleId = Number(result.data.role_id);
+      const data = result.data;
+      const roleId = Number(data.role_id);
+      const isAdmin = roleId === 1;
+      const isUserRole = roleId === 2 || roleId === 3;
+      // Older backends have no active_view: derive it from the role.
+      const activeView = data.active_view || (isAdmin ? "admin" : "user");
 
-      // Role IDs 2 (Teaching) and 3 (Non-Teaching) are user roles.
-      // Role ID 1 is Admin — redirect admins away from user pages.
-      if (roleId !== 2 && roleId !== 3) {
-        window.location.replace(ERROR_URL + "?code=403");
-        return false;
+      if (activeView === "user" && (isUserRole || isAdmin)) {
+        sessionData = data;
+        document.documentElement.style.visibility = "visible";
+        return true;
       }
 
-      // Session and user role verified — reveal the page.
-      document.documentElement.style.visibility = "visible";
+      // Admin still in admin view → send them to their admin side.
+      window.location.replace(
+        isAdmin ? ADMIN_DASHBOARD_URL : ERROR_URL + "?code=403"
+      );
+      return false;
 
-      return true;
     } catch (error) {
       console.error("User session verification failed:", error);
-
-      window.location.replace(
-        ERROR_URL + "?code=connection"
-      );
-
+      window.location.replace(ERROR_URL + "?code=connection");
       return false;
     }
   }
 
+  const ready = verifyUserSession();
+
   // Other user scripts can wait for this verification.
-  window.PERSYSUserGuard = {
-    ready: verifyUserSession()
+  window.PERSYSUserGuard = { ready };
+
+  // Shared session info (used by switchAccount.js).
+  window.PERSYSSession = {
+    ready: ready.then((ok) => (ok ? sessionData : null))
   };
 })();

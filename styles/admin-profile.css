@@ -385,3 +385,48 @@
     align-items: center;
     gap: 12px;
 }
+
+
+/* ============================================================
+   PERSYS — DARK MODE FOR PROFILE PAGE (Admin & User)
+   ============================================================ */
+
+html[data-theme="dark"] .page-content.profile-content {
+    background: var(--clr-cream-bg) !important;
+}
+
+html[data-theme="dark"] .profile-content .profile-panel {
+    background: #1e1926 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .profile-panel-header {
+    border-bottom-color: #484052 !important;
+}
+
+html[data-theme="dark"] .profile-panel-icon {
+    background: #36294d !important;
+    color: #F5C518 !important;
+}
+
+html[data-theme="dark"] .profile-panel-heading h3,
+html[data-theme="dark"] .profile-field dd {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .profile-panel-heading p,
+html[data-theme="dark"] .profile-field dt {
+    color: #d0c9db !important;
+}
+
+html[data-theme="dark"] .profile-content .profile-edit-btn:not(.profile-hero-edit) {
+    background: #2b2436 !important;
+    border-color: #484052 !important;
+    color: #F5C518 !important;
+}
+
+html[data-theme="dark"] .profile-status:not(.is-active):not(.is-inactive) {
+    background: #2b2436 !important;
+    color: #e2d9f3 !important;
+}

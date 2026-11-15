@@ -1621,14 +1621,386 @@ if (createAccountForm) {
 
 
 /* =========================================================
-   PERSYS — VIEW ACCOUNT (READ ONLY)
+   PERSYS — VIEW ACCOUNT (DETAILS & ACCOUNT ACTIONS)
    ========================================================= */
+
+const ACCOUNT_ACTIONS_API =
+    `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/accountActions.php`;
 
 const viewAccountDialog =
     document.getElementById("viewAccountDialog");
 
 const closeViewAccountButton =
     document.getElementById("closeViewAccount");
+
+const viewAccountTabDetails =
+    document.getElementById("viewAccountTabDetails");
+const viewAccountTabActions =
+    document.getElementById("viewAccountTabActions");
+const viewAccountDetailsPane =
+    document.getElementById("viewAccountDetailsPane");
+const viewAccountActionsPane =
+    document.getElementById("viewAccountActionsPane");
+
+const accountStatusActionTitle =
+    document.getElementById("accountStatusActionTitle");
+const accountStatusActionDesc =
+    document.getElementById("accountStatusActionDesc");
+const accountStatusActionBtn =
+    document.getElementById("accountStatusActionBtn");
+const accountStatusActionBtnLabel =
+    document.getElementById("accountStatusActionBtnLabel");
+const accountStatusActionIcon =
+    document.getElementById("accountStatusActionIcon");
+
+const accountRoleActionTitle =
+    document.getElementById("accountRoleActionTitle");
+const accountRoleActionDesc =
+    document.getElementById("accountRoleActionDesc");
+const accountRoleActionBtn =
+    document.getElementById("accountRoleActionBtn");
+const accountRoleActionBtnLabel =
+    document.getElementById("accountRoleActionBtnLabel");
+
+const accountSelfActionHint =
+    document.getElementById("accountSelfActionHint");
+
+const accountActionConfirmOverlay =
+    document.getElementById("accountActionConfirmOverlay");
+const accountActionConfirmTitle =
+    document.getElementById("accountActionConfirmTitle");
+const accountActionConfirmMessage =
+    document.getElementById("accountActionConfirmMessage");
+const accountActionConfirmCancelBtn =
+    document.getElementById("accountActionConfirmCancelBtn");
+const accountActionConfirmSubmitBtn =
+    document.getElementById("accountActionConfirmSubmitBtn");
+
+let currentViewedEmployee = null;
+let pendingAccountAction = null;
+
+function switchViewAccountTab(tabName) {
+    const isActions = tabName === "actions";
+
+    if (viewAccountTabDetails) {
+        viewAccountTabDetails.classList.toggle("is-active", !isActions);
+        viewAccountTabDetails.setAttribute("aria-selected", String(!isActions));
+    }
+
+    if (viewAccountTabActions) {
+        viewAccountTabActions.classList.toggle("is-active", isActions);
+        viewAccountTabActions.setAttribute("aria-selected", String(isActions));
+    }
+
+    if (viewAccountDetailsPane) {
+        viewAccountDetailsPane.hidden = isActions;
+    }
+
+    if (viewAccountActionsPane) {
+        viewAccountActionsPane.hidden = !isActions;
+    }
+
+    closeAccountActionConfirm();
+}
+
+viewAccountTabDetails?.addEventListener("click", function () {
+    switchViewAccountTab("details");
+});
+
+viewAccountTabActions?.addEventListener("click", function () {
+    switchViewAccountTab("actions");
+});
+
+function isEmployeeAdminAccount(employee) {
+    if (!employee) return false;
+    if (employee.role_id !== undefined && employee.role_id !== null) {
+        return Number(employee.role_id) === 1;
+    }
+    return String(employee.role_name || "").trim().toLowerCase() === "admin";
+}
+
+function getLoggedInAdminAccountId() {
+    return Number(window.PERSYSSession?.user?.account_id || 0);
+}
+
+function populateViewAccountModal(employee) {
+    if (!employee) return;
+
+    currentViewedEmployee = employee;
+
+    const fullName = [
+        employee.first_name,
+        employee.middle_name,
+        employee.last_name
+    ].filter(Boolean).join(" ");
+
+    const isActive = Number(employee.is_active) === 1;
+    const accountStatus = isActive ? "Active" : "Inactive";
+
+    // Personal Information
+    document.getElementById("viewEmployeeNumber").textContent =
+        employee.employee_number || "—";
+
+    document.getElementById("viewPersonnelType").textContent =
+        employee.personnel_type || "—";
+
+    document.getElementById("viewEmployeeName").textContent =
+        fullName || "—";
+
+    document.getElementById("viewDepedEmail").textContent =
+        employee.deped_email || "—";
+
+    // Account Information
+    document.getElementById("viewUsername").textContent =
+        employee.username || "—";
+
+    document.getElementById("viewRole").textContent =
+        employee.role_name || "—";
+
+    const statusElement =
+        document.getElementById("viewAccountStatus");
+
+    statusElement.textContent = accountStatus;
+
+    statusElement.classList.toggle(
+        "account-status-active",
+        accountStatus === "Active"
+    );
+
+    statusElement.classList.toggle(
+        "account-status-inactive",
+        accountStatus === "Inactive"
+    );
+
+    const createdAtElement =
+        document.getElementById("viewAccountCreatedAt");
+
+    const createdAt = employee.account_created_at;
+
+    if (createdAt) {
+        // MySQL DATETIME format: YYYY-MM-DD HH:MM:SS
+        const match = String(createdAt).match(
+            /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})/
+        );
+
+        if (match) {
+            const [, year, month, day, hour, minute, second] = match;
+
+            const date = new Date(
+                Number(year),
+                Number(month) - 1,
+                Number(day),
+                Number(hour),
+                Number(minute),
+                Number(second)
+            );
+
+            createdAtElement.textContent =
+                date.toLocaleString("en-PH", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true
+                });
+        } else {
+            createdAtElement.textContent = "Date unavailable";
+        }
+    } else {
+        createdAtElement.textContent = "Date unavailable";
+    }
+
+    // Populate Account Actions Tab
+    const isAdminRole = isEmployeeAdminAccount(employee);
+    const isSelfAccount =
+        Number(employee.account_id) > 0 &&
+        Number(employee.account_id) === getLoggedInAdminAccountId();
+
+    if (accountStatusActionTitle && accountStatusActionDesc && accountStatusActionBtn && accountStatusActionBtnLabel) {
+        if (isActive) {
+            accountStatusActionTitle.textContent = "Deactivate Account";
+            accountStatusActionDesc.textContent =
+                "Deactivating this account will prevent the user from logging in and accessing the system.";
+            accountStatusActionBtnLabel.textContent = "Deactivate Account";
+            accountStatusActionBtn.className = "btn-account-deactivate";
+            accountStatusActionBtn.dataset.action = "deactivate";
+            if (accountStatusActionIcon) accountStatusActionIcon.hidden = false;
+            accountStatusActionBtn.disabled = isSelfAccount;
+        } else {
+            accountStatusActionTitle.textContent = "Activate Account";
+            accountStatusActionDesc.textContent =
+                "Activating this account will allow the user to log in and access the system again.";
+            accountStatusActionBtnLabel.textContent = "Activate Account";
+            accountStatusActionBtn.className = "btn-account-activate";
+            accountStatusActionBtn.dataset.action = "activate";
+            if (accountStatusActionIcon) accountStatusActionIcon.hidden = true;
+            accountStatusActionBtn.disabled = false;
+        }
+    }
+
+    if (accountRoleActionTitle && accountRoleActionDesc && accountRoleActionBtn && accountRoleActionBtnLabel) {
+        if (!isAdminRole) {
+            accountRoleActionTitle.textContent = "Promote to Admin";
+            accountRoleActionDesc.textContent =
+                "Grant admin privileges to this account, giving them full access to all system features.";
+            accountRoleActionBtnLabel.textContent = "Promote to Admin";
+            accountRoleActionBtn.className = "btn-account-promote";
+            accountRoleActionBtn.dataset.action = "promote";
+            accountRoleActionBtn.disabled = false;
+        } else {
+            accountRoleActionTitle.textContent = "Demote to User";
+            accountRoleActionDesc.textContent =
+                `Remove admin privileges from this account and return them to their ${employee.personnel_type || "standard"} user role.`;
+            accountRoleActionBtnLabel.textContent = "Demote to User";
+            accountRoleActionBtn.className = "btn-account-demote";
+            accountRoleActionBtn.dataset.action = "demote";
+            accountRoleActionBtn.disabled = isSelfAccount;
+        }
+    }
+
+    if (accountSelfActionHint) {
+        accountSelfActionHint.hidden = !isSelfAccount;
+    }
+}
+
+function openAccountActionConfirm(action) {
+    if (!currentViewedEmployee || !accountActionConfirmOverlay) return;
+
+    pendingAccountAction = action;
+
+    const configMap = {
+        promote: {
+            title: "Promote to Admin",
+            message: "Are you sure to promote this account to admin?",
+            submitLabel: "Yes, Promote",
+            danger: false
+        },
+        demote: {
+            title: "Demote to User",
+            message: "Are you sure to remove admin privileges from this account?",
+            submitLabel: "Yes, Demote",
+            danger: false
+        },
+        deactivate: {
+            title: "Deactivate Account",
+            message: "Are you sure to deactivate this account?",
+            submitLabel: "Yes, Deactivate",
+            danger: true
+        },
+        activate: {
+            title: "Activate Account",
+            message: "Are you sure to activate this account?",
+            submitLabel: "Yes, Activate",
+            danger: false
+        }
+    };
+
+    const config = configMap[action];
+    if (!config) return;
+
+    accountActionConfirmTitle.textContent = config.title;
+    accountActionConfirmMessage.textContent = config.message;
+    accountActionConfirmSubmitBtn.textContent = config.submitLabel;
+    accountActionConfirmSubmitBtn.classList.toggle("is-danger", config.danger);
+    accountActionConfirmSubmitBtn.disabled = false;
+    accountActionConfirmCancelBtn.disabled = false;
+
+    accountActionConfirmOverlay.hidden = false;
+}
+
+function closeAccountActionConfirm() {
+    pendingAccountAction = null;
+    if (accountActionConfirmOverlay) {
+        accountActionConfirmOverlay.hidden = true;
+    }
+}
+
+accountStatusActionBtn?.addEventListener("click", function () {
+    const action = accountStatusActionBtn.dataset.action;
+    if (action && !accountStatusActionBtn.disabled) {
+        openAccountActionConfirm(action);
+    }
+});
+
+accountRoleActionBtn?.addEventListener("click", function () {
+    const action = accountRoleActionBtn.dataset.action;
+    if (action && !accountRoleActionBtn.disabled) {
+        openAccountActionConfirm(action);
+    }
+});
+
+accountActionConfirmCancelBtn?.addEventListener("click", function () {
+    closeAccountActionConfirm();
+});
+
+accountActionConfirmOverlay?.addEventListener("click", function (event) {
+    if (event.target === accountActionConfirmOverlay) {
+        closeAccountActionConfirm();
+    }
+});
+
+accountActionConfirmSubmitBtn?.addEventListener("click", async function () {
+    if (!currentViewedEmployee || !pendingAccountAction) return;
+
+    const actionToRun = pendingAccountAction;
+    const accountId = Number(currentViewedEmployee.account_id);
+
+    accountActionConfirmSubmitBtn.disabled = true;
+    accountActionConfirmCancelBtn.disabled = true;
+
+    try {
+        const response = await fetch(ACCOUNT_ACTIONS_API, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            body: JSON.stringify({
+                account_id: accountId,
+                action: actionToRun
+            })
+        });
+
+        const checkedResponse =
+            await window.PERSYSApiErrors.handleResponse(response);
+
+        if (!checkedResponse) {
+            closeAccountActionConfirm();
+            return;
+        }
+
+        const result = await checkedResponse.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Unable to update employee account.");
+        }
+
+        const updated = result.data || {};
+        currentViewedEmployee.role_id = updated.role_id ?? currentViewedEmployee.role_id;
+        currentViewedEmployee.role_name = updated.role_name ?? currentViewedEmployee.role_name;
+        currentViewedEmployee.is_active = updated.is_active ?? currentViewedEmployee.is_active;
+
+        closeAccountActionConfirm();
+        populateViewAccountModal(currentViewedEmployee);
+        await loadEmployeeRecords();
+
+        showMasterFileNotification(
+            "success",
+            "Account Updated",
+            result.message || "Employee account has been updated."
+        );
+    } catch (error) {
+        console.error("Account action error:", error);
+        closeAccountActionConfirm();
+        showMasterFileNotification(
+            "error",
+            "Action Failed",
+            error.message || "Unable to update employee account."
+        );
+    }
+});
 
 document.getElementById("accountsTableBody")
     ?.addEventListener("click", function (event) {
@@ -1653,95 +2025,13 @@ document.getElementById("accountsTableBody")
             return;
         }
 
-        const fullName = [
-            employee.first_name,
-            employee.middle_name,
-            employee.last_name
-        ].filter(Boolean).join(" ");
-
-        const accountStatus =
-            Number(employee.is_active) === 1
-                ? "Active"
-                : "Inactive";
-
-        // Personal Information
-        document.getElementById("viewEmployeeNumber").textContent =
-            employee.employee_number || "—";
-
-        document.getElementById("viewPersonnelType").textContent =
-            employee.personnel_type || "—";
-
-        document.getElementById("viewEmployeeName").textContent =
-            fullName || "—";
-
-        document.getElementById("viewDepedEmail").textContent =
-            employee.deped_email || "—";
-
-        // Account Information
-        document.getElementById("viewUsername").textContent =
-            employee.username || "—";
-
-        document.getElementById("viewRole").textContent =
-            employee.role_name || "—";
-
-        const statusElement =
-            document.getElementById("viewAccountStatus");
-
-        statusElement.textContent = accountStatus;
-
-        statusElement.classList.toggle(
-            "account-status-active",
-            accountStatus === "Active"
-        );
-
-        statusElement.classList.toggle(
-            "account-status-inactive",
-            accountStatus === "Inactive"
-        );
-
-        const createdAtElement =
-    document.getElementById("viewAccountCreatedAt");
-
-const createdAt = employee.account_created_at;
-
-if (createdAt) {
-    // MySQL DATETIME format: YYYY-MM-DD HH:MM:SS
-    const match = String(createdAt).match(
-        /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})/
-    );
-
-    if (match) {
-        const [, year, month, day, hour, minute, second] = match;
-
-        const date = new Date(
-            Number(year),
-            Number(month) - 1,
-            Number(day),
-            Number(hour),
-            Number(minute),
-            Number(second)
-        );
-
-        createdAtElement.textContent =
-            date.toLocaleString("en-PH", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: true
-            });
-    } else {
-        createdAtElement.textContent = "Date unavailable";
-    }
-} else {
-    createdAtElement.textContent = "Date unavailable";
-}
-
+        switchViewAccountTab("details");
+        populateViewAccountModal(employee);
         viewAccountDialog.showModal();
     });
 
 closeViewAccountButton?.addEventListener("click", function () {
+    closeAccountActionConfirm();
     viewAccountDialog.close();
 });
 

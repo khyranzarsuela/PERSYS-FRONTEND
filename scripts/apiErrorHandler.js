@@ -40,6 +40,35 @@
     );
   }
 
+  /**
+   * If a 403 means "wrong view" (Switch Account), return the dashboard
+   * URL for the view the account is really in. Otherwise null.
+   */
+  async function getWrongViewRedirect(response) {
+    try {
+      const body = await response.clone().json();
+
+      if (!body || body.code !== "WRONG_VIEW" || !body.redirect) {
+        return null;
+      }
+
+      let path = String(body.redirect);
+
+      // Only accept our own dashboard paths.
+      if (!/^\/PERSYS-FRONTEND\/Pages\/(Admin|Users)\/[A-Za-z]+\.html$/.test(path)) {
+        return null;
+      }
+
+      if (!window.PERSYS_CONFIG.isLocal) {
+        path = path.replace(/^\/PERSYS-FRONTEND(?=\/|$)/, "");
+      }
+
+      return path;
+    } catch (error) {
+      return null;
+    }
+  }
+
   async function handleResponse(response) {
     if (response.status === 401) {
       window.location.replace(LOGIN_URL);
@@ -47,6 +76,15 @@
     }
 
     if (response.status === 403) {
+      // Admin using the other view (e.g. switched in another tab):
+      // go to the dashboard of the view they are actually in.
+      const redirect = await getWrongViewRedirect(response);
+
+      if (redirect) {
+        window.location.replace(redirect);
+        return null;
+      }
+
       redirectToError("403");
       return null;
     }

@@ -80,7 +80,8 @@
   </style>
   <script src="../../scripts/apiConfig.js"></script>
   <script src="../../scripts/adminGuard.js"></script>
-  </head>
+    <link rel="stylesheet" href="../../styles/switchAccount.css" />
+</head>
 <body>
 
   <!-- ======================================================
@@ -179,6 +180,20 @@
                 </svg>
               </span>
               Transactions
+            </a>
+          </li>
+
+          <!-- History -->
+          <li>
+            <a href="adminHistory.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+                  <polyline points="3 3 3 8 8 8"/>
+                  <polyline points="12 7 12 12 15 15"/>
+                </svg>
+              </span>
+              History
             </a>
           </li>
 
@@ -435,5 +450,6 @@
   <script src="../../scripts/apiErrorHandler.js"></script>
   <script src="../../scripts/adminProfile.js"></script>
   <script src="../../scripts/settings.js"></script>
+  <script src="../../scripts/switchAccount.js"></script>
 </body>
 </html>

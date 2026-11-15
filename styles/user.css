@@ -1407,3 +1407,105 @@ html[data-theme="dark"] .profile-section-title {
   color: var(--clr-text-dark);
   border-color: var(--clr-border-light);
 }
+
+/* Comprehensive Dark Mode for User Dashboard, Service Credits, and Request Pages */
+html[data-theme="dark"] .page-content,
+html[data-theme="dark"] .page-content.dashboard-content,
+html[data-theme="dark"] .page-content.service-credits-content,
+html[data-theme="dark"] .page-content.request-content {
+  background-color: var(--clr-cream-bg) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .stat-card-new,
+html[data-theme="dark"] .sc-balance-card-new,
+html[data-theme="dark"] .recent-leave-card,
+html[data-theme="dark"] .sc-balance-card,
+html[data-theme="dark"] .sc-history-card,
+html[data-theme="dark"] .request-card,
+html[data-theme="dark"] .my-request-table,
+html[data-theme="dark"] .modal-box {
+  background-color: #1e1926 !important;
+  border-color: #484052 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sc-balance-card-title,
+html[data-theme="dark"] .sc-balance-col-number,
+html[data-theme="dark"] .sc-balance-card-heading,
+html[data-theme="dark"] .sc-balance-stat-value,
+html[data-theme="dark"] .sc-history-heading,
+html[data-theme="dark"] .sc-page-title,
+html[data-theme="dark"] .request-card-title,
+html[data-theme="dark"] .form-group label,
+html[data-theme="dark"] .modal-header h2 {
+  color: #ffffff !important;
+  border-color: #484052 !important;
+}
+
+html[data-theme="dark"] .sc-balance-current-number {
+  color: #F5C518 !important;
+}
+
+html[data-theme="dark"] .sc-balance-col-type,
+html[data-theme="dark"] .sc-balance-col-unit,
+html[data-theme="dark"] .sc-balance-current-label,
+html[data-theme="dark"] .sc-balance-stat-label,
+html[data-theme="dark"] .modal-body p {
+  color: #d0c9db !important;
+}
+
+html[data-theme="dark"] .sc-balance-stats {
+  border-top-color: #484052 !important;
+}
+
+html[data-theme="dark"] .sc-balance-stat + .sc-balance-stat {
+  border-left-color: #484052 !important;
+}
+
+html[data-theme="dark"] .recent-leave-card .data-table th,
+html[data-theme="dark"] .sc-history-card .sc-hist-table th,
+html[data-theme="dark"] .my-request-table .data-table th,
+html[data-theme="dark"] .data-table th {
+  background-color: #2f273d !important;
+  color: #ffffff !important;
+  border-color: #484052 !important;
+}
+
+html[data-theme="dark"] .recent-leave-card .data-table td,
+html[data-theme="dark"] .sc-history-card .sc-hist-table td,
+html[data-theme="dark"] .my-request-table .data-table td,
+html[data-theme="dark"] .data-table td {
+  color: #ffffff !important;
+  border-color: #3b3347 !important;
+}
+
+html[data-theme="dark"] .recent-leave-card .data-table tr:hover td,
+html[data-theme="dark"] .sc-history-card .sc-hist-table tr:hover td,
+html[data-theme="dark"] .my-request-table .data-table tr:hover td,
+html[data-theme="dark"] .data-table tr:hover td {
+  background-color: #362d47 !important;
+}
+
+html[data-theme="dark"] .form-group input,
+html[data-theme="dark"] .form-group select,
+html[data-theme="dark"] .form-group textarea {
+  background-color: #2b2436 !important;
+  border-color: #484052 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .form-group input::placeholder,
+html[data-theme="dark"] .form-group textarea::placeholder {
+  color: #a89ec0 !important;
+}
+
+html[data-theme="dark"] .view-request-btn {
+  background-color: #2b2436 !important;
+  color: #F5C518 !important;
+  border-color: #F5C518 !important;
+}
+
+html[data-theme="dark"] .view-request-btn:hover {
+  background-color: #3b314b !important;
+}
