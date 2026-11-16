@@ -338,7 +338,7 @@ function makeForm6Btn(rid) {
        <rect x="6" y="14" width="12" height="8"/>
      </svg>
      Form 6`;
-  btn.addEventListener('click', () => openForm6(rid));
+  btn.addEventListener('click', () => openForm6(rid, btn));
   return btn;
 }
 
@@ -440,20 +440,70 @@ async function inlineDecision(r, targetStatus) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FORM 6
+   FORM 6 (Ad-blocker & Popup-blocker resilient Fetch + Blob PDF)
 ═══════════════════════════════════════════════════════════════ */
 
-function openForm6(rid) {
-  const r = allRequests.find(x => x.leave_request_id === rid);
-  if (r && (r.status ?? '').toLowerCase() === 'rejected') {
+async function openForm6(rid, triggerBtn = null) {
+  const r = allRequests.find(x => String(x.leave_request_id) === String(rid));
+  const statusLow = String(r?.status ?? '').toLowerCase();
+  if (statusLow === 'rejected' || statusLow === 'disapproved') {
     alert('Form 6 is unavailable for rejected requests.');
     return;
   }
-  window.open(
-    `${FORM6_BASE}?request_id=${encodeURIComponent(rid)}`,
-    '_blank',
-    'noopener,noreferrer'
-  );
+
+  const originalHtml = triggerBtn ? triggerBtn.innerHTML : '';
+  if (triggerBtn) {
+    triggerBtn.disabled = true;
+    triggerBtn.textContent = 'Generating...';
+  }
+
+  try {
+    const url = `${FORM6_BASE}?request_id=${encodeURIComponent(rid)}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { Accept: 'application/pdf' }
+    });
+
+    if (!response.ok) {
+      const errText = await response.text().catch(() => '');
+      throw new Error(errText.trim() || `Unable to generate Form 6 (HTTP ${response.status}).`);
+    }
+
+    const rawBlob = await response.blob();
+    const pdfBlob = new Blob([rawBlob], { type: 'application/pdf' });
+    const blobUrl = URL.createObjectURL(pdfBlob);
+
+    const safeReqNum = String(r?.request_number || rid).replace(/[^A-Za-z0-9_-]/g, '_');
+    const filename = `Form6_${safeReqNum}.pdf`;
+
+    // Try opening the Blob URL in a new tab for preview/printing
+    const newWin = window.open(blobUrl, '_blank');
+
+    // If an ad blocker or popup blocker blocked window.open, trigger direct download
+    if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Revoke the temporary Blob URL after 60 seconds
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+
+  } catch (err) {
+    console.error('Form 6 generation error:', err);
+    alert(err.message || 'Unable to generate Form 6. Please try again.');
+  } finally {
+    if (triggerBtn) {
+      triggerBtn.disabled = false;
+      triggerBtn.innerHTML = originalHtml;
+    }
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -476,7 +526,7 @@ function wireModal() {
   if (modalForm6Btn) {
     modalForm6Btn.addEventListener('click', () => {
       const ridEl = document.getElementById('txModalRequestId');
-      if (ridEl) openForm6(Number(ridEl.value));
+      if (ridEl && ridEl.value) openForm6(ridEl.value, modalForm6Btn);
     });
   }
 }
