@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERSYS | Service Credits</title>
+    <title>PERSYS | Manage Service Credits</title>
     <link rel="icon" type="image/x-icon" href="../../assets/SAC logo.jpg">
 
     <link rel="stylesheet" href="../../styles/admin.css">
@@ -12,8 +13,9 @@
 
     <script src="../../scripts/apiConfig.js"></script>
     <script src="../../scripts/adminGuard.js"></script>
-  <link rel="stylesheet" href="../../styles/switchAccount.css" />
+    <link rel="stylesheet" href="../../styles/switchAccount.css" />
 </head>
+
 <body>
 
     <!-- Mobile Sidebar Overlay -->
@@ -24,10 +26,7 @@
         <!-- ── SIDEBAR ──────────────────────────────────────── -->
         <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
 
-            <img
-                class="sidebar-avatar"
-                src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
-                alt="Admin profile photo">
+            <img class="sidebar-avatar" src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A" alt="Admin profile photo">
 
             <p class="sidebar-name" id="sidebarUsername">Loading...</p>
             <p class="sidebar-role" id="sidebarRole">Loading...</p>
@@ -41,10 +40,10 @@
                         <a href="adminDashboard.html" class="nav-item">
                             <span class="nav-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                                    <rect x="14" y="14" width="7" height="7" rx="1" />
                                 </svg>
                             </span>
                             My Dashboard
@@ -55,8 +54,8 @@
                         <a href="adminProfile.html" class="nav-item">
                             <span class="nav-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
-                                    <circle cx="12" cy="8" r="4"/>
-                                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                                    <circle cx="12" cy="8" r="4" />
+                                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                                 </svg>
                             </span>
                             Profile
@@ -67,10 +66,10 @@
                         <a href="adminEmployees.html" class="nav-item">
                             <span class="nav-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
-                                    <circle cx="9" cy="8" r="3.5"/>
-                                    <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
-                                    <circle cx="17" cy="8" r="2.5"/>
-                                    <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                                    <circle cx="9" cy="8" r="3.5" />
+                                    <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+                                    <circle cx="17" cy="8" r="2.5" />
+                                    <path d="M20 20c0-2.5-1.9-4.5-4.5-5" />
                                 </svg>
                             </span>
                             Employees
@@ -81,8 +80,8 @@
                         <a href="adminServiceCredits.html" class="nav-item active" aria-current="page">
                             <span class="nav-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
-                                    <circle cx="12" cy="9" r="5"/>
-                                    <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                                    <circle cx="12" cy="9" r="5" />
+                                    <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5" />
                                 </svg>
                             </span>
                             Service Credits
@@ -93,13 +92,13 @@
                         <a href="adminTransactions.html" class="nav-item">
                             <span class="nav-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
-                                    <rect x="4" y="2" width="16" height="20" rx="2"/>
-                                    <line x1="8" y1="7" x2="16" y2="7"/>
-                                    <line x1="8" y1="11" x2="16" y2="11"/>
-                                    <line x1="8" y1="15" x2="12" y2="15"/>
+                                    <rect x="4" y="2" width="16" height="20" rx="2" />
+                                    <line x1="8" y1="7" x2="16" y2="7" />
+                                    <line x1="8" y1="11" x2="16" y2="11" />
+                                    <line x1="8" y1="15" x2="12" y2="15" />
                                 </svg>
                             </span>
-                            Transactions
+                            Leave Request
                         </a>
                     </li>
 
@@ -107,9 +106,9 @@
                         <a href="adminHistory.html" class="nav-item">
                             <span class="nav-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
-                                    <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
-                                    <polyline points="3 3 3 8 8 8"/>
-                                    <polyline points="12 7 12 12 15 15"/>
+                                    <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+                                    <polyline points="3 3 3 8 8 8" />
+                                    <polyline points="12 7 12 12 15 15" />
                                 </svg>
                             </span>
                             History
@@ -117,10 +116,25 @@
                     </li>
 
                     <li>
+                        <a href="adminReports.html" class="nav-item">
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                    <line x1="8" y1="17" x2="8" y2="13" />
+                                    <line x1="12" y1="17" x2="12" y2="11" />
+                                    <line x1="16" y1="17" x2="16" y2="15" />
+                                </svg>
+                            </span>
+                            Reports
+                        </a>
+                    </li>
+
+                    <li>
                         <a href="adminSettings.html" class="nav-item">
                             <span class="nav-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="3"/>
+                                    <circle cx="12" cy="12" r="3" />
                                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
                                              2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
                                              1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
@@ -135,7 +149,7 @@
                                              1.65 1.65 0 0 0 1.82-.33l.06-.06
                                              a2 2 0 0 1 2.83 2.83l-.06.06
                                              A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
-                                             H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                                             H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
                                 </svg>
                             </span>
                             Settings
@@ -149,9 +163,9 @@
             <div class="sidebar-logout-container">
                 <button type="button" class="btn-logout sidebar-logout">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
                     </svg>
                     <span>Logout</span>
                 </button>
@@ -170,13 +184,8 @@
                     <span></span><span></span>
                     <span></span><span></span>
                 </div>
-                <h1 class="topbar-title">Service Credits</h1>
-                <button
-                    class="hamburger"
-                    id="hamburger"
-                    type="button"
-                    aria-controls="sidebar"
-                    aria-expanded="false"
+                <h1 class="topbar-title">Manage Service Credits</h1>
+                <button class="hamburger" id="hamburger" type="button" aria-controls="sidebar" aria-expanded="false"
                     aria-label="Toggle navigation menu">
                     <span></span><span></span><span></span>
                 </button>
@@ -185,151 +194,117 @@
             <!-- PAGE CONTENT -->
             <main class="page-content sc-page" id="mainContent">
 
-                <!-- ── STAT CARDS ─────────────────────────────── -->
-                <div class="sc-stats" role="region" aria-label="Service credit statistics">
+                <!-- ── TOP ROW: TOTAL UPLOADED FILE + IMPORT SERVICE CREDITS ── -->
+                <div class="sc-top-overview-grid" role="region" aria-label="Service credit overview and Excel import">
 
-                    <!-- <div class="sc-stat-card">
-                        <p class="sc-stat-label">Local Service Credits</p>
-                        <p class="sc-stat-number" id="totalLocalCredits">—</p>
+                    <!-- Left Card: Total Uploaded File -->
+                    <div class="sc-total-file-card">
+                        <p class="sc-total-file-label">Total Uploaded File</p>
+                        <p class="sc-total-file-number" id="totalUploadRecords">—</p>
                     </div>
 
-                    <div class="sc-stat-card">
-                        <p class="sc-stat-label">National Service Credits</p>
-                        <p class="sc-stat-number" id="totalNationalCredits">—</p>
-                    </div> -->
+                    <!-- Right Group: Import Service Credits Banner + 2 Step Cards -->
+                    <div class="sc-import-group">
+                        <div class="sc-import-pill-header" id="importTitle">
+                            Import Service Credits
+                        </div>
 
-                    <div class="sc-stat-card">
-                        <p class="sc-stat-label">Total Upload Records</p>
-                        <p class="sc-stat-number" id="totalUploadRecords">—</p>
+                        <div class="sc-import-cards-row">
+
+                            <!-- Step 1 Card: Download Blank Excel Template -->
+                            <div class="sc-import-step-card">
+                                <h2 class="sc-step-card-title">1. Download Blank Excel Template</h2>
+                                <p class="sc-step-card-desc">
+                                    Use the official template to format service credit data.
+                                </p>
+                                <div class="sc-step-card-action">
+                                    <a href="../../templates/PERSYS_Service_Credits_Template.xlsx"
+                                        download="PERSYS_Service_Credits_Template.xlsx" class="btn-sc-green-pill"
+                                        aria-label="Download Service Credits Excel template">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M12 15V3" />
+                                            <path d="m7 10 5 5 5-5" />
+                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+                                        </svg>
+                                        Excel Template
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 Card: Upload Completed Excel File -->
+                            <div class="sc-import-step-card">
+                                <h2 class="sc-step-card-title">2. Upload Completed Excel File</h2>
+
+                                <form id="serviceCreditForm" enctype="multipart/form-data"
+                                    aria-label="Upload service credits form" class="sc-step2-form">
+                                    <div class="sc-step2-content">
+                                        <label for="excelFileInput" class="sc-upload-icon-box"
+                                            title="Choose an Excel file (.xlsx or .xls)">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M12 16V4" />
+                                                <path d="m7 9 5-5 5 5" />
+                                                <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+                                            </svg>
+                                        </label>
+
+                                        <div class="sc-step2-right">
+                                            <p class="sc-step-card-desc">
+                                                Select your completed Excel file to preview records.
+                                            </p>
+                                            <p class="sc-selected-file" id="scFileName" aria-live="polite">
+                                                No file selected
+                                            </p>
+
+                                            <input type="file" id="excelFileInput" name="service_credits_file"
+                                                accept=".xlsx,.xls" aria-describedby="scFileName">
+
+                                            <div class="sc-step2-btn-wrap">
+                                                <button type="submit" class="btn-sc-green-pill"
+                                                    id="btnUploadServiceCredits">
+                                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path d="M12 15V3" />
+                                                        <path d="m7 8 5-5 5 5" />
+                                                        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+                                                    </svg>
+                                                    Upload &amp; Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
                     </div>
 
                 </div>
-                <!-- END STAT CARDS -->
+                <!-- END TOP ROW -->
 
 
-                <!-- ── IMPORT SERVICE CREDITS ─────────────────── -->
-                <section class="sc-card" aria-labelledby="importTitle">
+                <!-- ── DATA PREVIEW CARD ──────────────────────────── -->
+                <section class="sc-card sc-preview-card" aria-labelledby="previewTitle">
 
-                    <h2 class="sc-card-title" id="importTitle">
-                        Import Service Credits
-                    </h2>
+                    <h2 class="sc-section-heading" id="previewTitle">Data Preview</h2>
 
-                    <!-- STEP 1 — Download template -->
-                    <div class="sc-upload-section">
-                        <h3>
-                            <span class="sc-step-number" aria-hidden="true">1</span>
-                            Download the Excel Template
-                        </h3>
-                        <p>
-                            Use the official template to prepare service credit data.
-                            If you already have a completed file, proceed to Step 2.
-                        </p>
-                        <a
-                            href="../../templates/PERSYS_Service_Credits_Template.xlsx"
-                            download="PERSYS_Service_Credits_Template.xlsx"
-                            class="btn-download-template-sc"
-                            aria-label="Download Service Credits Excel template"
-                        >
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M12 16V3"/>
-                                <path d="m7 11 5 5 5-5"/>
-                                <path d="M4 20h16"/>
-                            </svg>
-                            Download Excel Template
-                        </a>
-                    </div>
-
-                    <!-- STEP 2 — Upload file -->
-                    <div class="sc-upload-section">
-                        <h3>
-                            <span class="sc-step-number" aria-hidden="true">2</span>
-                            Upload the Completed Excel File
-                        </h3>
-                        <p>
-                            Select your completed file to preview and validate
-                            all records before they are saved.
-                        </p>
-
-                        <form
-                            id="serviceCreditForm"
-                            enctype="multipart/form-data"
-                            aria-label="Upload service credits form"
-                        >
-                            <!-- Dropzone -->
-                            <label for="excelFileInput" class="sc-dropzone" role="button" tabindex="0">
-                                <!-- Upload cloud icon -->
-                                <svg class="sc-dropzone-icon" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M12 16V3"/>
-                                    <path d="m7 8 5-5 5 5"/>
-                                    <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
-                                </svg>
-                                <span class="sc-dropzone-label">Choose an Excel File</span>
-                                <span class="sc-dropzone-format">Supported formats: .xlsx and .xls</span>
-                            </label>
-
-                            <input
-                                type="file"
-                                id="excelFileInput"
-                                name="service_credits_file"
-                                accept=".xlsx,.xls"
-                                aria-describedby="scFileName"
-                            >
-
-                            <p class="sc-selected-file" id="scFileName" aria-live="polite">
-                                No file selected
-                            </p>
-
-                            <p class="sc-upload-note">
-                                The file will be reviewed before any records are saved.
-                            </p>
-
-                            <div class="sc-upload-actions">
-                                <button
-                                    type="submit"
-                                    class="btn-upload"
-                                    id="btnUploadServiceCredits"
-                                    disabled
-                                >
-                                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                        <polyline points="17 8 12 3 7 8"/>
-                                        <line x1="12" y1="3" x2="12" y2="15"/>
-                                    </svg>
-                                    Upload &amp; Preview
-                                </button>
-                            </div>
-
-                        </form>
-                    </div>
-
-                </section>
-                <!-- END IMPORT -->
-
-
-                <!-- ── DATA PREVIEW ───────────────────────────── -->
-                <section class="sc-card" aria-labelledby="previewTitle">
-
-                    <h2 class="sc-card-title" id="previewTitle">Data Preview</h2>
-
-                    <!-- Validation banner -->
-                    <div
-                        class="sc-error-banner"
-                        id="serviceCreditValidationBanner"
-                        role="alert"
-                    >
+                    <!-- Validation banner (shown when a file is uploaded or validated) -->
+                    <div class="sc-error-banner" id="serviceCreditValidationBanner" role="alert" style="display:none;">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
-                            <line x1="12" y1="9" x2="12" y2="13"/>
-                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            <path
+                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
                         </svg>
-                        <span class="sc-error-text">
-                            Upload an Excel file to begin validation.
-                        </span>
+                        <span class="sc-error-text"></span>
                     </div>
 
-                    <!-- Preview table -->
-                    <div class="sc-table-wrap">
-                        <table class="sc-table" aria-label="Service credit data preview">
+                    <!-- Empty State Gray Bar (matches mockup when no file is uploaded yet) -->
+                    <div class="sc-preview-empty-bar" id="scPreviewEmptyBox">
+                        No file uploaded yet. Preview data will appear here.
+                    </div>
+
+                    <!-- Preview table (shown when previewRows has items) -->
+                    <div class="sc-table-wrap sc-preview-scroll-wrap" id="scPreviewTableWrap" style="display:none;">
+                        <table class="sc-table sc-preview-table" aria-label="Service credit data preview">
                             <thead>
                                 <tr>
                                     <th>Employee Number</th>
@@ -343,25 +318,18 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="serviceCreditPreviewBody">
-                                <tr>
-                                    <td colspan="9" style="text-align:center;padding:32px;color:#9ca3af;font-style:italic;">
-                                        No service credit file uploaded yet.
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody id="serviceCreditPreviewBody"></tbody>
                         </table>
                     </div>
 
-                    <!-- Save & Post -->
-                    <div id="serviceCreditActions" class="sc-post-actions" style="display:none;">
-                        <button type="button" class="btn-upload" id="btnSaveServiceCredits">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v14a2 2 0 0 1-2 2Z"/>
-                                <polyline points="17 21 17 13 7 13 7 21"/>
-                                <polyline points="7 3 7 8 15 8"/>
-                            </svg>
-                            Save &amp; Post
+                    <!-- Employees-style Per-Page Pagination for Data Preview -->
+                    <div class="employee-pagination sc-preview-pagination" id="scPreviewPagination" role="navigation"
+                        aria-label="Data preview pagination" style="display:none;"></div>
+
+                    <!-- Upload & Save Action -->
+                    <div id="serviceCreditActions" class="sc-preview-footer">
+                        <button type="button" class="btn-sc-green-pill" id="btnSaveServiceCredits" disabled>
+                            Upload &amp; Save
                         </button>
                     </div>
 
@@ -369,73 +337,152 @@
                 <!-- END DATA PREVIEW -->
 
 
-                <!-- ── SERVICE CREDIT UPLOAD HISTORY ─────────────────────────── -->
-                <section class="sc-history-card" aria-labelledby="historyTitle">
+                <!-- ── MANUAL UPLOAD CARD ─────────────────────────── -->
+                <section class="sc-card sc-manual-card" aria-labelledby="manualUploadTitle">
 
-                    <div class="sc-history-card-header">
-                        <h2 class="sc-history-card-title" id="historyTitle">Service Credit Upload History</h2>
+                    <h2 class="sc-section-heading" id="manualUploadTitle">Manual Upload</h2>
+
+                    <!-- Feedback banner for Manual Upload -->
+                    <div class="sc-error-banner" id="manualUploadBanner" role="alert" style="display:none;">
+                        <span class="sc-error-text" id="manualUploadBannerText"></span>
                     </div>
 
-                    <div class="sc-history-card-body">
-                        <div class="sc-table-wrap sc-history-wrap">
-                            <table class="sc-table" aria-label="Service credit upload history">
-                                <thead>
-                                    <tr>
-                                        <th>Upload Date</th>
-                                        <th>File Name</th>
-                                        <th>Uploaded By</th>
-                                        <th>Records</th>
-                                        <th>Status</th>
-                                        <th>Posted Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="serviceCreditHistoryBody">
-                                    <!-- Skeleton rows while history loads -->
-                                    <tr class="skel-row" aria-hidden="true">
-                                        <td><span class="skel skel-cell"></span></td>
-                                        <td><span class="skel skel-cell"></span></td>
-                                        <td><span class="skel skel-cell" style="width:60%"></span></td>
-                                        <td><span class="skel skel-cell" style="width:40%"></span></td>
-                                        <td><span class="skel skel-cell" style="width:55%"></span></td>
-                                        <td><span class="skel skel-cell" style="width:50%"></span></td>
-                                        <td><span class="skel skel-cell" style="width:50%"></span></td>
-                                    </tr>
-                                    <tr class="skel-row" aria-hidden="true">
-                                        <td><span class="skel skel-cell"></span></td>
-                                        <td><span class="skel skel-cell"></span></td>
-                                        <td><span class="skel skel-cell" style="width:70%"></span></td>
-                                        <td><span class="skel skel-cell" style="width:40%"></span></td>
-                                        <td><span class="skel skel-cell" style="width:55%"></span></td>
-                                        <td><span class="skel skel-cell" style="width:50%"></span></td>
-                                        <td><span class="skel skel-cell" style="width:50%"></span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="sc-manual-scroll-wrap">
+                        <div class="sc-manual-grid-container">
 
-                        <!-- Pagination -->
-                        <div
-                            class="sc-history-pagination"
-                            id="scHistoryPagination"
-                            role="navigation"
-                            aria-label="Upload history pagination"
-                            hidden
-                        ></div>
+                            <!-- Column Header Bar -->
+                            <div class="sc-manual-header-row" role="row">
+                                <span class="sc-manual-col-num" aria-hidden="true"></span>
+                                <span class="sc-manual-col-empno">Employee #</span>
+                                <span class="sc-manual-col-name">Name</span>
+                                <span class="sc-manual-col-activity">Name of Activity</span>
+                                <span class="sc-manual-col-start">Start Date</span>
+                                <span class="sc-manual-col-end">End Date</span>
+                                <span class="sc-manual-col-credits">Service Credits</span>
+                                <span class="sc-manual-col-type">Credit Type</span>
+                                <span class="sc-manual-col-action">Action</span>
+                            </div>
+
+                            <!-- Active Fillable Rows (1 to 5 max) -->
+                            <div id="manualUploadRowsContainer" class="sc-manual-rows-list"></div>
+
+                            <!-- Add Personnel Bar + Remaining Slot Numbers -->
+                            <div id="manualAddPersonnelArea" class="sc-manual-add-area">
+                                <div class="sc-manual-add-row">
+                                    <span class="sc-manual-slot-index" id="manualNextRowIndex">2.</span>
+                                    <button type="button" class="btn-manual-add-personnel" id="btnAddManualPersonnel">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <circle cx="12" cy="12" r="9" />
+                                            <line x1="12" y1="8" x2="12" y2="16" />
+                                            <line x1="8" y1="12" x2="16" y2="12" />
+                                        </svg>
+                                        + Add Personnel
+                                    </button>
+                                </div>
+                                <div id="manualRemainingSlots" class="sc-manual-remaining-slots" aria-hidden="true">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Manual Upload Submit Footer -->
+                    <div class="sc-manual-footer">
+                        <button type="button" class="btn-sc-green-pill btn-sc-manual-submit" id="btnSubmitManualUpload">
+                            Upload
+                        </button>
                     </div>
 
                 </section>
-                <!-- END UPLOAD HISTORY -->
+                <!-- END MANUAL UPLOAD -->
+
+
+                <!-- ── PERSONNEL SERVICE CREDITS RECORDS ──────────────────────── -->
+                <section class="sc-card sc-personnel-card" id="personnelRecordsSection"
+                    aria-labelledby="personnelRecordsTitle">
+
+                    <div class="sc-personnel-header">
+                        <h2 class="sc-personnel-title" id="personnelRecordsTitle">
+                            Personnel Service Credits Records
+                        </h2>
+
+                        <div class="sc-personnel-search-wrap">
+                            <input type="search" id="scPersonnelSearch" class="sc-personnel-search-input"
+                                placeholder="Search by employee #, name, role..."
+                                aria-label="Search personnel service credit records" autocomplete="off">
+                            <svg class="sc-personnel-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="11" cy="11" r="7" />
+                                <line x1="16.5" y1="16.5" x2="22" y2="22" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="sc-table-wrap sc-preview-scroll-wrap sc-personnel-scroll-wrap">
+                        <table class="sc-table sc-preview-table sc-personnel-table"
+                            aria-label="Personnel service credits records">
+                            <thead>
+                                <tr class="sc-personnel-thead-main">
+                                    <th rowspan="2">Employee #</th>
+                                    <th rowspan="2">Name</th>
+                                    <th rowspan="2">Role</th>
+                                    <th colspan="3" class="sc-col-group-head">Current Balance</th>
+                                    <th colspan="3" class="sc-col-group-head">Overall Earned</th>
+                                    <th colspan="3" class="sc-col-group-head">Total Used</th>
+                                    <th rowspan="2" class="sc-col-center">Activities</th>
+                                </tr>
+                                <tr class="sc-personnel-thead-sub">
+                                    <!-- CURRENT BALANCE -->
+                                    <th class="sc-col-sub" title="National Service Credits">National</th>
+                                    <th class="sc-col-sub" title="Wellness Service Credits">Wellness
+                                    </th>
+                                    <th class="sc-col-sub sc-col-group-end" title="Local Service Credits">Local</th>
+
+                                    <!-- OVERALL EARNED -->
+                                    <th class="sc-col-sub" title="National Service Credits">National</th>
+                                    <th class="sc-col-sub" title="Wellness Service Credits">Wellness
+                                    </th>
+                                    <th class="sc-col-sub sc-col-group-end" title="Local Service Credits">Local</th>
+
+                                    <!-- TOTAL USED -->
+                                    <th class="sc-col-sub" title="National Service Credits">National</th>
+                                    <th class="sc-col-sub" title="Wellness Service Credits">Wellness
+                                    </th>
+                                    <th class="sc-col-sub sc-col-group-end" title="Local Service Credits">Local</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scPersonnelRecordsBody">
+                                <tr class="skel-row" aria-hidden="true">
+                                    <td><span class="skel skel-cell"></span></td>
+                                    <td><span class="skel skel-cell"></span></td>
+                                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                                    <td colspan="3"><span class="skel skel-cell"></span></td>
+                                    <td colspan="3"><span class="skel skel-cell"></span></td>
+                                    <td colspan="3"><span class="skel skel-cell"></span></td>
+                                    <td><span class="skel skel-cell" style="width:60%"></span></td>
+                                </tr>
+                                <tr class="skel-row" aria-hidden="true">
+                                    <td><span class="skel skel-cell"></span></td>
+                                    <td><span class="skel skel-cell"></span></td>
+                                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                                    <td colspan="3"><span class="skel skel-cell"></span></td>
+                                    <td colspan="3"><span class="skel skel-cell"></span></td>
+                                    <td colspan="3"><span class="skel skel-cell"></span></td>
+                                    <td><span class="skel skel-cell" style="width:60%"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Employees-style Per-Page Pagination for Personnel Service Credits Records -->
+                    <div class="employee-pagination sc-personnel-pagination" id="scPersonnelPagination"
+                        role="navigation" aria-label="Personnel service credits pagination"></div>
+
+                </section>
+                <!-- END PERSONNEL SERVICE CREDITS RECORDS -->
 
                 <!-- Logout modal -->
-                <div
-                    class="modal-overlay"
-                    id="logoutModal"
-                    style="display:none;"
-                    role="dialog"
-                    aria-modal="true"
-                    aria-labelledby="logoutModalTitle"
-                >
+                <div class="modal-overlay" id="logoutModal" style="display:none;" role="dialog" aria-modal="true"
+                    aria-labelledby="logoutModalTitle">
                     <div class="modal-box">
                         <div class="modal-header">
                             <h2 id="logoutModalTitle">Log Out</h2>
@@ -460,86 +507,36 @@
     <!-- END APP SHELL -->
 
     <!-- ══════════════════════════════════════════════════════
-         SERVICE CREDIT RECIPIENTS MODAL
+         ACTIVITIES MODAL POPUP (When clicking "View")
     ══════════════════════════════════════════════════════ -->
-    <div
-        class="sc-recipients-modal-overlay"
-        id="scRecipientsModalOverlay"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="scRecipientsModalTitle"
-        tabindex="-1"
-    >
-        <div class="sc-recipients-modal" id="scRecipientsModal" tabindex="-1">
-            <button
-                type="button"
-                class="sc-recipients-close"
-                id="scRecipientsCloseBtn"
-                aria-label="Close"
-            >&#10005;</button>
+    <div class="sc-activities-modal-overlay" id="scActivitiesModalOverlay" role="dialog" aria-modal="true"
+        aria-labelledby="scActivitiesModalTitle" tabindex="-1">
+        <div class="sc-activities-modal" id="scActivitiesModal" tabindex="-1">
+            <button type="button" class="sc-activities-close" id="scActivitiesCloseBtn"
+                aria-label="Close">&#10005;</button>
 
-            <h2 class="sc-recipients-title" id="scRecipientsModalTitle">
-                Service Credit Recipients
+            <h2 class="sc-activities-title" id="scActivitiesModalTitle">
+                Activities
             </h2>
 
-            <div class="sc-recipients-meta">
-                <span><strong>File Name:</strong> <span id="scRecipientsFileName">—</span></span>
-                <span><strong>Upload Date:</strong> <span id="scRecipientsUploadDate">—</span></span>
-            </div>
-
-            <p class="sc-recipients-subtitle">
-                The following employees have received added service credits from this upload.
+            <p class="sc-activities-emp-name">
+                <strong>Name:</strong> <span id="scActivitiesEmployeeName">—</span>
             </p>
 
-            <div class="sc-recipients-table-box">
-                <div class="sc-recipients-table-scroll">
-                    <table class="sc-recipients-table" aria-label="Service credit recipients">
+            <div class="sc-activities-table-box">
+                <div class="sc-activities-table-scroll">
+                    <table class="sc-activities-table" aria-label="Employee service credit activities">
                         <thead>
                             <tr>
-                                <th>Employee ID</th>
-                                <th>Employee Name</th>
-                                <th>Current Role</th>
-                                <th>Credit Type</th>
-                                <th>Added Credits</th>
+                                <th>Name of Activity</th>
+                                <th>Date of Activity</th>
+                                <th>Service Credits / Pts</th>
+                                <th>Credit type</th>
                             </tr>
                         </thead>
-                        <tbody id="scRecipientsTableBody"></tbody>
+                        <tbody id="scActivitiesTableBody"></tbody>
                     </table>
                 </div>
-            </div>
-
-            <div class="sc-recipients-pagination" id="scRecipientsPagination">
-                <span id="scRecipientsPageInfo">Showing 0 of 0 records</span>
-                <div class="sc-recipients-nav-btns">
-                    <button
-                        type="button"
-                        class="sc-recipients-page-btn"
-                        id="scRecipientsPrevBtn"
-                        aria-label="Previous page"
-                        disabled
-                    >
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-                    </button>
-                    <button
-                        type="button"
-                        class="sc-recipients-page-btn"
-                        id="scRecipientsNextBtn"
-                        aria-label="Next page"
-                        disabled
-                    >
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-                    </button>
-                </div>
-            </div>
-
-            <div class="sc-recipients-footer">
-                <button
-                    type="button"
-                    class="btn-sc-recipients-close"
-                    id="scRecipientsFooterCloseBtn"
-                >
-                    Close
-                </button>
             </div>
         </div>
     </div>
@@ -549,6 +546,7 @@
     <script src="../../scripts/apiErrorHandler.js"></script>
     <script src="../../scripts/settings.js"></script>
     <script src="../../scripts/adminServiceCredits.js"></script>
-  <script src="../../scripts/switchAccount.js"></script>
+    <script src="../../scripts/switchAccount.js"></script>
 </body>
+
 </html>

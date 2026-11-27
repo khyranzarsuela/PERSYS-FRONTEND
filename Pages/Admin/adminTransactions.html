@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PERSYS | Transactions</title>
+  <title>PERSYS | Leave Request</title>
   <link rel="icon" type="image/x-icon" href="../../assets/SAC logo.jpg" />
 
   <link rel="stylesheet" href="../../styles/admin.css" />
@@ -45,9 +45,10 @@
        PAGE LAYOUT
        ========================================================= */
     .page-content.tx-page {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch;
+      gap: 24px;
       padding: 28px 32px;
       background: #f0eef8;
       width: 100%;
@@ -56,12 +57,13 @@
     }
 
     .main-wrapper { flex: 1; min-width: 0; display: flex; flex-direction: column; width: 100%; }
-    .page-content { display: block; }
 
     /* =========================================================
        MAIN CARD
        ========================================================= */
     .tx-card {
+      width: 100%;
+      box-sizing: border-box;
       background: #fff;
       border: 1px solid #e5dff5;
       border-radius: 16px;
@@ -131,21 +133,41 @@
     .tx-filter-wrap { position: relative; display: inline-block; }
 
     .tx-filter-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 18px;
-      background: #F5C518; color: #1a1a1a;
-      font-size: 0.875rem; font-weight: 700;
-      border: none; border-radius: 8px; cursor: pointer;
-      transition: background 0.2s;
+      display: inline-flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 9px 14px;
+      min-width: 140px;
+      background: #fff; color: #374151;
+      font: inherit; font-size: 0.85rem; font-weight: 500;
+      border: 1.5px solid #d0c8e8; border-radius: 8px; cursor: pointer;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
     }
-    .tx-filter-btn:hover { background: #e6b800; }
+    .tx-filter-btn:hover,
+    .tx-filter-wrap.is-open .tx-filter-btn {
+      border-color: #6B0FBA;
+      box-shadow: 0 0 0 3px rgba(107,15,186,0.12);
+    }
     .tx-filter-btn svg {
       width: 13px; height: 13px;
-      stroke: #1a1a1a; fill: none; stroke-width: 2.5;
+      stroke: #374151; fill: none; stroke-width: 2.2;
       stroke-linecap: round; stroke-linejoin: round;
       transition: transform 0.2s;
     }
     .tx-filter-wrap.is-open .tx-filter-btn svg { transform: rotate(180deg); }
+
+    html[data-theme="dark"] .tx-filter-btn {
+      background: #2b2436;
+      border-color: #484052;
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .tx-filter-btn svg {
+      stroke: #ffffff;
+    }
+    html[data-theme="dark"] .tx-filter-btn:hover,
+    html[data-theme="dark"] .tx-filter-wrap.is-open .tx-filter-btn {
+      border-color: #F5C518;
+      box-shadow: 0 0 0 3px rgba(245,197,24,0.15);
+    }
 
     .tx-dropdown-panel {
       display: none;
@@ -174,8 +196,31 @@
        ========================================================= */
     .tx-table-wrap {
       overflow-x: auto;
-      border: 1px solid #e5dff5;
+      overflow-y: auto;
+      max-height: 55vh;
+      border: 1px solid #DDD6C8;
       border-radius: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(107, 15, 186, 0.28) rgba(107, 15, 186, 0.05);
+    }
+
+    .tx-table-wrap::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .tx-table-wrap::-webkit-scrollbar-track {
+      background: rgba(107, 15, 186, 0.05);
+      border-radius: 3px;
+    }
+
+    .tx-table-wrap::-webkit-scrollbar-thumb {
+      background: rgba(107, 15, 186, 0.28);
+      border-radius: 3px;
+    }
+
+    .tx-table-wrap::-webkit-scrollbar-thumb:hover {
+      background: rgba(107, 15, 186, 0.45);
     }
 
     .tx-table {
@@ -184,8 +229,13 @@
       font-size: 0.8125rem;
     }
 
-    .tx-table thead tr { background: #f8f5ff; border-bottom: 1.5px solid #ede8f8; }
+    .tx-table thead tr { background: #faf8f3; }
     .tx-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #faf8f3;
+      box-shadow: 0 2px 0 #DDD6C8;
       padding: 12px 16px; text-align: left;
       font-weight: 700; color: #374151; white-space: nowrap;
     }
@@ -210,47 +260,231 @@
     .tx-view-btn:hover { opacity: 0.7; }
 
     /* =========================================================
-       PAGINATION
+       PAGINATION (Employees-style)
        ========================================================= */
     .tx-pagination {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 14px 20px;
-      border-top: 1px solid #f0ebfc;
-      background: #fff;
+      gap: 12px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #DDD6C8;
+      background: transparent;
     }
 
-    .tx-pagination-info { font-size: 0.8125rem; color: #9ca3af; }
+    .pagination-info {
+      font-size: 0.85rem;
+      color: #6B5E50;
+    }
 
-    .tx-pagination-btns { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
 
-    .tx-page-btn {
-      min-width: 34px; height: 34px; padding: 0 10px;
-      border: 1.5px solid #e5dff5; border-radius: 6px;
-      background: #fff; color: #6b7280;
-      font: inherit; font-size: 0.8125rem; font-weight: 600;
+    .pagination-controls label {
+      font-size: 0.8125rem;
+      color: #6B5E50;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 4px;
+    }
+
+    .pagination-select {
+      padding: 5px 10px;
+      border: 1.5px solid #DDD6C8;
+      border-radius: 7px;
+      background: #fff;
+      font: inherit;
+      font-size: 0.8125rem;
+      color: #1A1A2E;
+      cursor: pointer;
+    }
+
+    .pagination-button {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1.5px solid #DDD6C8;
+      border-radius: 7px;
+      background: #fff;
+      color: #1A1A2E;
+      font: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s, color 0.15s;
       white-space: nowrap;
     }
-    .tx-page-btn:hover:not(:disabled) {
-      background: #f0eaf8;
+    .pagination-button:hover:not(:disabled) {
       border-color: #6B0FBA;
       color: #6B0FBA;
+      background: rgba(107, 15, 186, 0.05);
     }
-    .tx-page-btn--active {
-      background: #6B0FBA; border-color: #6B0FBA; color: #fff; cursor: default;
+    .pagination-button.is-active {
+      background: #6B0FBA;
+      border-color: #6B0FBA;
+      color: #fff;
+      cursor: default;
     }
-    .tx-page-btn--active:hover { background: #6B0FBA; color: #fff; }
-    .tx-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pagination-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
 
-    .tx-page-ellipsis {
-      display: inline-flex; align-items: center; justify-content: center;
-      min-width: 34px; height: 34px;
-      font-size: 0.875rem; color: #9ca3af; user-select: none;
+    html[data-theme="dark"] .tx-table-wrap {
+      border-color: #3a314a;
+      scrollbar-color: rgba(245, 197, 24, 0.45) rgba(255, 255, 255, 0.05);
+    }
+    html[data-theme="dark"] .tx-table thead tr,
+    html[data-theme="dark"] .tx-table thead th {
+      background: #2b2436;
+      color: #F5C518;
+      box-shadow: 0 2px 0 #3a314a;
+    }
+    html[data-theme="dark"] .tx-pagination {
+      border-top-color: #3a314a;
+    }
+    html[data-theme="dark"] .pagination-info,
+    html[data-theme="dark"] .pagination-controls label {
+      color: #d6c8eb;
+    }
+    html[data-theme="dark"] .pagination-select,
+    html[data-theme="dark"] .pagination-button {
+      background: #26212e;
+      border-color: #3a314a;
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .pagination-button:hover:not(:disabled) {
+      border-color: #F5C518;
+      color: #F5C518;
+      background: rgba(245, 197, 24, 0.12);
+    }
+    html[data-theme="dark"] .pagination-button.is-active {
+      background: #F5C518;
+      border-color: #F5C518;
+      color: #1A1A2E;
+    }
+
+    /* =========================================================
+       LEAVE REPORTS CARD
+       ========================================================= */
+    .tx-reports-card {
+      width: 100%;
+      box-sizing: border-box;
+      background: #fff;
+      border: 1px solid #e5dff5;
+      border-radius: 16px;
+      padding: 24px 24px 28px;
+      box-shadow: 0 2px 10px rgba(107, 15, 186, 0.07);
+    }
+
+    .tx-reports-title {
+      margin: 0 0 16px;
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: #1A1A2E;
+    }
+
+    .tx-reports-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 45vh;
+      border: 1px solid #DDD6C8;
+      border-radius: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(107, 15, 186, 0.28) rgba(107, 15, 186, 0.05);
+    }
+
+    .tx-reports-table-wrap::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .tx-reports-table-wrap::-webkit-scrollbar-track {
+      background: rgba(107, 15, 186, 0.05);
+      border-radius: 3px;
+    }
+    .tx-reports-table-wrap::-webkit-scrollbar-thumb {
+      background: rgba(107, 15, 186, 0.28);
+      border-radius: 3px;
+    }
+    .tx-reports-table-wrap::-webkit-scrollbar-thumb:hover {
+      background: rgba(107, 15, 186, 0.45);
+    }
+
+    .tx-reports-table {
+      width: 100%;
+      min-width: 700px;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .tx-reports-table thead tr {
+      background: #ede9f5;
+    }
+
+    .tx-reports-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #ede9f5;
+      box-shadow: 0 2px 0 #DDD6C8;
+      padding: 13px 20px;
+      text-align: left;
+      font-weight: 700;
+      color: #1A1A2E;
+      white-space: nowrap;
+    }
+
+    .tx-reports-table tbody tr {
+      background: #fff;
+    }
+    .tx-reports-table tbody tr:hover {
+      background: #f8f5ff;
+    }
+
+    .tx-reports-table tbody td {
+      padding: 13px 20px;
+      color: #374151;
+      border-bottom: 1px solid #f0ebfc;
+    }
+    .tx-reports-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    html[data-theme="dark"] .tx-reports-card {
+      background: #1e1926;
+      border-color: #3a314a;
+    }
+    html[data-theme="dark"] .tx-reports-title {
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .tx-reports-table-wrap {
+      border-color: #3a314a;
+      scrollbar-color: rgba(245, 197, 24, 0.45) rgba(255, 255, 255, 0.05);
+    }
+    html[data-theme="dark"] .tx-reports-table thead tr,
+    html[data-theme="dark"] .tx-reports-table thead th {
+      background: #2b2436;
+      color: #F5C518;
+      box-shadow: 0 2px 0 #3a314a;
+    }
+    html[data-theme="dark"] .tx-reports-table tbody tr {
+      background: #1e1926;
+    }
+    html[data-theme="dark"] .tx-reports-table tbody tr:hover {
+      background: #26212e;
+    }
+    html[data-theme="dark"] .tx-reports-table tbody td {
+      color: #e9e0f5;
+      border-bottom-color: #3a314a;
     }
 
     /* =========================================================
@@ -479,8 +713,7 @@
 
     .tx-inline-approve,
     .tx-inline-reject,
-    .tx-inline-form6,
-    .tx-inline-view {
+    .tx-inline-form6 {
       display: inline-flex; align-items: center; gap: 5px;
       padding: 6px 11px; border-radius: 6px;
       font: inherit; font-size: 0.775rem; font-weight: 700;
@@ -497,8 +730,24 @@
     .tx-inline-form6 { background: transparent; color: #6B0FBA; border: 1.5px solid #6B0FBA; }
     .tx-inline-form6:hover { background: #f3eeff; }
 
-    .tx-inline-view { background: transparent; color: #6B0FBA; border: 1.5px solid #d0c8e8; }
-    .tx-inline-view:hover { background: #f3eeff; border-color: #6B0FBA; }
+    .tx-inline-view {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 22px;
+      border: none;
+      border-radius: 999px;
+      background: #1B8A4B;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.825rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      margin-right: 4px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .tx-inline-view:hover { background: #15703C; }
 
     .tx-inline-approve svg, .tx-inline-reject svg,
     .tx-inline-form6 svg, .tx-inline-view svg {
@@ -640,7 +889,7 @@
                   <line x1="8"  y1="15" x2="12" y2="15"/>
                 </svg>
               </span>
-              Transactions
+              Leave Request
             </a>
           </li>
 
@@ -654,6 +903,21 @@
                 </svg>
               </span>
               History
+            </a>
+          </li>
+
+          <li>
+            <a href="adminReports.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="8" y1="17" x2="8" y2="13"/>
+                  <line x1="12" y1="17" x2="12" y2="11"/>
+                  <line x1="16" y1="17" x2="16" y2="15"/>
+                </svg>
+              </span>
+              Reports
             </a>
           </li>
 
@@ -714,7 +978,7 @@
             <line x1="8"  y1="11" x2="16" y2="11"/>
             <line x1="8"  y1="15" x2="12" y2="15"/>
           </svg>
-          Transactions
+          Leave Request
         </h1>
         <button
           class="hamburger"
@@ -800,6 +1064,8 @@
               <table class="tx-table" aria-label="Leave request transactions">
                 <thead>
                   <tr>
+                    <th>Request ID</th>
+                    <th>Date filed</th>
                     <th>Employee</th>
                     <th>Leave Details</th>
                     <th>Deduct From</th>
@@ -810,6 +1076,8 @@
                 <!-- Skeleton rows while data loads -->
                 <tbody id="txTableBody">
                   <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                    <td><span class="skel skel-cell" style="width:75%"></span></td>
                     <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:65%"></span></td>
                     <td><span class="skel skel-cell" style="width:60%"></span></td>
@@ -817,6 +1085,8 @@
                     <td><span class="skel skel-cell" style="width:70%"></span></td>
                   </tr>
                   <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                    <td><span class="skel skel-cell" style="width:75%"></span></td>
                     <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:70%"></span></td>
                     <td><span class="skel skel-cell" style="width:60%"></span></td>
@@ -824,6 +1094,8 @@
                     <td><span class="skel skel-cell" style="width:70%"></span></td>
                   </tr>
                   <tr class="skel-row" aria-hidden="true">
+                    <td><span class="skel skel-cell" style="width:70%"></span></td>
+                    <td><span class="skel skel-cell" style="width:75%"></span></td>
                     <td><span class="skel skel-cell"></span></td>
                     <td><span class="skel skel-cell" style="width:50%"></span></td>
                     <td><span class="skel skel-cell" style="width:60%"></span></td>
@@ -845,6 +1117,51 @@
 
           </div><!-- END CARD BODY -->
         </div><!-- END TX CARD -->
+
+        <!-- ══════════════════════════════════════════════════════
+             LEAVE REPORTS CARD
+        ══════════════════════════════════════════════════════ -->
+        <div class="tx-reports-card" aria-labelledby="leaveReportsTitle">
+          <h2 class="tx-reports-title" id="leaveReportsTitle">Leave Reports</h2>
+
+          <div class="tx-reports-table-wrap">
+            <table class="tx-reports-table" aria-label="Leave reports">
+              <thead>
+                <tr>
+                  <th>Employee Number</th>
+                  <th>Employee Name</th>
+                  <th>Date Applied</th>
+                  <th>Inclusive Dates</th>
+                  <th>Type of Leave</th>
+                </tr>
+              </thead>
+              <tbody id="leaveReportsTableBody">
+                <tr class="skel-row" aria-hidden="true">
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:80%"></span></td>
+                  <td><span class="skel skel-cell" style="width:65%"></span></td>
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:55%"></span></td>
+                </tr>
+                <tr class="skel-row" aria-hidden="true">
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:75%"></span></td>
+                  <td><span class="skel skel-cell" style="width:65%"></span></td>
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:55%"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            class="tx-pagination"
+            id="leaveReportsPagination"
+            role="navigation"
+            aria-label="Leave reports pagination"
+            hidden
+          ></div>
+        </div><!-- END LEAVE REPORTS CARD -->
 
         <!-- Logout Modal -->
         <div

@@ -610,6 +610,358 @@
     html[data-theme="dark"] .welcome-banner-text p  { color: #a99dbe; }
     html[data-theme="dark"] .stat-card-new .sc-label { color: #c4b8d8; }
     html[data-theme="dark"] .stat-card-new .sc-number { color: #f0ecff; }
+
+    /* =========================================================
+       REQUEST EDIT PROFILE MODAL (User Side)
+       ========================================================= */
+    .edit-req-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 10, 35, 0.58);
+      backdrop-filter: blur(3px);
+      z-index: 120;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .edit-req-modal-overlay[hidden] {
+      display: none !important;
+    }
+
+    .edit-req-modal-box {
+      width: min(640px, calc(100vw - 32px));
+      max-height: calc(100dvh - 36px);
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 22px 64px rgba(0, 0, 0, 0.28);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .edit-req-modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 20px 26px 16px;
+      border-bottom: 1px solid #e8e1f0;
+      flex-shrink: 0;
+    }
+
+    .edit-req-modal-header h2 {
+      margin: 0 0 4px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #1A1A2E;
+    }
+
+    .edit-req-modal-header p {
+      margin: 0;
+      font-size: 0.84rem;
+      color: #6b7280;
+    }
+
+    .edit-req-close-x {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .edit-req-close-x:hover {
+      background: #f3eeff;
+      color: #6B0FBA;
+    }
+
+    .edit-req-modal-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 20px 26px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .edit-req-notice {
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .edit-req-notice[hidden] {
+      display: none !important;
+    }
+
+    .edit-req-notice.is-error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+    }
+
+    .edit-req-notice.is-success {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #15803d;
+    }
+
+    .edit-req-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .edit-req-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .edit-req-field label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .edit-req-select,
+    .edit-req-textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid #d5cfe6;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #1f2937;
+      font: inherit;
+      font-size: 0.875rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .edit-req-textarea {
+      min-height: 105px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .edit-req-select:focus,
+    .edit-req-textarea:focus {
+      border-color: #6B0FBA;
+      box-shadow: 0 0 0 3px rgba(107, 15, 186, 0.12);
+    }
+
+    .edit-req-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.76rem;
+      color: #6b7280;
+    }
+
+    .edit-req-form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .btn-edit-req-cancel {
+      padding: 9px 18px;
+      border: 1.5px solid #d0c8e8;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #374151;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-edit-req-cancel:hover {
+      background: #f3eeff;
+      border-color: #6B0FBA;
+      color: #6B0FBA;
+    }
+
+    .btn-edit-req-submit {
+      padding: 9px 22px;
+      border: none;
+      border-radius: 999px;
+      background: #1B8A4B;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s, opacity 0.15s;
+    }
+
+    .btn-edit-req-submit:hover:not(:disabled) {
+      background: #15703C;
+      box-shadow: 0 3px 10px rgba(27, 138, 75, 0.32);
+    }
+
+    .btn-edit-req-submit:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    /* My Edit Requests History Section inside Modal */
+    .my-edit-reqs-section {
+      border-top: 1px solid #e8e1f0;
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .my-edit-reqs-heading {
+      margin: 0;
+      font-size: 0.925rem;
+      font-weight: 800;
+      color: #1A1A2E;
+    }
+
+    .my-edit-reqs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 210px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .my-edit-req-card {
+      padding: 12px 14px;
+      border: 1px solid #e5dff5;
+      border-radius: 10px;
+      background: #faf8ff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .my-edit-req-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .my-edit-req-id-cat {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #5b21b6;
+    }
+
+    .my-edit-req-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .my-edit-req-badge.is-pending {
+      background: #FFF8E1;
+      color: #92400E;
+    }
+
+    .my-edit-req-badge.is-resolved {
+      background: #DCFCE7;
+      color: #15803D;
+    }
+
+    .my-edit-req-badge.is-declined {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
+
+    .my-edit-req-msg {
+      margin: 0;
+      font-size: 0.84rem;
+      color: #1f2937;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .my-edit-req-note {
+      margin: 2px 0 0;
+      padding: 7px 10px;
+      border-radius: 7px;
+      background: #ede9fe;
+      color: #4c1d95;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .my-edit-req-date {
+      font-size: 0.73rem;
+      color: #6b7280;
+    }
+
+    html[data-theme="dark"] .edit-req-modal-box {
+      background: #1e1926;
+      border: 1px solid #484052;
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .edit-req-modal-header,
+    html[data-theme="dark"] .my-edit-reqs-section {
+      border-color: #484052;
+    }
+    html[data-theme="dark"] .edit-req-modal-header h2,
+    html[data-theme="dark"] .edit-req-field label,
+    html[data-theme="dark"] .my-edit-reqs-heading {
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .edit-req-modal-header p,
+    html[data-theme="dark"] .edit-req-meta-row,
+    html[data-theme="dark"] .my-edit-req-date,
+    html[data-theme="dark"] .edit-req-close-x {
+      color: #d0c9db;
+    }
+    html[data-theme="dark"] .edit-req-select,
+    html[data-theme="dark"] .edit-req-textarea {
+      background: #2b2436;
+      border-color: #484052;
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .btn-edit-req-cancel {
+      background: #2b2436;
+      border-color: #484052;
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .my-edit-req-card {
+      background: #26212e;
+      border-color: #3a314a;
+    }
+    html[data-theme="dark"] .my-edit-req-id-cat {
+      color: #F5C518;
+    }
+    html[data-theme="dark"] .my-edit-req-msg {
+      color: #f3f0fa;
+    }
+    html[data-theme="dark"] .my-edit-req-note {
+      background: #352b47;
+      color: #e9d5ff;
+    }
   </style>
 
   <script src="../../scripts/apiConfig.js"></script>
@@ -1001,6 +1353,38 @@
                 </svg>
               </a>
 
+              <!-- Request Edit Profile -->
+              <button type="button" class="quick-action-btn" id="btnQuickRequestEditProfile">
+                <div class="quick-action-btn-left">
+                  <div class="quick-action-btn-icon">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 20h9"/>
+                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                  </div>
+                  Request Edit Profile
+                </div>
+                <svg class="quick-action-chevron" viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
+
+              <!-- Request Account Reset (UI button placeholder for future implementation) -->
+              <button type="button" class="quick-action-btn" id="btnQuickRequestAccountReset">
+                <div class="quick-action-btn-left">
+                  <div class="quick-action-btn-icon">
+                    <svg viewBox="0 0 24 24">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                  </div>
+                  Request Account Reset
+                </div>
+                <svg class="quick-action-chevron" viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
+
             </div>
           </div>
 
@@ -1047,6 +1431,79 @@
       </main>
     </div>
 
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       REQUEST EDIT PROFILE MODAL (User Side)
+  ══════════════════════════════════════════════════════ -->
+  <div
+    class="edit-req-modal-overlay"
+    id="requestEditProfileModalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="requestEditProfileModalTitle"
+    hidden
+  >
+    <div class="edit-req-modal-box">
+      <div class="edit-req-modal-header">
+        <div>
+          <h2 id="requestEditProfileModalTitle">Request Edit Profile</h2>
+          <p>Send a message to the administrator describing what needs to be updated on your profile.</p>
+        </div>
+        <button type="button" class="edit-req-close-x" id="btnCloseRequestEditProfileX" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="edit-req-modal-body">
+        <div id="requestEditProfileNotice" class="edit-req-notice" hidden role="alert"></div>
+
+        <form id="requestEditProfileForm" class="edit-req-form" novalidate>
+          <div class="edit-req-field">
+            <label for="editReqCategory">Section to Update *</label>
+            <select id="editReqCategory" name="category" class="edit-req-select" required>
+              <option value="Personal Information">Personal Information</option>
+              <option value="Employee Information">Employee Information</option>
+              <option value="Both">Both (Personal &amp; Employee Information)</option>
+            </select>
+          </div>
+
+          <div class="edit-req-field">
+            <label for="editReqMessage">Request Note / Message *</label>
+            <textarea
+              id="editReqMessage"
+              name="message"
+              class="edit-req-textarea"
+              minlength="5"
+              maxlength="1000"
+              placeholder="Describe the exact fields you need changed and their updated values (e.g., Please update my last name to Santos-Dela Cruz and my position to Teacher III)..."
+              required
+            ></textarea>
+            <div class="edit-req-meta-row">
+              <span>Please keep details accurate so the administrator can verify and update your record.</span>
+              <span id="editReqCharCount">0 / 1000</span>
+            </div>
+          </div>
+
+          <div class="edit-req-form-actions">
+            <button type="button" class="btn-edit-req-cancel" id="btnCancelRequestEditProfile">
+              Cancel
+            </button>
+            <button type="submit" class="btn-edit-req-submit" id="btnSubmitRequestEditProfile">
+              Send Request
+            </button>
+          </div>
+        </form>
+
+        <!-- My Edit Requests History -->
+        <section class="my-edit-reqs-section" aria-labelledby="myEditReqsHeading">
+          <h3 class="my-edit-reqs-heading" id="myEditReqsHeading">My Submitted Edit Requests</h3>
+          <div class="my-edit-reqs-list" id="myEditRequestsList">
+            <p style="font-size:0.825rem; color:#9ca3af; font-style:italic; margin:0;">
+              Loading your requests...
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
   </div>
 
   <!-- Logout Confirmation Modal -->

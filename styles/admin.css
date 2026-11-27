@@ -1192,7 +1192,6 @@ html[data-theme="dark"] .tx-modal-footer {
 }
 
 html[data-theme="dark"] .tx-inline-form6,
-html[data-theme="dark"] .tx-inline-view,
 html[data-theme="dark"] .tx-modal-close-btn {
   background-color: #2b2436 !important;
   color: #F5C518 !important;
@@ -1200,9 +1199,18 @@ html[data-theme="dark"] .tx-modal-close-btn {
 }
 
 html[data-theme="dark"] .tx-inline-form6:hover,
-html[data-theme="dark"] .tx-inline-view:hover,
 html[data-theme="dark"] .tx-modal-close-btn:hover {
   background-color: #3b314b !important;
+}
+
+html[data-theme="dark"] .tx-inline-view {
+  background-color: #1B8A4B !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+html[data-theme="dark"] .tx-inline-view:hover {
+  background-color: #15703C !important;
 }
 
 html[data-theme="dark"] .tx-view-btn,

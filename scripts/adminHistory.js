@@ -1,53 +1,95 @@
 /* ============================================================
-   PERSYS — Admin Transaction History
-   Toggle between Leave Request History (Approved & Disapproved)
-   and Service Credit Upload History, sorted newest first.
+   PERSYS — Admin Service Credit Upload & Leave Request History
+   Displays two stacked full-width cards:
+   1. Service Credit Upload (per-transaction EARNED records + View details modal)
+   2. Leave Request History (Approved & Disapproved leave requests + View + Form 6)
    ============================================================ */
 
 const TX_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/transactions.php`;
 const SC_SUMMARY_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/serviceCredits/summary.php`;
-const SC_BATCH_RECIPIENTS_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/serviceCredits/batchRecipients.php`;
 const FORM6_BASE = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/generateForm6.php`;
 
-const ROWS_PER_PAGE = 15;
-const SC_RECIPIENTS_PER_PAGE = 5;
+// ── Service Credit Upload History state ──────────────────────────
+let scUploadRecords = [];
+let scFilteredRows = [];
+let scCurrentPage = 1;
+let scRowsPerPage = 5;
 
-// Active view mode: 'leave-requests' | 'service-credits'
-let activeMode = 'leave-requests';
-
+// ── Leave Request History state ──────────────────────────────────
 let leaveHistoryRecords = [];
-let scUploadHistoryRecords = [];
-
-let filteredRows = [];
-let currentPage = 1;
-let filterType = 'all';
-let filterStatus = 'all';
-
-// State for Service Credit Recipients modal
-let scModalRecipients = [];
-let scModalPage = 1;
+let leaveFilteredRows = [];
+let leaveCurrentPage = 1;
+let leaveRowsPerPage = 5;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const authorized = await window.PERSYSAdminGuard.ready;
   if (!authorized) return;
 
-  wireModeToggles();
-  wireFilters();
-  wireModal();
-  wireScRecipientsModal();
-  populateFilterDropdowns();
+  wireScFilters();
+  wireLeaveFilters();
+  wireScDetailModal();
+  wireLeaveDetailModal();
 
   await Promise.all([
-    loadLeaveHistory(),
-    loadServiceCreditHistory()
+    loadServiceCreditHistory(),
+    loadLeaveHistory()
   ]);
 
-  applyFilters();
+  applyScFilters();
+  applyLeaveFilters();
 });
 
 /* ═══════════════════════════════════════════════════════════════
    DATA LOADING
 ═══════════════════════════════════════════════════════════════ */
+
+async function loadServiceCreditHistory() {
+  try {
+    let response;
+    try {
+      response = await fetch(SC_SUMMARY_API, {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' }
+      });
+    } catch (networkErr) {
+      window.PERSYSApiErrors.handleNetworkError(networkErr);
+      return;
+    }
+
+    const checked = await window.PERSYSApiErrors.handleResponse(response);
+    if (!checked) return;
+
+    const result = await checked.json();
+    if (!result.success) throw new Error(result.message || 'Unable to load service credit upload history.');
+
+    const data = result.data || {};
+
+    if (data.admin) {
+      const usernameEl = document.getElementById('adminUsername');
+      const roleEl = document.getElementById('adminRole');
+      if (usernameEl) usernameEl.textContent = data.admin.username;
+      if (roleEl) roleEl.textContent = data.admin.role_name;
+    }
+
+    const records = Array.isArray(data.upload_transactions_history)
+      ? [...data.upload_transactions_history]
+      : [];
+
+    records.sort((a, b) => {
+      const timeA = parseTimestamp(a.uploaded_at);
+      const timeB = parseTimestamp(b.uploaded_at);
+      if (timeB !== timeA) return timeB - timeA;
+      return Number(b.transaction_id || 0) - Number(a.transaction_id || 0);
+    });
+
+    scUploadRecords = records;
+  } catch (err) {
+    console.error('Service credit upload history load error:', err);
+    scUploadRecords = [];
+  }
+}
 
 async function loadLeaveHistory() {
   try {
@@ -79,7 +121,6 @@ async function loadLeaveHistory() {
       if (roleEl) roleEl.textContent = admin.role_name;
     }
 
-    // Keep only Approved and Rejected (Disapproved) requests, sorted newest first
     const finalized = (requests || []).filter(r => {
       const st = String(r.status || '').toLowerCase();
       return st === 'approved' || st === 'rejected' || st === 'disapproved';
@@ -99,53 +140,6 @@ async function loadLeaveHistory() {
   }
 }
 
-async function loadServiceCreditHistory() {
-  try {
-    let response;
-    try {
-      response = await fetch(SC_SUMMARY_API, {
-        method: 'GET',
-        credentials: 'include',
-        cache: 'no-store',
-        headers: { Accept: 'application/json' }
-      });
-    } catch (networkErr) {
-      window.PERSYSApiErrors.handleNetworkError(networkErr);
-      return;
-    }
-
-    const checked = await window.PERSYSApiErrors.handleResponse(response);
-    if (!checked) return;
-
-    const result = await checked.json();
-    if (!result.success) throw new Error(result.message || 'Unable to load service credit history.');
-
-    const data = result.data || {};
-
-    if (data.admin) {
-      const usernameEl = document.getElementById('adminUsername');
-      const roleEl = document.getElementById('adminRole');
-      if (usernameEl) usernameEl.textContent = data.admin.username;
-      if (roleEl) roleEl.textContent = data.admin.role_name;
-    }
-
-    const uploads = Array.isArray(data.upload_history) ? [...data.upload_history] : [];
-
-    // Sort newest upload at the top
-    uploads.sort((a, b) => {
-      const timeA = parseTimestamp(a.uploaded_at) || parseTimestamp(a.posted_at);
-      const timeB = parseTimestamp(b.uploaded_at) || parseTimestamp(b.posted_at);
-      if (timeB !== timeA) return timeB - timeA;
-      return Number(b.upload_batch_id || 0) - Number(a.upload_batch_id || 0);
-    });
-
-    scUploadHistoryRecords = uploads;
-  } catch (err) {
-    console.error('Service credit history load error:', err);
-    scUploadHistoryRecords = [];
-  }
-}
-
 function parseTimestamp(val) {
   if (!val) return 0;
   const d = new Date(String(val).replace(' ', 'T'));
@@ -154,242 +148,296 @@ function parseTimestamp(val) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MODE TOGGLE (Show Service Credits vs Show Leave Requests)
+   CARD 1: SERVICE CREDIT UPLOAD FILTERS & TABLE
 ═══════════════════════════════════════════════════════════════ */
 
-function wireModeToggles() {
-  const btnSc = document.getElementById('btnShowServiceCredits');
-  const btnLr = document.getElementById('btnShowLeaveRequests');
+function wireScFilters() {
+  const searchEl = document.getElementById('scSearchInput');
+  const roleEl = document.getElementById('scRoleFilter');
+  const creditEl = document.getElementById('scCreditTypeFilter');
+  const dateEl = document.getElementById('scDateFilter');
 
-  btnSc?.addEventListener('click', () => setMode('service-credits'));
-  btnLr?.addEventListener('click', () => setMode('leave-requests'));
+  searchEl?.addEventListener('input', applyScFilters);
+  roleEl?.addEventListener('change', applyScFilters);
+  creditEl?.addEventListener('change', applyScFilters);
+  dateEl?.addEventListener('change', applyScFilters);
+  dateEl?.addEventListener('input', applyScFilters);
 }
 
-function setMode(mode) {
-  if (mode !== 'service-credits' && mode !== 'leave-requests') return;
-  activeMode = mode;
+function applyScFilters() {
+  const term = (document.getElementById('scSearchInput')?.value ?? '').trim().toLowerCase();
+  const roleFilter = document.getElementById('scRoleFilter')?.value ?? 'all';
+  const creditFilter = document.getElementById('scCreditTypeFilter')?.value ?? 'all';
+  const dateFilter = (document.getElementById('scDateFilter')?.value ?? '').trim();
 
-  const isSc = mode === 'service-credits';
+  scFilteredRows = scUploadRecords.filter(rec => {
+    const empName = String(rec.employee_name ?? '').toLowerCase();
+    const empNum = String(rec.employee_number ?? '').toLowerCase();
+    const uploadedBy = String(rec.uploaded_by_name ?? '').toLowerCase();
+    const activity = String(rec.activity_name ?? '').toLowerCase();
+    const fileName = String(rec.file_name ?? '').toLowerCase();
+    const role = String(rec.role ?? '');
+    const creditType = String(rec.credit_type ?? '');
+    const uploadedDateYMD = String(rec.uploaded_at ?? '').slice(0, 10);
 
-  const btnSc = document.getElementById('btnShowServiceCredits');
-  const btnLr = document.getElementById('btnShowLeaveRequests');
-  const titleEl = document.getElementById('historyTableTitle');
-  const leaveWrap = document.getElementById('leaveHistoryTableWrap');
-  const scWrap = document.getElementById('scHistoryTableWrap');
+    const matchSearch = !term ||
+      [empName, empNum, uploadedBy, activity, fileName, role.toLowerCase(), creditType.toLowerCase()]
+        .some(v => v.includes(term));
 
-  if (btnSc) {
-    btnSc.classList.toggle('is-active', isSc);
-    btnSc.setAttribute('aria-selected', String(isSc));
-  }
-  if (btnLr) {
-    btnLr.classList.toggle('is-active', !isSc);
-    btnLr.setAttribute('aria-selected', String(!isSc));
-  }
+    const matchRole = roleFilter === 'all' || role.toLowerCase() === roleFilter.toLowerCase();
+    const matchCredit = creditFilter === 'all' || creditType.toLowerCase() === creditFilter.toLowerCase();
+    const matchDate = !dateFilter || uploadedDateYMD === dateFilter;
 
-  if (titleEl) {
-    titleEl.textContent = isSc
-      ? 'Service Credit Upload History'
-      : 'Leave Request History';
-  }
-
-  if (leaveWrap) leaveWrap.hidden = isSc;
-  if (scWrap) scWrap.hidden = !isSc;
-
-  // Reset dropdown filters on mode switch
-  filterType = 'all';
-  filterStatus = 'all';
-  populateFilterDropdowns();
-  currentPage = 1;
-  applyFilters();
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   FILTERS & DROPDOWNS
-═══════════════════════════════════════════════════════════════ */
-
-function populateFilterDropdowns() {
-  const typePanel = document.getElementById('historyTypeDropPanel');
-  const statusPanel = document.getElementById('historyStatusDropPanel');
-  const typeLabel = document.getElementById('historyTypeDropLabel');
-  const statusLabel = document.getElementById('historyStatusDropLabel');
-
-  if (typeLabel) typeLabel.textContent = 'Type: All';
-  if (statusLabel) statusLabel.textContent = 'Status: All';
-
-  const typeOptions = activeMode === 'leave-requests'
-    ? [
-        { value: 'all', label: 'All' },
-        { value: 'local', label: 'Local' },
-        { value: 'national', label: 'National' },
-        { value: 'wellness', label: 'Wellness' }
-      ]
-    : [
-        { value: 'all', label: 'All' },
-        { value: 'excel', label: 'Excel Upload (.xlsx)' }
-      ];
-
-  const statusOptions = activeMode === 'leave-requests'
-    ? [
-        { value: 'all', label: 'All' },
-        { value: 'approved', label: 'Approved' },
-        { value: 'disapproved', label: 'Disapproved' }
-      ]
-    : [
-        { value: 'all', label: 'All' },
-        { value: 'posted', label: 'POSTED' }
-      ];
-
-  if (typePanel) {
-    typePanel.replaceChildren();
-    typeOptions.forEach(opt => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.setAttribute('role', 'option');
-      btn.dataset.value = opt.value;
-      btn.textContent = opt.label;
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        filterType = opt.value;
-        if (typeLabel) typeLabel.textContent = `Type: ${opt.label}`;
-        closeAllDropdowns();
-        applyFilters();
-      });
-      typePanel.appendChild(btn);
-    });
-  }
-
-  if (statusPanel) {
-    statusPanel.replaceChildren();
-    statusOptions.forEach(opt => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.setAttribute('role', 'option');
-      btn.dataset.value = opt.value;
-      btn.textContent = opt.label;
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        filterStatus = opt.value;
-        if (statusLabel) statusLabel.textContent = `Status: ${opt.label}`;
-        closeAllDropdowns();
-        applyFilters();
-      });
-      statusPanel.appendChild(btn);
-    });
-  }
-}
-
-function closeAllDropdowns() {
-  document.querySelectorAll('.tx-filter-wrap').forEach(w => {
-    w.classList.remove('is-open');
-    w.querySelector('.tx-filter-btn')?.setAttribute('aria-expanded', 'false');
-  });
-}
-
-function wireFilters() {
-  const searchInput = document.getElementById('historySearch');
-  if (searchInput) searchInput.addEventListener('input', applyFilters);
-
-  const filterWraps = document.querySelectorAll('.tx-filter-wrap');
-  filterWraps.forEach(wrap => {
-    const btn = wrap.querySelector('.tx-filter-btn');
-    btn?.addEventListener('click', e => {
-      e.stopPropagation();
-      const wasOpen = wrap.classList.contains('is-open');
-      closeAllDropdowns();
-      if (!wasOpen) {
-        wrap.classList.add('is-open');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-    });
+    return matchSearch && matchRole && matchCredit && matchDate;
   });
 
-  document.addEventListener('click', closeAllDropdowns);
+  scCurrentPage = 1;
+  renderScPage();
 }
 
-function applyFilters() {
-  const term = (document.getElementById('historySearch')?.value ?? '').trim().toLowerCase();
-
-  if (activeMode === 'leave-requests') {
-    filteredRows = leaveHistoryRecords.filter(r => {
-      const name = buildName(r).toLowerCase();
-      const leaveType = String(r.leave_type_name ?? '').toLowerCase();
-      const rawStatus = String(r.status ?? '').toLowerCase();
-      const displayStatus = rawStatus === 'rejected' ? 'disapproved' : rawStatus;
-      const credit = String(r.credit_type_name ?? 'not deducted').toLowerCase();
-      const reqNum = String(r.request_number ?? '').toLowerCase();
-
-      const matchSearch = !term ||
-        [name, leaveType, displayStatus, rawStatus, credit, reqNum].some(v => v.includes(term));
-
-      const matchStatus = filterStatus === 'all' || displayStatus === filterStatus;
-      const matchType = filterType === 'all' || credit.includes(filterType) || leaveType.includes(filterType);
-
-      return matchSearch && matchStatus && matchType;
-    });
-  } else {
-    filteredRows = scUploadHistoryRecords.filter(rec => {
-      const fileName = String(rec.file_name ?? '').toLowerCase();
-      const uploadedBy = String(rec.uploaded_by_name ?? '').toLowerCase();
-      const status = String(rec.status ?? '').toLowerCase();
-      const uploadedAt = String(rec.uploaded_at ?? '').toLowerCase();
-      const postedAt = String(rec.posted_at ?? '').toLowerCase();
-
-      const matchSearch = !term ||
-        [fileName, uploadedBy, status, uploadedAt, postedAt].some(v => v.includes(term));
-
-      const matchStatus = filterStatus === 'all' || status === filterStatus;
-      const matchType = filterType === 'all' || (filterType === 'excel' && fileName.includes('.xls'));
-
-      return matchSearch && matchStatus && matchType;
-    });
-  }
-
-  currentPage = 1;
-  renderPage();
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   TABLE RENDER
-═══════════════════════════════════════════════════════════════ */
-
-function renderPage() {
-  const pagination = document.getElementById('historyPagination');
-  const total = filteredRows.length;
-  const totalPages = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
-  currentPage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const start = (currentPage - 1) * ROWS_PER_PAGE;
-  const pageItems = filteredRows.slice(start, start + ROWS_PER_PAGE);
-
-  if (activeMode === 'leave-requests') {
-    const tbody = document.getElementById('leaveHistoryTableBody');
-    renderLeaveHistoryRows(pageItems, tbody, total);
-  } else {
-    const tbody = document.getElementById('scHistoryTableBody');
-    renderScHistoryRows(pageItems, tbody, total);
-  }
-
-  renderPagination(currentPage, totalPages, pagination);
-}
-
-function renderLeaveHistoryRows(rows, tbody, totalCount) {
+function renderScPage() {
+  const tbody = document.getElementById('scHistoryTableBody');
+  const pagination = document.getElementById('scHistoryPagination');
   if (!tbody) return;
+
+  const total = scFilteredRows.length;
+  const totalPages = Math.max(1, Math.ceil(total / scRowsPerPage));
+  scCurrentPage = Math.min(Math.max(1, scCurrentPage), totalPages);
+
   tbody.replaceChildren();
 
-  if (totalCount === 0) {
+  if (total === 0) {
     const tr = document.createElement('tr');
     const td = document.createElement('td');
-    td.colSpan = 5;
+    td.colSpan = 7;
+    td.style.cssText = 'text-align:center;padding:32px;color:#9ca3af;font-style:italic;';
+    td.textContent = scUploadRecords.length > 0
+      ? 'No service credit upload records match the current filter.'
+      : 'No service credit upload records found.';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    if (pagination) pagination.hidden = true;
+    return;
+  }
+
+  const start = (scCurrentPage - 1) * scRowsPerPage;
+  const pageItems = scFilteredRows.slice(start, start + scRowsPerPage);
+
+  pageItems.forEach(rec => tbody.appendChild(buildScRow(rec)));
+
+  renderTablePagination({
+    page: scCurrentPage,
+    totalPages,
+    total,
+    rowsPerPage: scRowsPerPage,
+    container: pagination,
+    onPageChange: newPage => {
+      scCurrentPage = newPage;
+      renderScPage();
+    },
+    onRowsPerPageChange: newSize => {
+      scRowsPerPage = newSize;
+      scCurrentPage = 1;
+      renderScPage();
+    }
+  });
+}
+
+function buildScRow(rec) {
+  const tr = document.createElement('tr');
+
+  // Col 1: Date Uploaded
+  const tdDate = document.createElement('td');
+  tdDate.textContent = formatDate(rec.uploaded_at);
+
+  // Col 2: Uploaded By
+  const tdUploadedBy = document.createElement('td');
+  tdUploadedBy.textContent = rec.uploaded_by_name || '—';
+
+  // Col 3: Name
+  const tdName = document.createElement('td');
+  tdName.textContent = rec.employee_name || '—';
+
+  // Col 4: Role (Full: Teaching | Non-Teaching)
+  const tdRole = document.createElement('td');
+  tdRole.textContent = rec.role || '—';
+
+  // Col 5: Credit Type (Full: Local | National | Wellness)
+  const tdCreditType = document.createElement('td');
+  tdCreditType.textContent = rec.credit_type || '—';
+
+  // Col 6: Added Credits
+  const tdAdded = document.createElement('td');
+  const num = Number(rec.credit_amount ?? 0);
+  tdAdded.textContent = Number.isFinite(num) ? num.toFixed(2) : '0.00';
+
+  // Col 7: Details (Green pill View button)
+  const tdDetails = document.createElement('td');
+  const viewBtn = document.createElement('button');
+  viewBtn.type = 'button';
+  viewBtn.className = 'sc-view-pill-btn';
+  viewBtn.textContent = 'View';
+  viewBtn.addEventListener('click', () => openScDetailModal(rec));
+  tdDetails.appendChild(viewBtn);
+
+  tr.append(tdDate, tdUploadedBy, tdName, tdRole, tdCreditType, tdAdded, tdDetails);
+  return tr;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SERVICE CREDIT UPLOAD DETAILS MODAL
+═══════════════════════════════════════════════════════════════ */
+
+function wireScDetailModal() {
+  const overlay = document.getElementById('scUploadDetailModalOverlay');
+  const closeBtn = document.getElementById('scUploadDetailCloseBtn');
+  const footerCloseBtn = document.getElementById('scUploadDetailFooterCloseBtn');
+
+  closeBtn?.addEventListener('click', closeScDetailModal);
+  footerCloseBtn?.addEventListener('click', closeScDetailModal);
+  overlay?.addEventListener('click', e => {
+    if (e.target === overlay) closeScDetailModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay?.classList.contains('is-open')) {
+      closeScDetailModal();
+    }
+  });
+}
+
+function openScDetailModal(rec) {
+  const overlay = document.getElementById('scUploadDetailModalOverlay');
+  const modal = document.getElementById('scUploadDetailModal');
+  if (!overlay || !modal) return;
+
+  const isManual = String(rec.upload_type || '').toLowerCase().includes('manual') ||
+                   String(rec.file_name || '').toLowerCase() === 'n/a' ||
+                   String(rec.file_name || '').toLowerCase() === 'manual upload';
+
+  const uploadType = isManual ? 'Manual Upload' : 'Excel Upload';
+  const fileName = isManual ? 'N/A' : (rec.file_name || 'N/A');
+
+  const startFmt = rec.activity_start_date ? formatDate(rec.activity_start_date) : '';
+  const endFmt = rec.activity_end_date ? formatDate(rec.activity_end_date) : '';
+  let activityDates = '—';
+  if (startFmt && endFmt) {
+    activityDates = startFmt === endFmt ? startFmt : `${startFmt} – ${endFmt}`;
+  } else if (startFmt || endFmt) {
+    activityDates = startFmt || endFmt;
+  }
+
+  const amt = Number(rec.credit_amount ?? 0);
+  const formattedAmt = Number.isFinite(amt) ? `+${amt.toFixed(2)} Credits` : '0.00';
+
+  setText('scDetailUploadType', uploadType);
+  setText('scDetailFileName', fileName);
+  setText('scDetailDateUploaded', formatDateLong(rec.uploaded_at));
+  setText('scDetailUploadedBy', rec.uploaded_by_name || '—');
+  setText('scDetailEmployeeNumber', rec.employee_number || '—');
+  setText('scDetailEmployeeName', rec.employee_name || '—');
+  setText('scDetailRole', rec.role || '—');
+  setText('scDetailActivityName', rec.activity_name || '—');
+  setText('scDetailActivityDates', activityDates);
+  setText('scDetailCreditType', rec.credit_type || '—');
+  setText('scDetailAddedCredits', formattedAmt);
+
+  overlay.classList.add('is-open');
+  document.body.style.overflow = 'hidden';
+  modal.focus();
+}
+
+function closeScDetailModal() {
+  document.getElementById('scUploadDetailModalOverlay')?.classList.remove('is-open');
+  document.body.style.overflow = '';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARD 2: LEAVE REQUEST HISTORY FILTERS & TABLE
+═══════════════════════════════════════════════════════════════ */
+
+function wireLeaveFilters() {
+  const searchEl = document.getElementById('leaveHistorySearchInput');
+  const typeEl = document.getElementById('leaveTypeFilter');
+  const statusEl = document.getElementById('leaveStatusFilter');
+
+  searchEl?.addEventListener('input', applyLeaveFilters);
+  typeEl?.addEventListener('change', applyLeaveFilters);
+  statusEl?.addEventListener('change', applyLeaveFilters);
+}
+
+function applyLeaveFilters() {
+  const term = (document.getElementById('leaveHistorySearchInput')?.value ?? '').trim().toLowerCase();
+  const typeFilter = (document.getElementById('leaveTypeFilter')?.value ?? 'all').toLowerCase();
+  const statusFilter = (document.getElementById('leaveStatusFilter')?.value ?? 'all').toLowerCase();
+
+  leaveFilteredRows = leaveHistoryRecords.filter(r => {
+    const name = buildName(r).toLowerCase();
+    const reviewer = String(r.reviewer_name ?? '').toLowerCase();
+    const leaveType = String(r.leave_type_name ?? '').toLowerCase();
+    const rawStatus = String(r.status ?? '').toLowerCase();
+    const displayStatus = rawStatus === 'rejected' ? 'disapproved' : rawStatus;
+    const credit = String(r.credit_type_name ?? 'not deducted').toLowerCase();
+    const reqNum = String(r.request_number ?? '').toLowerCase();
+
+    const matchSearch = !term ||
+      [reqNum, reviewer, name, leaveType, displayStatus, rawStatus, credit].some(v => v.includes(term));
+
+    const matchStatus = statusFilter === 'all' || displayStatus === statusFilter;
+    const matchType = typeFilter === 'all' || credit.includes(typeFilter);
+
+    return matchSearch && matchStatus && matchType;
+  });
+
+  leaveCurrentPage = 1;
+  renderLeavePage();
+}
+
+function renderLeavePage() {
+  const tbody = document.getElementById('leaveHistoryTableBody');
+  const pagination = document.getElementById('leaveHistoryPagination');
+  if (!tbody) return;
+
+  const total = leaveFilteredRows.length;
+  const totalPages = Math.max(1, Math.ceil(total / leaveRowsPerPage));
+  leaveCurrentPage = Math.min(Math.max(1, leaveCurrentPage), totalPages);
+
+  tbody.replaceChildren();
+
+  if (total === 0) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 7;
     td.style.cssText = 'text-align:center;padding:32px;color:#9ca3af;font-style:italic;';
     td.textContent = leaveHistoryRecords.length > 0
       ? 'No leave request history matches the current filter.'
       : 'No approved or disapproved leave requests found.';
     tr.appendChild(td);
     tbody.appendChild(tr);
+    if (pagination) pagination.hidden = true;
     return;
   }
 
-  rows.forEach(r => tbody.appendChild(buildLeaveHistoryRow(r)));
+  const start = (leaveCurrentPage - 1) * leaveRowsPerPage;
+  const pageItems = leaveFilteredRows.slice(start, start + leaveRowsPerPage);
+
+  pageItems.forEach(r => tbody.appendChild(buildLeaveHistoryRow(r)));
+
+  renderTablePagination({
+    page: leaveCurrentPage,
+    totalPages,
+    total,
+    rowsPerPage: leaveRowsPerPage,
+    container: pagination,
+    onPageChange: newPage => {
+      leaveCurrentPage = newPage;
+      renderLeavePage();
+    },
+    onRowsPerPageChange: newSize => {
+      leaveRowsPerPage = newSize;
+      leaveCurrentPage = 1;
+      renderLeavePage();
+    }
+  });
 }
 
 function buildLeaveHistoryRow(r) {
@@ -403,18 +451,22 @@ function buildLeaveHistoryRow(r) {
   const tr = document.createElement('tr');
   tr.dataset.requestId = rid;
 
-  // Col 1: Employee
+  // Col 1: Request ID
+  const tdReqId = document.createElement('td');
+  tdReqId.textContent = r.request_number || rid || '—';
+
+  // Col 2: Reviewed By
+  const tdReviewedBy = document.createElement('td');
+  tdReviewedBy.textContent = (r.reviewer_name && String(r.reviewer_name).trim()) || '—';
+
+  // Col 3: Name
   const tdEmp = document.createElement('td');
   const empName = document.createElement('div');
   empName.className = 'tx-emp-name';
   empName.textContent = buildName(r);
+  tdEmp.appendChild(empName);
 
-  const empFiled = document.createElement('div');
-  empFiled.className = 'tx-emp-sub';
-  empFiled.textContent = `Filed: ${formatDate(r.date_filed)}`;
-  tdEmp.append(empName, empFiled);
-
-  // Col 2: Leave Details
+  // Col 4: Leave Details
   const tdLeave = document.createElement('td');
   const leaveType = document.createElement('div');
   leaveType.className = 'tx-leave-type';
@@ -427,7 +479,7 @@ function buildLeaveHistoryRow(r) {
   leaveSub.textContent = `${leaveDays} Days (${startFmt}–${endFmt})`;
   tdLeave.append(leaveType, leaveSub);
 
-  // Col 3: Deduct From
+  // Col 5: Deduct From
   const tdDeduct = document.createElement('td');
   if (isApproved) {
     const creditName = r.credit_type_name ?? 'Unknown pool';
@@ -442,7 +494,7 @@ function buildLeaveHistoryRow(r) {
     tdDeduct.appendChild(nd);
   }
 
-  // Col 4: Status
+  // Col 6: Status
   const tdStatus = document.createElement('td');
   const badge = document.createElement('span');
   badge.className = `tx-status-badge tx-status-${badgeStatusClass}`;
@@ -454,7 +506,7 @@ function buildLeaveHistoryRow(r) {
   badge.appendChild(document.createTextNode(displayStatusText));
   tdStatus.appendChild(badge);
 
-  // Col 5: Actions (View + Form 6)
+  // Col 7: Actions (View + Form 6)
   const tdActions = document.createElement('td');
   tdActions.className = 'tx-actions-cell';
 
@@ -462,7 +514,7 @@ function buildLeaveHistoryRow(r) {
   viewBtn.type = 'button';
   viewBtn.className = 'tx-inline-view';
   viewBtn.textContent = 'View';
-  viewBtn.addEventListener('click', () => openModal(r));
+  viewBtn.addEventListener('click', () => openLeaveModal(r));
 
   const form6Btn = document.createElement('button');
   form6Btn.type = 'button';
@@ -479,284 +531,12 @@ function buildLeaveHistoryRow(r) {
 
   tdActions.append(viewBtn, form6Btn);
 
-  tr.append(tdEmp, tdLeave, tdDeduct, tdStatus, tdActions);
-  return tr;
-}
-
-function renderScHistoryRows(rows, tbody, totalCount) {
-  if (!tbody) return;
-  tbody.replaceChildren();
-
-  if (totalCount === 0) {
-    const tr = document.createElement('tr');
-    const td = document.createElement('td');
-    td.colSpan = 7;
-    td.style.cssText = 'text-align:center;padding:32px;color:#9ca3af;font-style:italic;';
-    td.textContent = scUploadHistoryRecords.length > 0
-      ? 'No upload records match the current filter.'
-      : 'No service credit upload records found.';
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-    return;
-  }
-
-  rows.forEach(rec => tbody.appendChild(buildScHistoryRow(rec)));
-}
-
-function buildScHistoryRow(rec) {
-  const tr = document.createElement('tr');
-
-  // Col 1: Upload Date
-  const tdUploadDate = document.createElement('td');
-  tdUploadDate.textContent = rec.uploaded_at || '—';
-
-  // Col 2: File Name
-  const tdFileName = document.createElement('td');
-  const fileSpan = document.createElement('span');
-  fileSpan.className = 'sc-history-filename';
-  fileSpan.textContent = rec.file_name || '—';
-  tdFileName.appendChild(fileSpan);
-
-  // Col 3: Uploaded By
-  const tdUploadedBy = document.createElement('td');
-  tdUploadedBy.textContent = rec.uploaded_by_name || '—';
-
-  // Col 4: Records
-  const tdRecords = document.createElement('td');
-  tdRecords.textContent = String(rec.record_count ?? 0);
-
-  // Col 5: Status
-  const tdStatus = document.createElement('td');
-  const statusPill = document.createElement('span');
-  statusPill.className = 'sc-status-posted';
-  statusPill.textContent = String(rec.status || 'POSTED').toUpperCase();
-  tdStatus.appendChild(statusPill);
-
-  // Col 6: Posted Date
-  const tdPostedDate = document.createElement('td');
-  tdPostedDate.textContent = rec.posted_at || '—';
-
-  // Col 7: Actions (View button opens Service Credit Recipients modal)
-  const tdActions = document.createElement('td');
-  tdActions.className = 'tx-actions-cell';
-  const viewBtn = document.createElement('button');
-  viewBtn.type = 'button';
-  viewBtn.className = 'tx-inline-view';
-  viewBtn.textContent = 'View';
-  viewBtn.addEventListener('click', () => openScRecipientsModal(rec));
-  tdActions.appendChild(viewBtn);
-
-  tr.append(
-    tdUploadDate,
-    tdFileName,
-    tdUploadedBy,
-    tdRecords,
-    tdStatus,
-    tdPostedDate,
-    tdActions
-  );
-
+  tr.append(tdReqId, tdReviewedBy, tdEmp, tdLeave, tdDeduct, tdStatus, tdActions);
   return tr;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SERVICE CREDIT RECIPIENTS MODAL
-═══════════════════════════════════════════════════════════════ */
-
-function wireScRecipientsModal() {
-  const overlay = document.getElementById('scRecipientsModalOverlay');
-  const closeBtn = document.getElementById('scRecipientsCloseBtn');
-  const footerCloseBtn = document.getElementById('scRecipientsFooterCloseBtn');
-  const prevBtn = document.getElementById('scRecipientsPrevBtn');
-  const nextBtn = document.getElementById('scRecipientsNextBtn');
-
-  closeBtn?.addEventListener('click', closeScRecipientsModal);
-  footerCloseBtn?.addEventListener('click', closeScRecipientsModal);
-  overlay?.addEventListener('click', e => {
-    if (e.target === overlay) closeScRecipientsModal();
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && overlay?.classList.contains('is-open')) {
-      closeScRecipientsModal();
-    }
-  });
-
-  prevBtn?.addEventListener('click', () => {
-    if (scModalPage > 1) {
-      scModalPage--;
-      renderScRecipientsModalPage();
-    }
-  });
-
-  nextBtn?.addEventListener('click', () => {
-    const totalPages = Math.max(1, Math.ceil(scModalRecipients.length / SC_RECIPIENTS_PER_PAGE));
-    if (scModalPage < totalPages) {
-      scModalPage++;
-      renderScRecipientsModalPage();
-    }
-  });
-}
-
-async function openScRecipientsModal(rec) {
-  const overlay = document.getElementById('scRecipientsModalOverlay');
-  const modal = document.getElementById('scRecipientsModal');
-  const tbody = document.getElementById('scRecipientsTableBody');
-  const pageInfo = document.getElementById('scRecipientsPageInfo');
-  const prevBtn = document.getElementById('scRecipientsPrevBtn');
-  const nextBtn = document.getElementById('scRecipientsNextBtn');
-
-  if (!overlay || !modal) return;
-
-  setText('scRecipientsFileName', rec.file_name || '—');
-  setText('scRecipientsUploadDate', rec.uploaded_at || '—');
-
-  scModalRecipients = [];
-  scModalPage = 1;
-
-  if (tbody) {
-    tbody.innerHTML =
-      `<tr><td colspan="5" style="text-align:center;padding:24px;color:#6b7280;">
-         Loading recipients...
-       </td></tr>`;
-  }
-  if (pageInfo) pageInfo.textContent = 'Showing 0 of 0 records';
-  if (prevBtn) prevBtn.disabled = true;
-  if (nextBtn) nextBtn.disabled = true;
-
-  overlay.classList.add('is-open');
-  document.body.style.overflow = 'hidden';
-  modal.focus();
-
-  const batchId = Number(rec.upload_batch_id || 0);
-  if (batchId <= 0) {
-    renderScRecipientsEmpty('No recipient records found for this upload.');
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `${SC_BATCH_RECIPIENTS_API}?upload_batch_id=${encodeURIComponent(batchId)}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        cache: 'no-store',
-        headers: { Accept: 'application/json' }
-      }
-    );
-
-    const checked = await window.PERSYSApiErrors.handleResponse(response);
-    if (!checked) return;
-
-    const result = await checked.json();
-    if (!response.ok || !result.success) {
-      throw new Error(result.message || 'Unable to load recipients.');
-    }
-
-    const batch = result.data?.batch;
-    if (batch) {
-      setText('scRecipientsFileName', batch.file_name || rec.file_name || '—');
-      setText('scRecipientsUploadDate', batch.uploaded_at || rec.uploaded_at || '—');
-    }
-
-    scModalRecipients = Array.isArray(result.data?.recipients)
-      ? result.data.recipients
-      : [];
-    scModalPage = 1;
-    renderScRecipientsModalPage();
-  } catch (err) {
-    console.error('Batch recipients load error:', err);
-    renderScRecipientsEmpty(err.message || 'Unable to load service credit recipients.');
-  }
-}
-
-function renderScRecipientsEmpty(message) {
-  const tbody = document.getElementById('scRecipientsTableBody');
-  const pageInfo = document.getElementById('scRecipientsPageInfo');
-  const prevBtn = document.getElementById('scRecipientsPrevBtn');
-  const nextBtn = document.getElementById('scRecipientsNextBtn');
-
-  if (tbody) {
-    tbody.replaceChildren();
-    const tr = document.createElement('tr');
-    const td = document.createElement('td');
-    td.colSpan = 5;
-    td.style.cssText = 'text-align:center;padding:24px;color:#9ca3af;font-style:italic;';
-    td.textContent = message;
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-  }
-  if (pageInfo) pageInfo.textContent = 'Showing 0 of 0 records';
-  if (prevBtn) prevBtn.disabled = true;
-  if (nextBtn) nextBtn.disabled = true;
-}
-
-function renderScRecipientsModalPage() {
-  const tbody = document.getElementById('scRecipientsTableBody');
-  const pageInfo = document.getElementById('scRecipientsPageInfo');
-  const prevBtn = document.getElementById('scRecipientsPrevBtn');
-  const nextBtn = document.getElementById('scRecipientsNextBtn');
-
-  if (!tbody) return;
-
-  const total = scModalRecipients.length;
-  if (total === 0) {
-    renderScRecipientsEmpty('No employees received service credits in this upload.');
-    return;
-  }
-
-  const totalPages = Math.max(1, Math.ceil(total / SC_RECIPIENTS_PER_PAGE));
-  scModalPage = Math.min(Math.max(1, scModalPage), totalPages);
-
-  const startIdx = (scModalPage - 1) * SC_RECIPIENTS_PER_PAGE;
-  const endIdx = Math.min(startIdx + SC_RECIPIENTS_PER_PAGE, total);
-  const slice = scModalRecipients.slice(startIdx, endIdx);
-
-  tbody.replaceChildren();
-
-  slice.forEach(item => {
-    const tr = document.createElement('tr');
-
-    const tdId = document.createElement('td');
-    tdId.textContent = item.employee_number || '—';
-
-    const tdName = document.createElement('td');
-    tdName.textContent = item.employee_name || '—';
-
-    const tdRole = document.createElement('td');
-    tdRole.textContent = item.current_role || '—';
-
-    const tdCreditType = document.createElement('td');
-    tdCreditType.textContent = item.credit_type || '—';
-
-    const tdCredits = document.createElement('td');
-    const creditsSpan = document.createElement('span');
-    creditsSpan.className = 'sc-added-credits-val';
-    const num = Number(item.credit_amount ?? 0);
-    const formattedNum = Number.isFinite(num)
-      ? num.toFixed(1)
-      : '0.0';
-    creditsSpan.textContent = `+${formattedNum} Credits`;
-    tdCredits.appendChild(creditsSpan);
-
-    tr.append(tdId, tdName, tdRole, tdCreditType, tdCredits);
-    tbody.appendChild(tr);
-  });
-
-  if (pageInfo) {
-    pageInfo.textContent = `Showing ${startIdx + 1}-${endIdx} of ${total} records`;
-  }
-  if (prevBtn) prevBtn.disabled = scModalPage <= 1;
-  if (nextBtn) nextBtn.disabled = scModalPage >= totalPages;
-}
-
-function closeScRecipientsModal() {
-  document.getElementById('scRecipientsModalOverlay')?.classList.remove('is-open');
-  document.body.style.overflow = '';
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   FORM 6 & MODAL (Ad-blocker & Popup-blocker resilient Fetch + Blob PDF)
+   FORM 6 & LEAVE REQUEST MODAL
 ═══════════════════════════════════════════════════════════════ */
 
 async function openForm6(r, triggerBtn = null) {
@@ -794,10 +574,8 @@ async function openForm6(r, triggerBtn = null) {
     const safeReqNum = String(r?.request_number || rid).replace(/[^A-Za-z0-9_-]/g, '_');
     const filename = `Form6_${safeReqNum}.pdf`;
 
-    // Try opening the Blob URL in a new tab for preview/printing
     const newWin = window.open(blobUrl, '_blank');
 
-    // If an ad blocker or popup blocker blocked window.open, trigger direct download
     if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
       const link = document.createElement('a');
       link.href = blobUrl;
@@ -821,29 +599,27 @@ async function openForm6(r, triggerBtn = null) {
   }
 }
 
-function wireModal() {
+function wireLeaveDetailModal() {
   const overlay = document.getElementById('txModalOverlay');
   const closeBtn = document.getElementById('txModalClose');
   const modalCloseFooter = document.getElementById('txModalCloseFooter');
   const modalForm6Btn = document.getElementById('txModalForm6');
 
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-  if (modalCloseFooter) modalCloseFooter.addEventListener('click', closeModal);
-  overlay?.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  closeBtn?.addEventListener('click', closeLeaveModal);
+  modalCloseFooter?.addEventListener('click', closeLeaveModal);
+  overlay?.addEventListener('click', e => { if (e.target === overlay) closeLeaveModal(); });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && overlay?.classList.contains('is-open')) closeModal();
+    if (e.key === 'Escape' && overlay?.classList.contains('is-open')) closeLeaveModal();
   });
 
-  if (modalForm6Btn) {
-    modalForm6Btn.addEventListener('click', () => {
-      const ridEl = document.getElementById('txModalRequestId');
-      const r = leaveHistoryRecords.find(x => String(x.leave_request_id) === String(ridEl?.value));
-      if (r) openForm6(r, modalForm6Btn);
-    });
-  }
+  modalForm6Btn?.addEventListener('click', () => {
+    const ridEl = document.getElementById('txModalRequestId');
+    const r = leaveHistoryRecords.find(x => String(x.leave_request_id) === String(ridEl?.value));
+    if (r) openForm6(r, modalForm6Btn);
+  });
 }
 
-function openModal(r) {
+function openLeaveModal(r) {
   const overlay = document.getElementById('txModalOverlay');
   const modal = document.getElementById('txModal');
   const rawStatusLow = String(r.status ?? 'approved').toLowerCase();
@@ -903,47 +679,84 @@ function openModal(r) {
   modal.focus();
 }
 
-function closeModal() {
+function closeLeaveModal() {
   document.getElementById('txModalOverlay')?.classList.remove('is-open');
   document.body.style.overflow = '';
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   PAGINATION
+   SHARED EMPLOYEES-STYLE PAGINATION
 ═══════════════════════════════════════════════════════════════ */
 
-function renderPagination(page, totalPages, container) {
+function renderTablePagination({
+  page,
+  totalPages,
+  total,
+  rowsPerPage,
+  container,
+  onPageChange,
+  onRowsPerPageChange
+}) {
   if (!container) return;
   container.replaceChildren();
 
-  if (totalPages <= 1) { container.hidden = true; return; }
+  if (total === 0) {
+    container.hidden = true;
+    return;
+  }
   container.hidden = false;
 
-  const total = filteredRows.length;
-  const start = (page - 1) * ROWS_PER_PAGE + 1;
-  const end = Math.min(page * ROWS_PER_PAGE, total);
+  const start = (page - 1) * rowsPerPage + 1;
+  const end = Math.min(page * rowsPerPage, total);
 
-  const info = document.createElement('span');
-  info.className = 'tx-pagination-info';
-  info.textContent = `Showing ${start}–${end} of ${total}`;
+  const info = document.createElement('div');
+  info.className = 'pagination-info';
+  info.textContent = `Showing ${start}-${end} of ${total} records`;
 
-  const group = document.createElement('div');
-  group.className = 'tx-pagination-btns';
+  const controls = document.createElement('div');
+  controls.className = 'pagination-controls';
 
-  group.append(
-    makePagBtn('← Prev', page <= 1, () => { currentPage--; renderPage(); }),
-    ...buildPageRange(page, totalPages).map(p => {
-      if (p === '…') {
-        const el = document.createElement('span');
-        el.className = 'tx-page-ellipsis'; el.textContent = '…';
-        return el;
-      }
-      return makePagBtn(String(p), false, () => { currentPage = p; renderPage(); }, p === page);
-    }),
-    makePagBtn('Next →', page >= totalPages, () => { currentPage++; renderPage(); })
+  const sizeLabel = document.createElement('label');
+  sizeLabel.textContent = 'Rows per page: ';
+  const sizeSelect = document.createElement('select');
+  sizeSelect.className = 'pagination-select';
+  sizeSelect.setAttribute('aria-label', 'Rows per page');
+  [5, 10, 20].forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = String(n);
+    opt.textContent = String(n);
+    if (n === rowsPerPage) opt.selected = true;
+    sizeSelect.appendChild(opt);
+  });
+  sizeSelect.addEventListener('change', () => {
+    onRowsPerPageChange(Number(sizeSelect.value) || 5);
+  });
+  sizeLabel.appendChild(sizeSelect);
+  controls.appendChild(sizeLabel);
+
+  controls.appendChild(
+    makePagBtn('‹', page <= 1, () => onPageChange(page - 1))
   );
 
-  container.append(info, group);
+  for (const p of buildPageRange(page, totalPages)) {
+    if (p === '…') {
+      const span = document.createElement('span');
+      span.style.padding = '0 4px';
+      span.style.color = '#6B5E50';
+      span.textContent = '…';
+      controls.appendChild(span);
+    } else {
+      controls.appendChild(
+        makePagBtn(String(p), false, () => onPageChange(p), p === page)
+      );
+    }
+  }
+
+  controls.appendChild(
+    makePagBtn('›', page >= totalPages, () => onPageChange(page + 1))
+  );
+
+  container.append(info, controls);
 }
 
 function buildPageRange(current, total) {
@@ -964,7 +777,7 @@ function makePagBtn(label, disabled, onClick, isActive = false) {
   btn.type = 'button';
   btn.textContent = label;
   btn.disabled = disabled;
-  btn.className = 'tx-page-btn' + (isActive ? ' tx-page-btn--active' : '');
+  btn.className = 'pagination-button' + (isActive ? ' is-active' : '');
   if (!disabled) btn.addEventListener('click', onClick);
   return btn;
 }

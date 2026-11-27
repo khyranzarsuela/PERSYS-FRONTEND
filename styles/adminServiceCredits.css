@@ -1,9 +1,7 @@
 /* ============================================================
-   PERSYS — ADMIN SERVICE CREDITS
+   PERSYS — ADMIN SERVICE CREDITS (Manage Service Credits)
    File: adminServiceCredits.css
-   Follows the same design language as adminEmployees.css
 ============================================================ */
-
 
 /* ============================================================
    PAGE CONTENT
@@ -12,140 +10,148 @@
 .page-content.sc-page {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 28px 32px;
+    gap: 22px;
+    padding: 24px 30px 32px;
     background-color: #f0eef8;
     width: 100%;
     box-sizing: border-box;
 }
 
-
 /* ============================================================
-   STAT CARDS ROW
+   TOP OVERVIEW GRID: Total Uploaded File + Import Service Credits
 ============================================================ */
 
-.sc-stats {
+.sc-top-overview-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 220px 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* Left Card: Total Uploaded File */
+.sc-total-file-card {
+    background: #ffffff;
+    border: 1px solid #e5dff5;
+    border-radius: 18px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(107, 15, 186, 0.06);
+}
+
+.sc-total-file-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #6b7280;
+    margin: 0;
+}
+
+.sc-total-file-number {
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: #5b0fa8;
+    line-height: 1;
+    margin: 0;
+}
+
+/* Right Group: Import Service Credits Pill Header + 2 Cards */
+.sc-import-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+}
+
+.sc-import-pill-header {
+    background: #ffffff;
+    border: 1px solid #e5dff5;
+    border-radius: 999px;
+    padding: 9px 24px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1a0a2e;
+    box-shadow: 0 2px 8px rgba(107, 15, 186, 0.05);
+}
+
+.sc-import-cards-row {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 18px;
+    flex: 1;
+}
+
+.sc-import-step-card {
+    background: #ffffff;
+    border: 1px solid #e5dff5;
+    border-radius: 18px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 3px 12px rgba(107, 15, 186, 0.06);
+}
+
+.sc-step-card-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1a0a2e;
+    margin: 0;
+}
+
+.sc-step-card-desc {
+    font-size: 0.85rem;
+    color: #374151;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.sc-step-card-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+/* Step 2 Form Layout */
+.sc-step2-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+}
+
+.sc-step2-content {
+    display: flex;
+    align-items: center;
     gap: 20px;
 }
 
-.sc-stat-card {
-    background: #fff;
-    border: 1px solid #e5dff5;
+.sc-upload-icon-box {
+    width: 68px;
+    height: 68px;
     border-radius: 14px;
-    padding: 22px 26px 24px;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    box-shadow: 0 2px 8px rgba(107,15,186,0.06);
-}
-
-.sc-stat-label {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: #6b7280;
-}
-
-.sc-stat-number {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #6B0FBA;
-    line-height: 1.1;
-}
-
-
-/* ============================================================
-   SHARED CARD SHELL
-============================================================ */
-
-.sc-card {
-    background: #fff;
-    border: 1px solid #e5dff5;
-    border-radius: 16px;
-    padding: 28px 30px;
-    box-shadow: 0 2px 8px rgba(107,15,186,0.06);
-}
-
-.sc-card-title {
-    font-size: 1.0625rem;
-    font-weight: 700;
-    color: #1a0a2e;
-    margin-bottom: 22px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #f0ebfc;
-}
-
-
-/* ============================================================
-   IMPORT / UPLOAD — master-file-style layout
-============================================================ */
-
-/* Step sections inside the import card */
-.sc-upload-section {
-    margin-bottom: 28px;
-}
-
-.sc-upload-section:last-of-type {
-    margin-bottom: 0;
-}
-
-.sc-upload-section h3 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: #1a0a2e;
-    margin: 0 0 8px;
-}
-
-.sc-upload-section p {
-    font-size: 0.875rem;
-    color: #6b7280;
-    line-height: 1.6;
-    margin: 0 0 16px;
-}
-
-/* Step number badge */
-.sc-step-number {
-    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: #6B0FBA;
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
+    color: #6B0FBA;
+    cursor: pointer;
     flex-shrink: 0;
+    transition: background 0.18s ease, transform 0.15s ease;
 }
 
-/* Download template button — matches masterfile style */
-.btn-download-template-sc {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    background: #167d49;
-    color: #fff;
-    text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 600;
-    transition: background 0.2s ease;
-    border: none;
+.sc-upload-icon-box:hover {
+    background: #f3e8ff;
+    transform: translateY(-1px);
 }
 
-.btn-download-template-sc:hover {
-    background: #116438;
-    color: #fff;
-}
-
-.btn-download-template-sc svg {
-    width: 16px;
-    height: 16px;
+.sc-upload-icon-box svg {
+    width: 48px;
+    height: 48px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2.2;
@@ -153,97 +159,75 @@
     stroke-linejoin: round;
 }
 
-/* Dropzone — identical look to master file upload */
-.sc-dropzone {
+.sc-step2-right {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    padding: 36px 24px;
-    border: 2px dashed #c4b5d4;
-    border-radius: 12px;
-    background: #faf7ff;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    gap: 6px;
+    min-width: 0;
 }
 
-.sc-dropzone:hover {
-    border-color: #6B0FBA;
-    background: #f3eeff;
-}
-
-.sc-dropzone-icon {
-    width: 44px;
-    height: 44px;
-    stroke: #9b7dca;
-    fill: none;
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.sc-dropzone-label {
-    font-size: 0.9375rem;
+.sc-selected-file {
+    font-size: 0.78rem;
     font-weight: 600;
     color: #6B0FBA;
-    cursor: pointer;
-}
-
-.sc-dropzone-format {
-    font-size: 0.78rem;
-    color: #9ca3af;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #excelFileInput {
     display: none;
 }
 
-.sc-selected-file {
-    font-size: 0.8rem;
-    color: #6b7280;
-    min-height: 1.2em;
-    text-align: center;
-}
-
-/* Form action row */
-.sc-upload-actions {
+.sc-step2-btn-wrap {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 20px;
+    justify-content: flex-start;
+    margin-top: 4px;
 }
 
-/* Upload & Preview button */
-.btn-upload {
+/* Shared Green Pill CTA Button (matches mockup) */
+.btn-sc-green-pill {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    padding: 10px 22px;
+    padding: 10px 24px;
+    border-radius: 999px;
     border: none;
-    border-radius: 8px;
-    background: #6B0FBA;
-    color: #fff;
-    font-size: 0.875rem;
+    background: #1b804b;
+    color: #ffffff;
+    font: inherit;
+    font-size: 0.9rem;
     font-weight: 700;
+    text-decoration: none;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.18s ease, transform 0.1s ease, opacity 0.18s ease;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(27, 128, 75, 0.22);
 }
 
-.btn-upload:hover:not(:disabled) {
-    background: #560A96;
+.btn-sc-green-pill:hover:not(:disabled) {
+    background: #14663b;
+    color: #ffffff;
 }
 
-.btn-upload:disabled {
-    background: #BDBDBD;
-    color: #F5F5F5;
+.btn-sc-green-pill:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.btn-sc-green-pill:disabled {
+    background: #9ca3af;
+    color: #f3f4f6;
     cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
 }
 
-.btn-upload svg {
-    width: 16px;
-    height: 16px;
+.btn-sc-green-pill svg {
+    width: 18px;
+    height: 18px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2.2;
@@ -251,14 +235,45 @@
     stroke-linejoin: round;
 }
 
-/* Upload note */
-.sc-upload-note {
-    font-size: 0.8rem;
-    color: #9ca3af;
-    margin: 12px 0 0;
-    text-align: center;
+/* ============================================================
+   SHARED CARD SHELL (Data Preview & Manual Upload)
+============================================================ */
+
+.sc-card {
+    background: #ffffff;
+    border: 1px solid #e5dff5;
+    border-radius: 18px;
+    padding: 22px 26px;
+    box-shadow: 0 3px 12px rgba(107, 15, 186, 0.06);
 }
 
+.sc-section-heading {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1a0a2e;
+    margin: 0 0 14px;
+}
+
+/* ============================================================
+   DATA PREVIEW CARD
+============================================================ */
+
+.sc-preview-empty-bar {
+    background: #f1f1f4;
+    border: 1px solid #e2e2e8;
+    border-radius: 10px;
+    padding: 13px 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #71717a;
+}
+
+.sc-preview-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 16px;
+}
 
 /* ============================================================
    VALIDATION BANNERS
@@ -269,10 +284,10 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 16px;
+    padding: 11px 16px;
     border-radius: 10px;
-    margin-bottom: 18px;
-    font-size: 0.875rem;
+    margin-bottom: 14px;
+    font-size: 0.85rem;
     font-weight: 600;
 }
 
@@ -283,13 +298,19 @@
 }
 
 .sc-error-banner svg {
-    width: 18px; height: 18px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
-    stroke: #E09B00; fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    stroke: #E09B00;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-.sc-error-text { color: #7A5C00; }
+.sc-error-text {
+    color: inherit;
+}
 
 .sc-success-banner {
     background: #ECFDF3;
@@ -298,12 +319,218 @@
 }
 
 .sc-success-banner svg {
-    width: 18px; height: 18px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
-    stroke: #16804F; fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    stroke: #16804F;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
+/* ============================================================
+   MANUAL UPLOAD SECTION
+============================================================ */
+
+.sc-manual-scroll-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.sc-manual-grid-container {
+    min-width: 920px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 9-column grid template matching mockup proportions */
+.sc-manual-header-row,
+.sc-manual-item-row {
+    display: grid;
+    grid-template-columns: 28px 105px 1.2fr 1.35fr 135px 135px 115px 125px 64px;
+    gap: 10px;
+    align-items: center;
+}
+
+.sc-manual-header-row {
+    background: #efedf6;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #1a0a2e;
+    text-align: center;
+}
+
+.sc-manual-rows-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sc-manual-item-row {
+    padding: 2px 12px;
+}
+
+.sc-manual-row-index,
+.sc-manual-slot-index {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #1a0a2e;
+    text-align: left;
+    user-select: none;
+}
+
+/* Employee # Auto Pill */
+.sc-manual-empno-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 10px;
+    background: #d4d4d8;
+    color: #27272a;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+}
+
+.sc-manual-empno-badge.has-value {
+    background: #ede9fe;
+    color: #4c1d95;
+    border: 1px solid #c4b5fd;
+}
+
+/* Manual Inputs & Dropdowns */
+.sc-manual-input,
+.sc-manual-select {
+    width: 100%;
+    height: 36px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1.5px solid #a1a1aa;
+    background: #ffffff;
+    color: #1f2937;
+    font: inherit;
+    font-size: 0.82rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sc-manual-input:focus,
+.sc-manual-select:focus {
+    border-color: #6B0FBA;
+    box-shadow: 0 0 0 2px rgba(107, 15, 186, 0.14);
+}
+
+.sc-manual-input.is-invalid,
+.sc-manual-select.is-invalid {
+    border-color: #dc2626;
+    background: #fef2f2;
+}
+
+/* Remove Link Button */
+.btn-manual-remove {
+    background: none;
+    border: none;
+    color: #b91c1c;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 4px;
+    text-align: center;
+    transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-manual-remove:hover {
+    color: #7f1d1d;
+}
+
+/* Add Personnel Purple Bar & Remaining Numbered Slots */
+.sc-manual-add-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 2px 12px 0;
+}
+
+.sc-manual-add-row {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-manual-add-personnel {
+    width: 100%;
+    height: 38px;
+    border-radius: 999px;
+    border: none;
+    background: #5b0fa8;
+    color: #ffffff;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.1s ease;
+    box-shadow: 0 2px 8px rgba(91, 15, 168, 0.22);
+}
+
+.btn-manual-add-personnel:hover:not(:disabled) {
+    background: #4a0b8a;
+}
+
+.btn-manual-add-personnel:active:not(:disabled) {
+    transform: scale(0.995);
+}
+
+.btn-manual-add-personnel svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.sc-manual-remaining-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sc-manual-empty-slot-num {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #1a0a2e;
+    line-height: 1.4;
+}
+
+.sc-manual-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 14px;
+}
+
+.btn-sc-manual-submit {
+    min-width: 130px;
+}
 
 /* ============================================================
    TABLES (preview + history)
@@ -347,6 +574,179 @@
 
 .sc-table tbody tr:last-child td { border-bottom: none; }
 
+/* ── Employees-Style Scrollable Preview Table & Pagination ── */
+.sc-preview-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.sc-preview-scroll-wrap {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 55vh;
+    border: 1px solid #DDD6C8;
+    border-radius: 10px;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sc-preview-scroll-wrap::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.sc-preview-scroll-wrap::-webkit-scrollbar-track {
+    background: #f0ebe0;
+    border-radius: 10px;
+}
+
+.sc-preview-scroll-wrap::-webkit-scrollbar-thumb {
+    background: #c0b0d0;
+    border-radius: 10px;
+}
+
+.sc-preview-table {
+    width: max-content;
+    min-width: 1150px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.9375rem;
+}
+
+.sc-preview-table thead tr {
+    background-color: #faf8f3;
+    border-bottom: 2px solid #DDD6C8;
+}
+
+.sc-preview-table thead th {
+    padding: 15px 18px;
+    text-align: left;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #242424;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #faf8f3;
+    box-shadow: 0 2px 0 #DDD6C8;
+}
+
+.sc-preview-table tbody tr:nth-child(odd) {
+    background-color: #f8f5fc;
+}
+
+.sc-preview-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.sc-preview-table tbody tr:hover {
+    background-color: #f0e9fa;
+}
+
+.sc-preview-table tbody td {
+    font-size: 0.9375rem;
+    color: #292929;
+    padding: 13px 18px;
+    height: 58px;
+    vertical-align: middle;
+    white-space: nowrap;
+    border-bottom: 1px solid #e9e5de;
+}
+
+.sc-preview-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Employees-Style Pagination Bar */
+.employee-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 18px 4px 6px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.pagination-info {
+    color: #475569;
+    font-size: 0.9375rem;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pagination-controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 12px;
+    font-size: 0.9375rem;
+    color: #475569;
+}
+
+.pagination-select {
+    min-height: 40px;
+    padding: 7px 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #334155;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    cursor: pointer;
+}
+
+.pagination-button {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #475569;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background: #f1f5f9;
+}
+
+.pagination-button.is-active {
+    background: #6b0fba;
+    border-color: #6b0fba;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.pagination-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+    .employee-pagination {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
 
 /* ============================================================
    EDITABLE PREVIEW INPUTS
@@ -389,7 +789,6 @@
     outline: none;
 }
 
-
 /* ============================================================
    ROW VALIDATION
 ============================================================ */
@@ -410,7 +809,6 @@
     max-width: 240px;
 }
 
-
 /* ============================================================
    ACTIONS / REMOVE ROW
 ============================================================ */
@@ -419,451 +817,298 @@
     border: none;
     background: transparent;
     color: #D32F2F;
-    font-size: 1.1rem;
+    font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
     padding: 4px 8px;
+    text-decoration: underline;
 }
 
 .sc-remove-row:hover { color: #A40000; }
 
-
 /* ============================================================
-   PREVIEW SUMMARY
+   PERSONNEL SERVICE CREDITS RECORDS CARD & TABLE
 ============================================================ */
 
-.sc-summary {
-    margin-bottom: 15px;
-    padding: 10px 14px;
-    background: #f3eeff;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    color: #333;
-    border: 1px solid #e0d5f5;
+.sc-personnel-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
-.sc-summary-valid   { color: #16804F; font-weight: 700; }
-.sc-summary-invalid { color: #C5221F; font-weight: 700; }
-
-
-/* ============================================================
-   SAVE & POST
-============================================================ */
-
-.sc-post-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 12px;
-    margin-top: 18px;
-    padding-top: 18px;
-    border-top: 1px solid #f0ebfc;
-}
-
-#btnSaveServiceCredits {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 24px;
-    border: none;
-    border-radius: 8px;
-    background: #6B0FBA;
-    color: #fff;
-    font-size: 0.875rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-#btnSaveServiceCredits:hover:not(:disabled) { background: #560A96; }
-
-#btnSaveServiceCredits:disabled {
-    background: #BDBDBD;
-    color: #F5F5F5;
-    cursor: not-allowed;
-}
-
-
-/* ============================================================
-   UPLOAD HISTORY TABLE & CARD (matches Transaction History)
-============================================================ */
-
-.sc-history-card {
-    background: #fff;
-    border: 1px solid #e5dff5;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(107, 15, 186, 0.07);
-}
-
-.sc-history-card-header {
-    background: #2D0057;
-    padding: 16px 24px;
+.sc-personnel-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 18px;
 }
 
-.sc-history-card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #fff;
+.sc-personnel-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1a0a2e;
     margin: 0;
 }
 
-.sc-history-card-body {
-    padding: 0;
+.sc-personnel-search-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
 }
 
-.sc-history-wrap {
-    overflow-x: auto;
-    border: none;
-    border-radius: 0;
-}
-
-.sc-history-wrap .sc-table {
-    min-width: 760px;
-    font-size: 0.84rem;
-}
-
-.sc-history-wrap .sc-table thead th {
-    padding: 13px 20px;
+.sc-personnel-search-input {
+    width: 100%;
+    height: 40px;
+    padding: 8px 38px 8px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #d0c8e8;
+    background: #ffffff;
     color: #1f2937;
+    font: inherit;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.sc-history-wrap .sc-table tbody td {
-    padding: 13px 20px;
-    color: #374151;
+.sc-personnel-search-input:focus {
+    border-color: #6B0FBA;
+    box-shadow: 0 0 0 3px rgba(107, 15, 186, 0.12);
+}
+
+.sc-personnel-search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    stroke: #9ca3af;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+/* Grouped 2-row headers for Current Balance / Overall Earned / Total Used (L / N / W) */
+.sc-personnel-table {
+    width: 100%;
+    min-width: 980px;
+}
+
+.sc-personnel-table thead tr.sc-personnel-thead-main th {
+    padding: 12px 14px 8px;
     vertical-align: middle;
+    box-shadow: none;
+    border-bottom: 1px solid #e5dfd2;
 }
 
-.sc-history-filename {
-    color: #3b5998;
+.sc-personnel-table thead tr.sc-personnel-thead-sub th {
+    top: 41px;
+    padding: 6px 10px 10px;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #1a0a2e;
+    background-color: #faf8f3;
+    box-shadow: 0 2px 0 #DDD6C8;
+}
+
+.sc-col-group-head {
+    text-align: center !important;
+    border-left: 1px solid #e5dfd2;
+}
+
+.sc-col-sub {
+    text-align: center !important;
+    min-width: 54px;
+}
+
+.sc-col-sub:first-child,
+.sc-col-group-end + .sc-col-sub {
+    border-left: 1px solid #e5dfd2;
+}
+
+.sc-col-center {
+    text-align: center !important;
+    border-left: 1px solid #e5dfd2;
+}
+
+.sc-personnel-table tbody td.sc-num-cell {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
     font-weight: 500;
+    padding: 12px 10px;
 }
 
-.sc-status-posted {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 6px;
-    background: #DCFCE7;
-    color: #15803D;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+.sc-personnel-table tbody td.sc-num-group-start {
+    border-left: 1px solid #ede8dc;
 }
 
-.sc-history-status-posted { color: #16803A; font-weight: 700; }
-.sc-history-status-other  { color: #A66A00; font-weight: 700; }
-
-.sc-actions-cell {
-    white-space: nowrap;
-    vertical-align: middle;
+.sc-personnel-table tbody td.sc-action-cell {
+    text-align: center;
+    border-left: 1px solid #ede8dc;
 }
 
-.sc-inline-view {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    background: #fff;
-    color: #6B0FBA;
-    border: 1.5px solid #9d74c7;
-    font: inherit;
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.15s, border-color 0.15s;
-}
-
-.sc-inline-view:hover {
-    background: #f3eeff;
-    border-color: #6B0FBA;
-}
-
-/* Upload History Pagination */
-.sc-history-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 14px 20px;
-    border-top: 1px solid #f0ebfc;
-    background: #fff;
-}
-
-.sc-pagination-info {
-    font-size: 0.8125rem;
-    color: #9ca3af;
-}
-
-.sc-pagination-btns {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-wrap: wrap;
-}
-
-.sc-page-btn {
-    min-width: 34px;
-    height: 34px;
-    padding: 0 10px;
-    border: 1.5px solid #e5dff5;
-    border-radius: 6px;
-    background: #fff;
-    color: #6b7280;
-    font: inherit;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-    white-space: nowrap;
-}
-
-.sc-page-btn:hover:not(:disabled) {
-    background: #f0eaf8;
-    border-color: #6B0FBA;
-    color: #6B0FBA;
-}
-
-.sc-page-btn--active {
-    background: #6B0FBA;
-    border-color: #6B0FBA;
-    color: #fff;
-    cursor: default;
-}
-
-.sc-page-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.sc-page-ellipsis {
+/* Green Pill "View" Button under Activities */
+.btn-sc-activities-view {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 34px;
-    height: 34px;
-    font-size: 0.875rem;
-    color: #9ca3af;
-    user-select: none;
+    padding: 6px 18px;
+    border-radius: 999px;
+    border: none;
+    background: #2f855a;
+    color: #ffffff;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    white-space: nowrap;
+}
+
+.btn-sc-activities-view:hover {
+    background: #276749;
+}
+
+.btn-sc-activities-view:active {
+    transform: scale(0.97);
 }
 
 /* ============================================================
-   SERVICE CREDIT RECIPIENTS MODAL
+   ACTIVITIES MODAL POPUP (Centered)
 ============================================================ */
 
-.sc-recipients-modal-overlay {
+.sc-activities-modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    z-index: 100;
+    background: rgba(0, 0, 0, 0.52);
+    z-index: 120;
     align-items: center;
     justify-content: center;
     padding: 20px;
 }
 
-.sc-recipients-modal-overlay.is-open {
+.sc-activities-modal-overlay.is-open {
     display: flex;
 }
 
-.sc-recipients-modal {
-    background: #fff;
-    border-radius: 16px;
+.sc-activities-modal {
+    background: #ffffff;
+    border-radius: 18px;
     width: 100%;
-    max-width: 650px;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 28px 32px 24px;
+    max-width: 580px;
+    max-height: 88vh;
+    overflow: hidden;
+    padding: 24px 28px 26px;
     position: relative;
-    box-shadow: 0 12px 44px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
-.sc-recipients-close {
+.sc-activities-close {
     position: absolute;
     top: 18px;
-    right: 20px;
+    right: 22px;
     background: none;
     border: none;
     font-size: 1.25rem;
-    color: #666;
+    color: #1f2937;
     cursor: pointer;
-    padding: 4px 6px;
-    border-radius: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    line-height: 1;
+    transition: background 0.15s ease;
 }
 
-.sc-recipients-close:hover {
-    background: #f0f0f0;
-    color: #333;
+.sc-activities-close:hover {
+    background: #f3f4f6;
 }
 
-.sc-recipients-title {
-    font-size: 1.35rem;
+.sc-activities-title {
+    font-size: 1.25rem;
     font-weight: 800;
     color: #111827;
+    text-align: center;
     margin: 0 0 14px;
-    padding-right: 28px;
 }
 
-.sc-recipients-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 26px;
-    font-size: 0.9rem;
-    color: #1f2937;
-    margin-bottom: 8px;
-}
-
-.sc-recipients-meta strong {
+.sc-activities-emp-name {
+    font-size: 0.95rem;
     font-weight: 700;
     color: #111827;
+    margin: 0 0 14px;
 }
 
-.sc-recipients-subtitle {
-    margin: 0 0 16px;
-    font-size: 0.84rem;
-    color: #4b5563;
-}
-
-.sc-recipients-table-box {
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+.sc-activities-table-box {
+    border-radius: 12px;
     overflow: hidden;
-    background: #fff;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
 }
 
-.sc-recipients-table-scroll {
-    max-height: 290px;
+.sc-activities-table-scroll {
+    max-height: 360px;
     overflow-y: auto;
 }
 
-.sc-recipients-table-scroll::-webkit-scrollbar { width: 6px; }
-.sc-recipients-table-scroll::-webkit-scrollbar-track { background: #f3f4f6; }
-.sc-recipients-table-scroll::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 999px; }
-
-.sc-recipients-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.84rem;
+.sc-activities-table-scroll::-webkit-scrollbar {
+    width: 6px;
 }
 
-.sc-recipients-table thead tr {
-    background: #f9fafb;
+.sc-activities-table-scroll::-webkit-scrollbar-track {
+    background: #f3f4f6;
+}
+
+.sc-activities-table-scroll::-webkit-scrollbar-thumb {
+    background: #c0b0d0;
+    border-radius: 999px;
+}
+
+.sc-activities-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.sc-activities-table thead tr {
+    background: #efedf6;
     border-bottom: 1px solid #e5e7eb;
 }
 
-.sc-recipients-table thead th {
-    padding: 11px 14px;
-    text-align: left;
-    font-weight: 700;
+.sc-activities-table thead th {
+    padding: 12px 14px;
+    text-align: center;
+    font-weight: 800;
     color: #111827;
-    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    background: #efedf6;
+    z-index: 1;
 }
 
-.sc-recipients-table tbody tr {
-    border-bottom: 1px solid #f1f5f9;
+.sc-activities-table tbody tr {
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.sc-recipients-table tbody tr:nth-child(even) {
-    background: #f8fafc;
-}
-
-.sc-recipients-table tbody tr:last-child {
+.sc-activities-table tbody tr:last-child {
     border-bottom: none;
 }
 
-.sc-recipients-table tbody td {
-    padding: 12px 14px;
+.sc-activities-table tbody td {
+    padding: 14px 12px;
+    text-align: center;
     color: #1f2937;
     vertical-align: middle;
 }
-
-.sc-added-credits-val {
-    font-weight: 700;
-    color: #8a6d1b;
-    white-space: nowrap;
-}
-
-.sc-recipients-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 14px;
-    font-size: 0.8rem;
-    color: #4b5563;
-}
-
-.sc-recipients-nav-btns {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.sc-recipients-page-btn {
-    width: 28px;
-    height: 28px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    background: #fff;
-    color: #374151;
-    cursor: pointer;
-    padding: 0;
-    transition: background 0.15s, border-color 0.15s;
-}
-
-.sc-recipients-page-btn:hover:not(:disabled) {
-    background: #f3f4f6;
-    border-color: #d1d5db;
-}
-
-.sc-recipients-page-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.sc-recipients-page-btn svg {
-    width: 14px;
-    height: 14px;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.sc-recipients-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 18px;
-}
-
-.btn-sc-recipients-close {
-    padding: 9px 22px;
-    background: #F5C518;
-    color: #1a1a1a;
-    border: none;
-    border-radius: 8px;
-    font: inherit;
-    font-size: 0.875rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.15s;
-}
-
-.btn-sc-recipients-close:hover {
-    background: #e6b800;
-}
-
 
 /* ============================================================
    SIDEBAR LOGOUT BUTTON (shared with all admin pages)
@@ -910,21 +1155,27 @@
 .sidebar-logout:focus-visible { outline: 2px solid #FCA5A5; outline-offset: 3px; }
 .sidebar-logout:disabled { opacity: 0.6; cursor: wait; }
 
-
 /* ============================================================
    RESPONSIVE
 ============================================================ */
 
-@media (max-width: 900px) {
-    .sc-stats { grid-template-columns: 1fr 1fr; }
+@media (max-width: 1024px) {
+    .sc-top-overview-grid {
+        grid-template-columns: 1fr;
+    }
+    .sc-import-cards-row {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 600px) {
-    .sc-stats { grid-template-columns: 1fr; }
     .page-content.sc-page { padding: 18px 16px; }
-    .sc-card { padding: 20px 16px; }
+    .sc-card { padding: 18px 16px; }
+    .sc-step2-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
-
 
 /* ============================================================
    DARK MODE
@@ -934,57 +1185,86 @@ html[data-theme="dark"] .page-content.sc-page {
     background-color: var(--clr-cream-bg) !important;
 }
 
-html[data-theme="dark"] .sc-stat-card,
+html[data-theme="dark"] .sc-total-file-card,
+html[data-theme="dark"] .sc-import-pill-header,
+html[data-theme="dark"] .sc-import-step-card,
 html[data-theme="dark"] .sc-card,
-html[data-theme="dark"] .sc-upload-history-card,
+html[data-theme="dark"] .sc-history-card,
 html[data-theme="dark"] .sc-recipients-modal {
     background: #1e1926 !important;
     border-color: #484052 !important;
     color: #ffffff !important;
 }
 
-html[data-theme="dark"] .sc-stat-label  { color: #e2d9f3 !important; }
-html[data-theme="dark"] .sc-stat-number { color: #F5C518 !important; }
+html[data-theme="dark"] .sc-total-file-label,
+html[data-theme="dark"] .sc-step-card-desc,
+html[data-theme="dark"] .sc-selected-file,
+html[data-theme="dark"] .sc-recipients-subtitle,
+html[data-theme="dark"] .sc-recipients-pagination,
+html[data-theme="dark"] .sc-pagination-info {
+    color: #d0c9db !important;
+}
 
-html[data-theme="dark"] .sc-card-title,
-html[data-theme="dark"] .sc-upload-section h3,
+html[data-theme="dark"] .sc-total-file-number {
+    color: #F5C518 !important;
+}
+
+html[data-theme="dark"] .sc-step-card-title,
+html[data-theme="dark"] .sc-section-heading,
+html[data-theme="dark"] .sc-manual-row-index,
+html[data-theme="dark"] .sc-manual-slot-index,
+html[data-theme="dark"] .sc-manual-empty-slot-num,
 html[data-theme="dark"] .sc-recipients-title,
 html[data-theme="dark"] .sc-recipients-meta,
 html[data-theme="dark"] .sc-recipients-meta strong {
     color: #ffffff !important;
-    border-color: #484052 !important;
 }
 
-html[data-theme="dark"] .sc-upload-section p,
-html[data-theme="dark"] .sc-upload-note,
-html[data-theme="dark"] .sc-dropzone-format,
-html[data-theme="dark"] .sc-selected-file,
-html[data-theme="dark"] .sc-recipients-subtitle,
-html[data-theme="dark"] .sc-recipients-pagination,
-html[data-theme="dark"] .sc-upload-pagination-info {
-    color: #d0c9db !important;
-}
-
-html[data-theme="dark"] .sc-dropzone {
-    background: #2b2436 !important;
-    border-color: #6b5a8e !important;
-}
-
-html[data-theme="dark"] .sc-dropzone:hover {
-    background: #352c44 !important;
-    border-color: #F5C518 !important;
-}
-
-html[data-theme="dark"] .sc-dropzone-label {
+html[data-theme="dark"] .sc-upload-icon-box {
     color: #F5C518 !important;
 }
 
-html[data-theme="dark"] .sc-dropzone-icon {
-    stroke: #d8b4fe !important;
+html[data-theme="dark"] .sc-upload-icon-box:hover {
+    background: #2f273d !important;
+}
+
+html[data-theme="dark"] .sc-preview-empty-bar {
+    background: #2b2436 !important;
+    border-color: #484052 !important;
+    color: #d0c9db !important;
+}
+
+html[data-theme="dark"] .sc-manual-header-row {
+    background: #2f273d !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sc-manual-empno-badge {
+    background: #352d42 !important;
+    color: #e2d9f3 !important;
+}
+
+html[data-theme="dark"] .sc-manual-empno-badge.has-value {
+    background: #3b2d54 !important;
+    color: #F5C518 !important;
+    border-color: #8b5cf6 !important;
+}
+
+html[data-theme="dark"] .sc-manual-input,
+html[data-theme="dark"] .sc-manual-select,
+html[data-theme="dark"] .sc-preview-input,
+html[data-theme="dark"] .sc-preview-select {
+    background: #2b2436 !important;
+    border-color: #5b4e70 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-manual-remove,
+html[data-theme="dark"] .sc-remove-row {
+    color: #fca5a5 !important;
 }
 
 html[data-theme="dark"] .sc-table-wrap,
-html[data-theme="dark"] .sc-upload-table-wrap,
 html[data-theme="dark"] .sc-recipients-table-box {
     background: #1e1926 !important;
     border-color: #484052 !important;
@@ -992,8 +1272,6 @@ html[data-theme="dark"] .sc-recipients-table-box {
 
 html[data-theme="dark"] .sc-table thead tr,
 html[data-theme="dark"] .sc-table thead th,
-html[data-theme="dark"] .sc-upload-table thead tr,
-html[data-theme="dark"] .sc-upload-table thead th,
 html[data-theme="dark"] .sc-recipients-table thead tr,
 html[data-theme="dark"] .sc-recipients-table thead th {
     background: #2f273d !important;
@@ -1002,27 +1280,23 @@ html[data-theme="dark"] .sc-recipients-table thead th {
 }
 
 html[data-theme="dark"] .sc-table tbody td,
-html[data-theme="dark"] .sc-upload-table tbody td,
 html[data-theme="dark"] .sc-recipients-table tbody td {
     color: #ffffff !important;
     border-color: #3b3347 !important;
 }
 
 html[data-theme="dark"] .sc-table tbody tr:nth-child(odd),
-html[data-theme="dark"] .sc-upload-table tbody tr:nth-child(odd),
 html[data-theme="dark"] .sc-recipients-table tbody tr:nth-child(odd),
 html[data-theme="dark"] .sc-row-valid {
     background: #26212e !important;
 }
 
 html[data-theme="dark"] .sc-table tbody tr:nth-child(even),
-html[data-theme="dark"] .sc-upload-table tbody tr:nth-child(even),
 html[data-theme="dark"] .sc-recipients-table tbody tr:nth-child(even) {
     background: #1e1926 !important;
 }
 
 html[data-theme="dark"] .sc-table tbody tr:hover,
-html[data-theme="dark"] .sc-upload-table tbody tr:hover,
 html[data-theme="dark"] .sc-recipients-table tbody tr:hover {
     background: #362d47 !important;
 }
@@ -1031,26 +1305,22 @@ html[data-theme="dark"] .sc-history-filename {
     color: #d8b4fe !important;
 }
 
-html[data-theme="dark"] .sc-view-btn {
+html[data-theme="dark"] .sc-inline-view {
     background: #2b2436 !important;
     color: #F5C518 !important;
     border-color: #F5C518 !important;
-}
-
-html[data-theme="dark"] .sc-view-btn:hover {
-    background: #3b314b !important;
 }
 
 html[data-theme="dark"] .sc-added-credits-val {
     color: #F5C518 !important;
 }
 
-html[data-theme="dark"] .sc-upload-pagination {
+html[data-theme="dark"] .sc-history-pagination {
     background: #1e1926 !important;
     border-top-color: #484052 !important;
 }
 
-html[data-theme="dark"] .sc-upload-page-btn:not(.sc-upload-page-btn--active),
+html[data-theme="dark"] .sc-page-btn:not(.sc-page-btn--active),
 html[data-theme="dark"] .sc-recipients-page-btn {
     background: #2b2436 !important;
     border-color: #484052 !important;
@@ -1061,19 +1331,117 @@ html[data-theme="dark"] .sc-recipients-close {
     color: #ffffff !important;
 }
 
-html[data-theme="dark"] .sc-preview-input,
-html[data-theme="dark"] .sc-preview-select {
+html[data-theme="dark"] .sc-preview-scroll-wrap {
+    border-color: #484052 !important;
+    background: #1e1926 !important;
+}
+
+html[data-theme="dark"] .sc-preview-scroll-wrap::-webkit-scrollbar-track {
+    background: #17131d !important;
+}
+
+html[data-theme="dark"] .sc-preview-scroll-wrap::-webkit-scrollbar-thumb {
+    background: #5b4e70 !important;
+}
+
+html[data-theme="dark"] .sc-preview-table thead tr,
+html[data-theme="dark"] .sc-preview-table thead th {
+    background: #2f273d !important;
+    color: #ffffff !important;
+    border-color: #484052 !important;
+    box-shadow: 0 2px 0 #484052 !important;
+}
+
+html[data-theme="dark"] .sc-row-invalid {
+    background: #3d1f28 !important;
+}
+
+html[data-theme="dark"] .sc-row-errors {
+    color: #fca5a5 !important;
+}
+
+html[data-theme="dark"] .sc-status-invalid {
+    color: #fca5a5 !important;
+}
+
+html[data-theme="dark"] .sc-status-valid {
+    color: #4ade80 !important;
+}
+
+html[data-theme="dark"] .pagination-info,
+html[data-theme="dark"] .pagination-controls label {
+    color: #e2d9f3 !important;
+}
+
+html[data-theme="dark"] .pagination-select,
+html[data-theme="dark"] .pagination-button:not(.is-active) {
     background: #2b2436 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .pagination-button:hover:not(:disabled):not(.is-active) {
+    background: #3b314b !important;
+}
+
+html[data-theme="dark"] .pagination-button.is-active {
+    background: #8b3dff !important;
+    border-color: #8b3dff !important;
+    color: #ffffff !important;
+}
+
+/* Dark Mode for Personnel Service Credits Records & Activities Modal */
+html[data-theme="dark"] .sc-personnel-title,
+html[data-theme="dark"] .sc-activities-title,
+html[data-theme="dark"] .sc-activities-emp-name,
+html[data-theme="dark"] .sc-activities-close {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sc-personnel-search-input {
+    background: #2b2436 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sc-personnel-search-input::placeholder {
+    color: #a89ec0 !important;
+}
+
+html[data-theme="dark"] .sc-personnel-table thead tr.sc-personnel-thead-main th,
+html[data-theme="dark"] .sc-personnel-table thead tr.sc-personnel-thead-sub th {
+    background: #2f273d !important;
     color: #ffffff !important;
     border-color: #484052 !important;
 }
 
-html[data-theme="dark"] .sc-summary {
-    background: #2e2840 !important;
+html[data-theme="dark"] .sc-personnel-table tbody td.sc-num-group-start,
+html[data-theme="dark"] .sc-personnel-table tbody td.sc-action-cell {
+    border-left-color: #3b3347 !important;
+}
+
+html[data-theme="dark"] .sc-activities-modal,
+html[data-theme="dark"] .sc-activities-table-box {
+    background: #1e1926 !important;
+    border-color: #484052 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sc-activities-close:hover {
+    background: #2f273d !important;
+}
+
+html[data-theme="dark"] .sc-activities-table thead tr,
+html[data-theme="dark"] .sc-activities-table thead th {
+    background: #2f273d !important;
     color: #ffffff !important;
     border-color: #484052 !important;
 }
 
-html[data-theme="dark"] .sc-post-actions {
-    border-color: #484052 !important;
+html[data-theme="dark"] .sc-activities-table tbody tr {
+    border-bottom-color: #3b3347 !important;
+}
+
+html[data-theme="dark"] .sc-activities-table tbody td {
+    color: #ffffff !important;
 }

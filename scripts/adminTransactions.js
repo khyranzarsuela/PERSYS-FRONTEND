@@ -7,7 +7,7 @@ const TX_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/transactions.php`
 const PROCESS_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/processTransaction.php`;
 const FORM6_BASE = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/generateForm6.php`;
 
-const ROWS_PER_PAGE = 15;
+let rowsPerPage = 5;
 
 // ── Module state ─────────────────────────────────────────────────
 let allRequests = [];
@@ -15,6 +15,11 @@ let filteredRows = [];
 let currentPage = 1;
 let filterStatus = 'all';
 let filterType = 'all';
+
+// ── Leave Reports state ──────────────────────────────────────────
+let leaveReportRows = [];
+let reportCurrentPage = 1;
+let reportRowsPerPage = 5;
 
 // Per-row pool selection state: { [requestId]: '1' | '2' | '' }
 const rowPoolState = {};
@@ -63,20 +68,33 @@ async function loadTransactions() {
 
     allRequests = requests || [];
     currentPage = 1;
+    reportCurrentPage = 1;
     applyFilters();
+    rebuildAndRenderLeaveReports();
 
   } catch (err) {
     console.error('TX load error:', err);
     const tbody = document.getElementById('txTableBody');
     if (tbody) {
       tbody.innerHTML =
-        `<tr><td colspan="5" style="text-align:center;padding:28px;
+        `<tr><td colspan="7" style="text-align:center;padding:28px;
            color:#9ca3af;font-style:italic;">
            Unable to load transactions. Please refresh.
          </td></tr>`;
     }
     const pg = document.getElementById('txPagination');
     if (pg) pg.hidden = true;
+
+    const repTbody = document.getElementById('leaveReportsTableBody');
+    if (repTbody) {
+      repTbody.innerHTML =
+        `<tr><td colspan="5" style="text-align:center;padding:28px;
+           color:#9ca3af;font-style:italic;">
+           Unable to load leave reports. Please refresh.
+         </td></tr>`;
+    }
+    const repPg = document.getElementById('leaveReportsPagination');
+    if (repPg) repPg.hidden = true;
   }
 }
 
@@ -115,11 +133,11 @@ function renderPage() {
   const pagination = document.getElementById('txPagination');
 
   const total = filteredRows.length;
-  const totalPages = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+  const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
   currentPage = Math.min(Math.max(1, currentPage), totalPages);
 
-  const start = (currentPage - 1) * ROWS_PER_PAGE;
-  renderTableRows(filteredRows.slice(start, start + ROWS_PER_PAGE), tbody, total);
+  const start = (currentPage - 1) * rowsPerPage;
+  renderTableRows(filteredRows.slice(start, start + rowsPerPage), tbody, total);
   renderPagination(currentPage, totalPages, pagination);
 }
 
@@ -129,7 +147,7 @@ function renderTableRows(rows, tbody, totalCount) {
   if (totalCount === 0) {
     const tr = document.createElement('tr');
     const td = document.createElement('td');
-    td.colSpan = 5;
+    td.colSpan = 7;
     td.style.cssText = 'text-align:center;padding:32px;color:#9ca3af;font-style:italic;';
     td.textContent = allRequests.length > 0
       ? 'No transactions match the current filter.'
@@ -154,17 +172,20 @@ function buildRow(r) {
   tr.dataset.requestId = rid;
   tr.dataset.status = statusLow;
 
-  /* ── Col 1: Employee ─────────────────────────────────────────── */
+  /* ── Col 1: Request ID ───────────────────────────────────────── */
+  const tdReqId = document.createElement('td');
+  tdReqId.textContent = r.request_number || rid || '—';
+
+  /* ── Col 2: Date filed ───────────────────────────────────────── */
+  const tdDateFiled = document.createElement('td');
+  tdDateFiled.textContent = formatDate(r.date_filed);
+
+  /* ── Col 3: Employee ─────────────────────────────────────────── */
   const tdEmp = document.createElement('td');
   const empName = document.createElement('div');
   empName.className = 'tx-emp-name';
   empName.textContent = buildName(r);
-
-  const empFiled = document.createElement('div');
-  empFiled.className = 'tx-emp-sub';
-  empFiled.textContent = `Filed: ${formatDate(r.date_filed)}`;
-
-  tdEmp.append(empName, empFiled);
+  tdEmp.appendChild(empName);
 
   /* ── Col 2: Leave Details ────────────────────────────────────── */
   const tdLeave = document.createElement('td');
@@ -295,7 +316,7 @@ function buildRow(r) {
     tdActions.append(viewBtn, form6Btn);
   }
 
-  tr.append(tdEmp, tdLeave, tdDeduct, tdStatus, tdActions);
+  tr.append(tdReqId, tdDateFiled, tdEmp, tdLeave, tdDeduct, tdStatus, tdActions);
   return tr;
 }
 
@@ -420,17 +441,19 @@ async function inlineDecision(r, targetStatus) {
       if (targetStatus === 'Approved') {
         // Map credit_type_id back to a name
         allRequests[idx].credit_type_id = creditTypeId;
-        allRequests[idx].credit_type_name = creditTypeId === '1'
-          ? 'Local'
-          : 'National';
+        allRequests[idx].credit_type_name =
+          creditTypeId === '1' ? 'Local' :
+          creditTypeId === '2' ? 'National' :
+          creditTypeId === '3' ? 'Wellness' : 'Local';
       }
 
       // Clear the pool choice for this row (it's finalised now)
       delete rowPoolState[rid];
     }
 
-    // Re-render from filtered slice (preserves page + filters)
+    // Re-render from filtered slice (preserves page + filters) and refresh Leave Reports
     applyFilters();
+    rebuildAndRenderLeaveReports();
 
   } catch (err) {
     console.error('inlineDecision error:', err);
@@ -603,36 +626,69 @@ function closeModal() {
 ═══════════════════════════════════════════════════════════════ */
 
 function renderPagination(page, totalPages, container) {
+  if (!container) return;
   container.replaceChildren();
 
-  if (totalPages <= 1) { container.hidden = true; return; }
+  const total = filteredRows.length;
+  if (total === 0) {
+    container.hidden = true;
+    return;
+  }
   container.hidden = false;
 
-  const total = filteredRows.length;
-  const start = (page - 1) * ROWS_PER_PAGE + 1;
-  const end = Math.min(page * ROWS_PER_PAGE, total);
+  const start = (page - 1) * rowsPerPage + 1;
+  const end = Math.min(page * rowsPerPage, total);
 
-  const info = document.createElement('span');
-  info.className = 'tx-pagination-info';
-  info.textContent = `Showing ${start}–${end} of ${total}`;
+  const info = document.createElement('div');
+  info.className = 'pagination-info';
+  info.textContent = `Showing ${start}–${end} of ${total} records`;
 
-  const group = document.createElement('div');
-  group.className = 'tx-pagination-btns';
+  const controls = document.createElement('div');
+  controls.className = 'pagination-controls';
 
-  group.append(
-    makePagBtn('← Prev', page <= 1, () => { currentPage--; renderPage(); }),
-    ...buildPageRange(page, totalPages).map(p => {
-      if (p === '…') {
-        const el = document.createElement('span');
-        el.className = 'tx-page-ellipsis'; el.textContent = '…';
-        return el;
-      }
-      return makePagBtn(String(p), false, () => { currentPage = p; renderPage(); }, p === page);
-    }),
-    makePagBtn('Next →', page >= totalPages, () => { currentPage++; renderPage(); })
+  const sizeLabel = document.createElement('label');
+  sizeLabel.textContent = 'Rows per page: ';
+  const sizeSelect = document.createElement('select');
+  sizeSelect.className = 'pagination-select';
+  sizeSelect.setAttribute('aria-label', 'Rows per page');
+  [5, 10, 20].forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = String(n);
+    opt.textContent = String(n);
+    if (n === rowsPerPage) opt.selected = true;
+    sizeSelect.appendChild(opt);
+  });
+  sizeSelect.addEventListener('change', () => {
+    rowsPerPage = Number(sizeSelect.value) || 5;
+    currentPage = 1;
+    renderPage();
+  });
+  sizeLabel.appendChild(sizeSelect);
+  controls.appendChild(sizeLabel);
+
+  controls.appendChild(
+    makePagBtn('‹', page <= 1, () => { currentPage--; renderPage(); })
   );
 
-  container.append(info, group);
+  for (const p of buildPageRange(page, totalPages)) {
+    if (p === '…') {
+      const span = document.createElement('span');
+      span.style.padding = '0 4px';
+      span.style.color = '#6B5E50';
+      span.textContent = '…';
+      controls.appendChild(span);
+    } else {
+      controls.appendChild(
+        makePagBtn(String(p), false, () => { currentPage = p; renderPage(); }, p === page)
+      );
+    }
+  }
+
+  controls.appendChild(
+    makePagBtn('›', page >= totalPages, () => { currentPage++; renderPage(); })
+  );
+
+  container.append(info, controls);
 }
 
 function buildPageRange(current, total) {
@@ -653,7 +709,7 @@ function makePagBtn(label, disabled, onClick, isActive = false) {
   btn.type = 'button';
   btn.textContent = label;
   btn.disabled = disabled;
-  btn.className = 'tx-page-btn' + (isActive ? ' tx-page-btn--active' : '');
+  btn.className = 'pagination-button' + (isActive ? ' is-active' : '');
   if (!disabled) btn.addEventListener('click', onClick);
   return btn;
 }
@@ -713,6 +769,210 @@ function wireFilters() {
       w.querySelector('.tx-filter-btn').setAttribute('aria-expanded', 'false');
     });
   });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEAVE REPORTS (Daily breakdown of Approved leave requests)
+═══════════════════════════════════════════════════════════════ */
+
+function rebuildAndRenderLeaveReports() {
+  leaveReportRows = expandApprovedLeaveReports(allRequests);
+  renderLeaveReportsPage();
+}
+
+function parseLocalDateYMD(dateStr) {
+  if (!dateStr) return null;
+  const ymd = String(dateStr).trim().slice(0, 10);
+  const parts = ymd.split('-');
+  if (parts.length !== 3) return null;
+  const year = Number(parts[0]);
+  const month = Number(parts[1]) - 1;
+  const day = Number(parts[2]);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return null;
+  const dt = new Date(year, month, day);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+
+function formatReportSingleDate(dt) {
+  if (!(dt instanceof Date) || isNaN(dt.getTime())) return '—';
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function resolveReportCreditPool(r) {
+  if (r.credit_type_name) {
+    return String(r.credit_type_name).trim().toUpperCase();
+  }
+  const cid = String(r.credit_type_id ?? '');
+  if (cid === '1') return 'LOCAL';
+  if (cid === '2') return 'NATIONAL';
+  if (cid === '3') return 'WELLNESS';
+  return '—';
+}
+
+function expandApprovedLeaveReports(requests) {
+  const rows = [];
+  const approved = (requests || []).filter(
+    r => String(r.status ?? '').toLowerCase() === 'approved'
+  );
+
+  for (const r of approved) {
+    const empNumber = r.employee_number || '—';
+    const empName = buildName(r);
+    const dateApplied = r.date_filed ? formatDate(r.date_filed) : '-';
+    const typeOfLeave = resolveReportCreditPool(r);
+
+    const startDt = parseLocalDateYMD(r.start_datetime);
+    const endDt = parseLocalDateYMD(r.end_datetime) || startDt;
+
+    if (!startDt) {
+      rows.push({
+        employee_number: empNumber,
+        employee_name: empName,
+        date_applied: dateApplied,
+        inclusive_date: '—',
+        type_of_leave: typeOfLeave,
+      });
+      continue;
+    }
+
+    const cursor = new Date(startDt.getFullYear(), startDt.getMonth(), startDt.getDate());
+    const finalDt = endDt && endDt >= cursor
+      ? new Date(endDt.getFullYear(), endDt.getMonth(), endDt.getDate())
+      : new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate());
+
+    // Cap at 366 days per request as a safety guard against malformed dates
+    let safety = 0;
+    while (cursor <= finalDt && safety < 366) {
+      rows.push({
+        employee_number: empNumber,
+        employee_name: empName,
+        date_applied: dateApplied,
+        inclusive_date: formatReportSingleDate(cursor),
+        type_of_leave: typeOfLeave,
+      });
+      cursor.setDate(cursor.getDate() + 1);
+      safety++;
+    }
+  }
+
+  return rows;
+}
+
+function renderLeaveReportsPage() {
+  const tbody = document.getElementById('leaveReportsTableBody');
+  const pagination = document.getElementById('leaveReportsPagination');
+  if (!tbody) return;
+
+  const total = leaveReportRows.length;
+  const totalPages = Math.max(1, Math.ceil(total / reportRowsPerPage));
+  reportCurrentPage = Math.min(Math.max(1, reportCurrentPage), totalPages);
+
+  tbody.replaceChildren();
+
+  if (total === 0) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 5;
+    td.style.cssText = 'text-align:center;padding:28px;color:#9ca3af;font-style:italic;';
+    td.textContent = 'No approved leave reports found.';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    if (pagination) pagination.hidden = true;
+    return;
+  }
+
+  const start = (reportCurrentPage - 1) * reportRowsPerPage;
+  const pageSlice = leaveReportRows.slice(start, start + reportRowsPerPage);
+
+  for (const item of pageSlice) {
+    const tr = document.createElement('tr');
+
+    const tdNum = document.createElement('td');
+    tdNum.textContent = item.employee_number;
+
+    const tdName = document.createElement('td');
+    tdName.textContent = item.employee_name;
+
+    const tdApplied = document.createElement('td');
+    tdApplied.textContent = item.date_applied;
+
+    const tdInclusive = document.createElement('td');
+    tdInclusive.textContent = item.inclusive_date;
+
+    const tdType = document.createElement('td');
+    tdType.textContent = item.type_of_leave;
+
+    tr.append(tdNum, tdName, tdApplied, tdInclusive, tdType);
+    tbody.appendChild(tr);
+  }
+
+  renderLeaveReportsPagination(reportCurrentPage, totalPages, pagination);
+}
+
+function renderLeaveReportsPagination(page, totalPages, container) {
+  if (!container) return;
+  container.replaceChildren();
+
+  const total = leaveReportRows.length;
+  if (total === 0) {
+    container.hidden = true;
+    return;
+  }
+  container.hidden = false;
+
+  const start = (page - 1) * reportRowsPerPage + 1;
+  const end = Math.min(page * reportRowsPerPage, total);
+
+  const info = document.createElement('div');
+  info.className = 'pagination-info';
+  info.textContent = `Showing ${start}–${end} of ${total} records`;
+
+  const controls = document.createElement('div');
+  controls.className = 'pagination-controls';
+
+  const sizeLabel = document.createElement('label');
+  sizeLabel.textContent = 'Rows per page: ';
+  const sizeSelect = document.createElement('select');
+  sizeSelect.className = 'pagination-select';
+  sizeSelect.setAttribute('aria-label', 'Leave reports rows per page');
+  [5, 10, 20].forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = String(n);
+    opt.textContent = String(n);
+    if (n === reportRowsPerPage) opt.selected = true;
+    sizeSelect.appendChild(opt);
+  });
+  sizeSelect.addEventListener('change', () => {
+    reportRowsPerPage = Number(sizeSelect.value) || 5;
+    reportCurrentPage = 1;
+    renderLeaveReportsPage();
+  });
+  sizeLabel.appendChild(sizeSelect);
+  controls.appendChild(sizeLabel);
+
+  controls.appendChild(
+    makePagBtn('‹', page <= 1, () => { reportCurrentPage--; renderLeaveReportsPage(); })
+  );
+
+  for (const p of buildPageRange(page, totalPages)) {
+    if (p === '…') {
+      const span = document.createElement('span');
+      span.style.padding = '0 4px';
+      span.style.color = '#6B5E50';
+      span.textContent = '…';
+      controls.appendChild(span);
+    } else {
+      controls.appendChild(
+        makePagBtn(String(p), false, () => { reportCurrentPage = p; renderLeaveReportsPage(); }, p === page)
+      );
+    }
+  }
+
+  controls.appendChild(
+    makePagBtn('›', page >= totalPages, () => { reportCurrentPage++; renderLeaveReportsPage(); })
+  );
+
+  container.append(info, controls);
 }
 
 /* ═══════════════════════════════════════════════════════════════

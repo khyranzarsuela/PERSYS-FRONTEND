@@ -2,13 +2,926 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERSYS | Admin Reports</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERSYS | Reports</title>
+  <link rel="icon" type="image/x-icon" href="../../assets/SAC logo.jpg" />
+
+  <link rel="stylesheet" href="../../styles/admin.css" />
+  <link rel="stylesheet" href="../../styles/skeleton.css" />
+
+  <style>
+    /* =========================================================
+       SIDEBAR LOGOUT BUTTON
+       ========================================================= */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logout-container {
+      margin-top: auto;
+      padding: 16px 20px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      flex-shrink: 0;
+    }
+
+    .sidebar-logout {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: transparent;
+      color: #FCA5A5;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .sidebar-logout svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sidebar-logout:hover {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(252, 165, 165, 0.4);
+    }
+
+    .sidebar-logout:focus-visible {
+      outline: 2px solid #FCA5A5;
+      outline-offset: 3px;
+    }
+
+    .sidebar-logout:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    /* =========================================================
+       PAGE LAYOUT
+       ========================================================= */
+    .page-content.reports-page {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch;
+      gap: 28px;
+      padding: 28px 32px;
+      background: #f0eef8;
+      width: 100%;
+      min-height: calc(100vh - var(--topbar-height));
+      box-sizing: border-box;
+    }
+
+    .main-wrapper {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    /* =========================================================
+       TOP 2-COLUMN EXPORT CARDS GRID
+       ========================================================= */
+    .reports-top-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+      width: 100%;
+    }
+
+    .report-export-card {
+      background: #ffffff;
+      border: 1px solid #e5dff5;
+      border-radius: 16px;
+      padding: 26px 28px 24px;
+      box-shadow: 0 2px 10px rgba(107, 15, 186, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      box-sizing: border-box;
+    }
+
+    .report-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .report-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #efeaf8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #4b3b6b;
+    }
+
+    .report-card-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .report-card-title {
+      margin: 0;
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -0.01em;
+    }
+
+    /* =========================================================
+       FORM FIELDS (Month | Start Date | End Date)
+       ========================================================= */
+    .report-fields-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      align-items: end;
+    }
+
+    .report-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .report-field label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .report-select,
+    .report-date-input {
+      width: 100%;
+      height: 44px;
+      padding: 8px 12px;
+      border: 1.5px solid #d5cfe6;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #1f2937;
+      font: inherit;
+      font-size: 0.925rem;
+      outline: none;
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .report-select:focus,
+    .report-date-input:focus {
+      border-color: #6B0FBA;
+      box-shadow: 0 0 0 3px rgba(107, 15, 186, 0.12);
+    }
+
+    /* =========================================================
+       EXPORT FILE BUTTON FOOTER
+       ========================================================= */
+    .report-card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .btn-export-report {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border: none;
+      border-radius: 999px;
+      background: #1B8A4B;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.925rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-export-report:hover:not(:disabled) {
+      background: #15703C;
+      box-shadow: 0 4px 12px rgba(27, 138, 75, 0.32);
+    }
+
+    .btn-export-report:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .btn-export-report svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* =========================================================
+       BOTTOM CARD CONTAINER (Automated Monthly Reports Job)
+       ========================================================= */
+    .reports-bottom-card {
+      width: 100%;
+      min-height: 280px;
+      background: #ffffff;
+      border: 1px solid #e5dff5;
+      border-radius: 16px;
+      padding: 26px 28px;
+      box-shadow: 0 2px 10px rgba(107, 15, 186, 0.06);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .auto-reports-content[hidden] {
+      display: none !important;
+    }
+
+    .auto-reports-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .auto-reports-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #ece7f7;
+    }
+
+    .auto-reports-title-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .auto-reports-badge-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #dcfce7;
+      color: #15803d;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .auto-reports-badge-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .auto-reports-label {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .auto-reports-sub {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .auto-reports-expiry-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #f3eeff;
+      color: #6B0FBA;
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .auto-reports-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .auto-report-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 22px;
+      border: 1.5px solid #e5dff5;
+      border-radius: 14px;
+      background: #faf8ff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .auto-report-item:hover {
+      border-color: #c4b5fd;
+      box-shadow: 0 4px 12px rgba(107, 15, 186, 0.06);
+    }
+
+    .auto-report-item-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .auto-report-file-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #e6f4ea;
+      color: #1B8A4B;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .auto-report-file-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .auto-report-item-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .auto-report-item-period {
+      margin: 3px 0 0;
+      font-size: 0.8125rem;
+      color: #6b7280;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+    @media (max-width: 1100px) {
+
+      .reports-top-grid,
+      .auto-reports-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-content.reports-page {
+        padding: 18px 16px;
+      }
+
+      .report-fields-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .auto-report-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .auto-report-item .btn-export-report {
+        width: 100%;
+      }
+    }
+
+    /* =========================================================
+       DARK MODE OVERRIDES
+       ========================================================= */
+    html[data-theme="dark"] .page-content.reports-page {
+      background-color: var(--clr-cream-bg) !important;
+    }
+
+    html[data-theme="dark"] .report-export-card,
+    html[data-theme="dark"] .reports-bottom-card {
+      background: #1e1926;
+      border-color: #3a314a;
+      color: #ffffff;
+    }
+
+    html[data-theme="dark"] .auto-reports-header {
+      border-bottom-color: #3a314a;
+    }
+
+    html[data-theme="dark"] .auto-reports-label,
+    html[data-theme="dark"] .auto-report-item-title {
+      color: #ffffff;
+    }
+
+    html[data-theme="dark"] .auto-reports-sub,
+    html[data-theme="dark"] .auto-report-item-period {
+      color: #d0c9db;
+    }
+
+    html[data-theme="dark"] .auto-reports-badge-icon {
+      background: rgba(27, 138, 75, 0.22);
+      color: #4ade80;
+    }
+
+    html[data-theme="dark"] .auto-reports-expiry-pill {
+      background: #2b2436;
+      color: #F5C518;
+      border: 1px solid #484052;
+    }
+
+    html[data-theme="dark"] .auto-report-item {
+      background: #26212e;
+      border-color: #3a314a;
+    }
+
+    html[data-theme="dark"] .auto-report-item:hover {
+      border-color: #F5C518;
+    }
+
+    html[data-theme="dark"] .auto-report-file-icon {
+      background: rgba(27, 138, 75, 0.2);
+      color: #4ade80;
+    }
+
+    html[data-theme="dark"] .report-card-icon {
+      background: #2b2436;
+      color: #F5C518;
+    }
+
+    html[data-theme="dark"] .report-card-title,
+    html[data-theme="dark"] .report-field label {
+      color: #ffffff;
+    }
+
+    html[data-theme="dark"] .report-select,
+    html[data-theme="dark"] .report-date-input {
+      background: #2b2436;
+      border-color: #484052;
+      color: #ffffff;
+    }
+
+    html[data-theme="dark"] .report-select:focus,
+    html[data-theme="dark"] .report-date-input:focus {
+      border-color: #F5C518;
+      box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.15);
+    }
+  </style>
+
+  <script src="../../scripts/apiConfig.js"></script>
+  <script src="../../scripts/adminGuard.js"></script>
+  <link rel="stylesheet" href="../../styles/switchAccount.css" />
 </head>
 
 <body>
 
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+
+      <img class="sidebar-avatar" src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A" alt="Admin profile photo" />
+      <p class="sidebar-name" id="adminUsername">Loading...</p>
+      <p class="sidebar-role" id="adminRole">Loading...</p>
+
+      <div class="sidebar-divider" role="separator"></div>
+
+      <nav aria-label="Main menu">
+        <ul class="sidebar-nav">
+
+          <li>
+            <a href="adminDashboard.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+              </span>
+              My Dashboard
+            </a>
+          </li>
+
+          <li>
+            <a href="adminProfile.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+              </span>
+              Profile
+            </a>
+          </li>
+
+          <li>
+            <a href="adminEmployees.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="9" cy="8" r="3.5" />
+                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+                  <circle cx="17" cy="8" r="2.5" />
+                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5" />
+                </svg>
+              </span>
+              Employees
+            </a>
+          </li>
+
+          <li>
+            <a href="adminServiceCredits.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="9" r="5" />
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5" />
+                </svg>
+              </span>
+              Service Credits
+            </a>
+          </li>
+
+          <li>
+            <a href="adminTransactions.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="2" width="16" height="20" rx="2" />
+                  <line x1="8" y1="7" x2="16" y2="7" />
+                  <line x1="8" y1="11" x2="16" y2="11" />
+                  <line x1="8" y1="15" x2="12" y2="15" />
+                </svg>
+              </span>
+              Leave Request
+            </a>
+          </li>
+
+          <li>
+            <a href="adminHistory.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+                  <polyline points="3 3 3 8 8 8" />
+                  <polyline points="12 7 12 12 15 15" />
+                </svg>
+              </span>
+              History
+            </a>
+          </li>
+
+          <li>
+            <a href="adminReports.html" class="nav-item active" aria-current="page">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="8" y1="17" x2="8" y2="13" />
+                  <line x1="12" y1="17" x2="12" y2="11" />
+                  <line x1="16" y1="17" x2="16" y2="15" />
+                </svg>
+              </span>
+              Reports
+            </a>
+          </li>
+
+          <li>
+            <a href="adminSettings.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
+                           2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                           1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
+                           A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33
+                           l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06
+                           A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1
+                           H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9
+                           a1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                           a2 2 0 0 1 2.83-2.83l.06.06
+                           A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51
+                           V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51
+                           1.65 1.65 0 0 0 1.82-.33l.06-.06
+                           a2 2 0 0 1 2.83 2.83l-.06.06
+                           A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
+                </svg>
+              </span>
+              Settings
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      <div class="sidebar-logout-container">
+        <button type="button" class="btn-logout sidebar-logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <div class="main-wrapper">
+
+      <!-- TOPBAR -->
+      <header class="topbar" role="banner">
+        <h1 class="topbar-title">
+          <svg
+            style="width:24px;height:24px;stroke:#F5C518;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:8px;"
+            viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="2" width="16" height="20" rx="2" />
+            <line x1="8" y1="7" x2="16" y2="7" />
+            <line x1="8" y1="11" x2="16" y2="11" />
+            <line x1="8" y1="15" x2="12" y2="15" />
+          </svg>
+          Reports
+        </h1>
+        <button class="hamburger" id="hamburger" type="button" aria-controls="sidebar" aria-expanded="false"
+          aria-label="Toggle navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <main class="page-content reports-page" id="mainContent">
+
+        <!-- TOP 2-COLUMN EXPORT CARDS -->
+        <div class="reports-top-grid">
+
+          <!-- CARD 1: Summary of Avail. Leave -->
+          <section class="report-export-card" aria-labelledby="availLeaveCardTitle">
+            <div class="report-card-header">
+              <span class="report-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <polyline points="8 16 11 13 13 15 16 12" />
+                </svg>
+              </span>
+              <h2 class="report-card-title" id="availLeaveCardTitle">Summary of Available Leave</h2>
+            </div>
+
+            <div class="report-fields-grid">
+              <div class="report-field">
+                <label for="availLeaveMonth">Month</label>
+                <select id="availLeaveMonth" class="report-select">
+                  <option value="">Select Month</option>
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+              </div>
+
+              <div class="report-field">
+                <label for="availLeaveStartDate">Start Date</label>
+                <input type="date" id="availLeaveStartDate" class="report-date-input" />
+              </div>
+
+              <div class="report-field">
+                <label for="availLeaveEndDate">End Date</label>
+                <input type="date" id="availLeaveEndDate" class="report-date-input" />
+              </div>
+            </div>
+
+            <div class="report-card-actions">
+              <button type="button" class="btn-export-report" id="btnExportAvailLeave">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v12" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <path d="M5 20h14" />
+                </svg>
+                <span>Export File</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- CARD 2: Leave Reports -->
+          <section class="report-export-card" aria-labelledby="leaveReportsCardTitle">
+            <div class="report-card-header">
+              <span class="report-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="8" y1="13" x2="16" y2="13" />
+                  <line x1="8" y1="17" x2="14" y2="17" />
+                </svg>
+              </span>
+              <h2 class="report-card-title" id="leaveReportsCardTitle">Leave Reports</h2>
+            </div>
+
+            <div class="report-fields-grid">
+              <div class="report-field">
+                <label for="leaveReportMonth">Month</label>
+                <select id="leaveReportMonth" class="report-select">
+                  <option value="">Select Month</option>
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+              </div>
+
+              <div class="report-field">
+                <label for="leaveReportStartDate">Start Date</label>
+                <input type="date" id="leaveReportStartDate" class="report-date-input" />
+              </div>
+
+              <div class="report-field">
+                <label for="leaveReportEndDate">End Date</label>
+                <input type="date" id="leaveReportEndDate" class="report-date-input" />
+              </div>
+            </div>
+
+            <div class="report-card-actions">
+              <button type="button" class="btn-export-report" id="btnExportLeaveReports">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v12" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <path d="M5 20h14" />
+                </svg>
+                <span>Export File</span>
+              </button>
+            </div>
+          </section>
+
+        </div>
+        <!-- END TOP 2-COLUMN EXPORT CARDS -->
+
+        <!-- BOTTOM CONTAINER CARD (Automated Monthly Reports Job) -->
+        <section class="reports-bottom-card" id="reportsBottomSection" aria-label="Automated monthly reports">
+          <div class="auto-reports-content" id="autoReportsContainer" hidden>
+            <div class="auto-reports-header">
+              <div class="auto-reports-title-group">
+                <span class="auto-reports-badge-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <polyline points="9 15 11 17 15 13" />
+                  </svg>
+                </span>
+                <div>
+                  <h2 class="auto-reports-label" id="autoReportsHeadingLabel">
+                    Here is your automated Monthly Reports by —
+                  </h2>
+                  <p class="auto-reports-sub" id="autoReportsSubtitle">
+                    Automatically generated full-month Excel reports.
+                  </p>
+                </div>
+              </div>
+
+              <span class="auto-reports-expiry-pill" id="autoReportsExpiryBadge">
+                Available for 3 days
+              </span>
+            </div>
+
+            <div class="auto-reports-grid">
+              <!-- Automated Report 1: Summary of Available Leave -->
+              <div class="auto-report-item">
+                <div class="auto-report-item-info">
+                  <span class="auto-report-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <polyline points="8 16 11 13 13 15 16 12" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3 class="auto-report-item-title">Summary of Available Leave</h3>
+                    <p class="auto-report-item-period" id="autoAvailLeavePeriod">Full Month (.xlsx)</p>
+                  </div>
+                </div>
+
+                <button type="button" class="btn-export-report" id="btnAutoDownloadAvailLeave">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v12" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <path d="M5 20h14" />
+                  </svg>
+                  <span>Download</span>
+                </button>
+              </div>
+
+              <!-- Automated Report 2: Leave Reports -->
+              <div class="auto-report-item">
+                <div class="auto-report-item-info">
+                  <span class="auto-report-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="8" y1="13" x2="16" y2="13" />
+                      <line x1="8" y1="17" x2="14" y2="17" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3 class="auto-report-item-title">Leave Reports</h3>
+                    <p class="auto-report-item-period" id="autoLeaveReportsPeriod">Full Month (.xlsx)</p>
+                  </div>
+                </div>
+
+                <button type="button" class="btn-export-report" id="btnAutoDownloadLeaveReports">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v12" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <path d="M5 20h14" />
+                  </svg>
+                  <span>Download</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Logout Modal -->
+        <div class="modal-overlay" id="logoutModal" style="display:none;" role="dialog" aria-modal="true"
+          aria-labelledby="logoutModalTitle">
+          <div class="modal-box">
+            <div class="modal-header">
+              <h2 id="logoutModalTitle">Log Out</h2>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="cancelLogoutBtn" class="btn-secondary">Cancel</button>
+              <button type="button" id="confirmLogoutBtn" class="btn-yellow">Log Out</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="../../scripts/admin.js"></script>
+  <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/adminReports.js"></script>
+  <script src="../../scripts/settings.js"></script>
+  <script src="../../scripts/switchAccount.js"></script>
 </body>
 
 </html>

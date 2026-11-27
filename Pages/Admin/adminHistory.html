@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PERSYS | Transaction History</title>
+  <title>PERSYS | Service Credit Upload &amp; Leave Request History</title>
   <link rel="icon" type="image/x-icon" href="../../assets/SAC logo.jpg" />
 
   <link rel="stylesheet" href="../../styles/admin.css" />
@@ -45,9 +45,10 @@
        PAGE LAYOUT
        ========================================================= */
     .page-content.tx-history-page {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch;
+      gap: 24px;
       padding: 28px 32px;
       background: #f0eef8;
       width: 100%;
@@ -56,253 +57,175 @@
     }
 
     .main-wrapper { flex: 1; min-width: 0; display: flex; flex-direction: column; width: 100%; }
-    .page-content { display: block; }
 
     /* =========================================================
-       TOP FILTER CARD (Toggle Header + Search/Dropdown Toolbar)
+       STACKED HISTORY CARDS
        ========================================================= */
-    .tx-filter-card {
-      background: #fff;
-      border: 1px solid #e5dff5;
-      border-radius: 16px;
-      overflow: visible;
-      box-shadow: 0 2px 10px rgba(107,15,186,0.07);
-    }
-
-    .tx-toggle-bar {
-      background: #2D0057;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      border-radius: 15px 15px 0 0;
-    }
-
-    .tx-mode-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 7px 10px 7px 16px;
-      border-radius: 999px;
-      border: 1.5px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.16);
-      color: #e5e7eb;
-      font: inherit;
-      font-size: 0.84rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
-    }
-
-    .tx-mode-pill:hover {
-      background: rgba(255,255,255,0.24);
-    }
-
-    .tx-mode-pill.is-active {
-      background: #F5C518;
-      border-color: #F5C518;
-      color: #1a1a1a;
-      font-weight: 700;
-    }
-
-    .tx-mode-switch-track {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      width: 36px;
-      height: 20px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.32);
-      padding: 2px;
+    .history-section-card {
+      width: 100%;
       box-sizing: border-box;
-      transition: background 0.2s;
-    }
-
-    .tx-mode-pill.is-active .tx-mode-switch-track {
-      background: #7A5900;
-      justify-content: flex-end;
-    }
-
-    .tx-mode-switch-knob {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: #fff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    }
-
-    .tx-mode-switch-knob svg {
-      width: 10px;
-      height: 10px;
-      stroke: #7A5900;
-      stroke-width: 3;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      opacity: 0;
-      transition: opacity 0.15s;
-    }
-
-    .tx-mode-pill.is-active .tx-mode-switch-knob svg {
-      opacity: 1;
-    }
-
-    .tx-filter-card-body {
-      padding: 18px 24px;
-    }
-
-    /* =========================================================
-       MAIN TABLE CARD
-       ========================================================= */
-    .tx-card {
       background: #fff;
       border: 1px solid #e5dff5;
       border-radius: 16px;
-      overflow: hidden;
+      padding: 24px 28px 26px;
       box-shadow: 0 2px 10px rgba(107,15,186,0.07);
     }
 
-    .tx-card-header {
-      background: #2D0057;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .tx-card-header-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      margin: 0;
-    }
-
-    .tx-card-body {
-      padding: 0;
+    .history-section-title {
+      font-size: 1.0625rem;
+      font-weight: 800;
+      color: #111827;
+      margin: 0 0 14px;
     }
 
     /* =========================================================
-       TOOLBAR
+       TOOLBAR (Search + Selects + Date)
        ========================================================= */
-    .tx-toolbar {
+    .history-toolbar {
       display: flex;
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
-    .tx-search-wrap {
+    .history-search-wrap {
       position: relative;
       flex: 1;
-      min-width: 220px;
-      max-width: 380px;
+      min-width: 240px;
+      max-width: 360px;
     }
 
-    .tx-search-wrap input {
+    .history-search-wrap input {
       width: 100%;
-      padding: 10px 42px 10px 16px;
+      padding: 9px 38px 9px 14px;
       border: 1.5px solid #d0c8e8;
       border-radius: 8px;
-      font-size: 0.875rem;
-      color: #444;
+      font-size: 0.85rem;
+      color: #374151;
       background: #fff;
       outline: none;
       box-sizing: border-box;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .tx-search-wrap input::placeholder { color: #aaa; }
-    .tx-search-wrap input:focus {
+    .history-search-wrap input::placeholder { color: #9ca3af; }
+    .history-search-wrap input:focus {
       border-color: #6B0FBA;
       box-shadow: 0 0 0 3px rgba(107,15,186,0.12);
     }
 
-    .tx-search-icon {
-      position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+    .history-search-icon {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
       width: 16px; height: 16px;
-      stroke: #999; fill: none; stroke-width: 2;
+      stroke: #9ca3af; fill: none; stroke-width: 2;
       stroke-linecap: round; stroke-linejoin: round;
       pointer-events: none;
     }
 
-    .tx-filter-wrap { position: relative; display: inline-block; }
-
-    .tx-filter-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 18px;
-      background: #F5C518; color: #1a1a1a;
-      font-size: 0.875rem; font-weight: 700;
-      border: none; border-radius: 8px; cursor: pointer;
-      transition: background 0.2s;
-    }
-    .tx-filter-btn:hover { background: #e6b800; }
-    .tx-filter-btn svg {
-      width: 13px; height: 13px;
-      stroke: #1a1a1a; fill: none; stroke-width: 2.5;
-      stroke-linecap: round; stroke-linejoin: round;
-      transition: transform 0.2s;
-    }
-    .tx-filter-wrap.is-open .tx-filter-btn svg { transform: rotate(180deg); }
-
-    .tx-dropdown-panel {
-      display: none;
-      position: absolute;
-      top: calc(100% + 6px); left: 0;
-      min-width: 150px;
-      background: #fff;
-      border: 1px solid #ddd;
+    .history-select,
+    .history-date-input {
+      padding: 9px 14px;
+      border: 1.5px solid #d0c8e8;
       border-radius: 8px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-      z-index: 30;
-      overflow: hidden;
+      font: inherit;
+      font-size: 0.85rem;
+      color: #374151;
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+      min-width: 150px;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .tx-filter-wrap.is-open .tx-dropdown-panel { display: block; }
-
-    .tx-dropdown-panel button {
-      display: block; width: 100%;
-      padding: 9px 16px;
-      text-align: left; font-size: 0.8125rem; color: #333;
-      background: none; border: none; cursor: pointer;
+    .history-select:focus,
+    .history-date-input:focus {
+      border-color: #6B0FBA;
+      box-shadow: 0 0 0 3px rgba(107,15,186,0.12);
     }
-    .tx-dropdown-panel button:hover { background: #f3eeff; }
 
     /* =========================================================
-       TABLE
+       SCROLLABLE TABLE
        ========================================================= */
     .tx-table-wrap {
+      width: 100%;
       overflow-x: auto;
+      overflow-y: auto;
+      max-height: 48vh;
+      border: 1px solid #DDD6C8;
+      border-radius: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(107, 15, 186, 0.28) rgba(107, 15, 186, 0.05);
+    }
+
+    .tx-table-wrap::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .tx-table-wrap::-webkit-scrollbar-track {
+      background: rgba(107, 15, 186, 0.05);
+      border-radius: 3px;
+    }
+    .tx-table-wrap::-webkit-scrollbar-thumb {
+      background: rgba(107, 15, 186, 0.28);
+      border-radius: 3px;
+    }
+    .tx-table-wrap::-webkit-scrollbar-thumb:hover {
+      background: rgba(107, 15, 186, 0.45);
     }
 
     .tx-table {
-      width: 100%; min-width: 720px;
+      width: 100%;
+      min-width: 760px;
       border-collapse: collapse;
-      font-size: 0.84rem;
+      font-size: 0.85rem;
     }
 
-    .tx-table thead tr { background: #f8f5ff; border-bottom: 1.5px solid #ede8f8; }
+    .tx-table thead tr {
+      background: #faf8f3;
+    }
     .tx-table thead th {
-      padding: 13px 20px; text-align: left;
-      font-weight: 700; color: #1f2937; white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #faf8f3;
+      box-shadow: 0 2px 0 #DDD6C8;
+      padding: 13px 18px;
+      text-align: left;
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
     }
 
-    .tx-table tbody tr:nth-child(odd)  { background: #faf7ff; }
+    .tx-table tbody tr:nth-child(odd)  { background: #f6f2fc; }
     .tx-table tbody tr:nth-child(even) { background: #fff; }
-    .tx-table tbody tr:hover           { background: #f3eeff; }
+    .tx-table tbody tr:hover           { background: #ede5fa; }
 
     .tx-table tbody td {
-      padding: 13px 20px; color: #374151;
+      padding: 13px 18px;
+      color: #1f2937;
       border-bottom: 1px solid #f0ebfc;
       vertical-align: middle;
     }
     .tx-table tbody tr:last-child td { border-bottom: none; }
 
-    /* Service Credit file name styling */
-    .sc-history-filename {
-      color: #3b5998;
-      font-weight: 500;
+    /* Green pill View button for Service Credit Upload Details */
+    .sc-view-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 22px;
+      border: none;
+      border-radius: 999px;
+      background: #1B8A4B;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.825rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .sc-view-pill-btn:hover {
+      background: #15703C;
     }
 
     /* Status badges */
@@ -314,18 +237,6 @@
     .tx-status-pending  { background: #FFF8E1; color: #92400E; }
     .tx-status-approved { background: #DCFCE7; color: #15803D; }
     .tx-status-rejected { background: #FEE2E2; color: #B91C1C; }
-
-    .sc-status-posted {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 6px;
-      background: #DCFCE7;
-      color: #15803D;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
 
     .tx-status-dot-inline {
       width: 8px; height: 8px; border-radius: 50%;
@@ -348,20 +259,34 @@
     /* Actions cell */
     .tx-actions-cell { white-space: nowrap; vertical-align: middle; }
 
-    .tx-inline-form6,
-    .tx-inline-view {
+    .tx-inline-form6 {
       display: inline-flex; align-items: center; gap: 5px;
       padding: 6px 12px; border-radius: 6px;
       font: inherit; font-size: 0.78rem; font-weight: 700;
       cursor: pointer; white-space: nowrap; margin-right: 4px;
+      background: #fff; color: #6B0FBA; border: 1.5px solid #9d74c7;
       transition: background 0.15s, border-color 0.15s, opacity 0.15s;
     }
-
-    .tx-inline-form6 { background: #fff; color: #6B0FBA; border: 1.5px solid #9d74c7; }
     .tx-inline-form6:hover { background: #f3eeff; border-color: #6B0FBA; }
 
-    .tx-inline-view { background: #fff; color: #6B0FBA; border: 1.5px solid #9d74c7; }
-    .tx-inline-view:hover { background: #f3eeff; border-color: #6B0FBA; }
+    .tx-inline-view {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 22px;
+      border: none;
+      border-radius: 999px;
+      background: #1B8A4B;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.825rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      margin-right: 6px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .tx-inline-view:hover { background: #15703C; }
 
     .tx-inline-form6 svg, .tx-inline-view svg {
       width: 12px; height: 12px; flex-shrink: 0;
@@ -370,49 +295,85 @@
     }
 
     /* =========================================================
-       PAGINATION
+       PAGINATION (Employees-style)
        ========================================================= */
     .tx-pagination {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 14px 20px;
-      border-top: 1px solid #f0ebfc;
-      background: #fff;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #DDD6C8;
+      background: transparent;
     }
 
-    .tx-pagination-info { font-size: 0.8125rem; color: #9ca3af; }
-    .tx-pagination-btns { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .pagination-info {
+      font-size: 0.85rem;
+      color: #6B5E50;
+    }
 
-    .tx-page-btn {
-      min-width: 34px; height: 34px; padding: 0 10px;
-      border: 1.5px solid #e5dff5; border-radius: 6px;
-      background: #fff; color: #6b7280;
-      font: inherit; font-size: 0.8125rem; font-weight: 600;
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pagination-controls label {
+      font-size: 0.8125rem;
+      color: #6B5E50;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 4px;
+    }
+
+    .pagination-select {
+      padding: 5px 10px;
+      border: 1.5px solid #DDD6C8;
+      border-radius: 7px;
+      background: #fff;
+      font: inherit;
+      font-size: 0.8125rem;
+      color: #1A1A2E;
+      cursor: pointer;
+    }
+
+    .pagination-button {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1.5px solid #DDD6C8;
+      border-radius: 7px;
+      background: #fff;
+      color: #1A1A2E;
+      font: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s, color 0.15s;
       white-space: nowrap;
     }
-    .tx-page-btn:hover:not(:disabled) {
-      background: #f0eaf8;
+    .pagination-button:hover:not(:disabled) {
       border-color: #6B0FBA;
       color: #6B0FBA;
+      background: rgba(107, 15, 186, 0.05);
     }
-    .tx-page-btn--active {
-      background: #6B0FBA; border-color: #6B0FBA; color: #fff; cursor: default;
+    .pagination-button.is-active {
+      background: #6B0FBA;
+      border-color: #6B0FBA;
+      color: #fff;
+      cursor: default;
     }
-    .tx-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .tx-page-ellipsis {
-      display: inline-flex; align-items: center; justify-content: center;
-      min-width: 34px; height: 34px;
-      font-size: 0.875rem; color: #9ca3af; user-select: none;
+    .pagination-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
 
     /* =========================================================
-       MODAL (Leave Request View Details)
+       MODALS (Leave Request Details & Service Credit Upload Details)
        ========================================================= */
     .tx-modal-overlay {
       display: none;
@@ -447,15 +408,15 @@
     .tx-modal-title { font-size: 1.25rem; font-weight: 700; color: #111; margin-bottom: 18px; }
 
     .tx-detail-row {
-      display: flex; gap: 16px; margin-bottom: 6px; font-size: 0.875rem;
+      display: flex; gap: 16px; margin-bottom: 8px; font-size: 0.875rem;
     }
     .tx-detail-label { font-weight: 700; color: #111; min-width: 160px; flex-shrink: 0; }
-    .tx-detail-value { color: #555; }
+    .tx-detail-value { color: #4b5563; word-break: break-word; }
 
     .tx-section-heading {
       font-size: 1rem; font-weight: 700; color: #111; margin: 20px 0 10px;
     }
-    .tx-divider { height: 1px; background: #eee; margin: 4px 0 16px; }
+    .tx-divider { height: 1px; background: #eee; margin: 10px 0 16px; }
 
     .tx-status-dot {
       display: inline-block; width: 10px; height: 10px;
@@ -529,186 +490,87 @@
     .tx-modal[data-status="rejected"] .tx-doc-unavailable { display: inline-flex; }
     .tx-modal[data-status="rejected"] .tx-audit { display: block; }
 
-    /* =========================================================
-       SERVICE CREDIT RECIPIENTS MODAL
-       ========================================================= */
-    .sc-recipients-modal {
-      background: #fff;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 650px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 28px 32px 24px;
-      position: relative;
-      box-shadow: 0 12px 44px rgba(0, 0, 0, 0.28);
-      box-sizing: border-box;
+    .sc-upload-type-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: #ede9fe;
+      color: #5b21b6;
     }
 
-    .sc-recipients-title {
-      font-size: 1.35rem;
+    .sc-credits-highlight {
       font-weight: 800;
-      color: #111827;
-      margin: 0 0 14px;
-      padding-right: 28px;
+      color: #15803D;
     }
 
-    .sc-recipients-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 26px;
-      font-size: 0.9rem;
-      color: #1f2937;
-      margin-bottom: 8px;
+    /* =========================================================
+       DARK MODE OVERRIDES
+       ========================================================= */
+    html[data-theme="dark"] .history-section-card {
+      background: #1e1926;
+      border-color: #3a314a;
     }
-
-    .sc-recipients-meta strong {
-      font-weight: 700;
-      color: #111827;
+    html[data-theme="dark"] .history-section-title {
+      color: #ffffff;
     }
-
-    .sc-recipients-subtitle {
-      margin: 0 0 16px;
-      font-size: 0.84rem;
-      color: #4b5563;
+    html[data-theme="dark"] .history-search-wrap input,
+    html[data-theme="dark"] .history-select,
+    html[data-theme="dark"] .history-date-input {
+      background: #2b2436;
+      border-color: #484052;
+      color: #ffffff;
     }
-
-    .sc-recipients-table-box {
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #fff;
+    html[data-theme="dark"] .history-search-wrap input::placeholder {
+      color: #a89ec0;
     }
-
-    .sc-recipients-table-scroll {
-      max-height: 290px;
-      overflow-y: auto;
+    html[data-theme="dark"] .tx-table-wrap {
+      border-color: #3a314a;
+      scrollbar-color: rgba(245, 197, 24, 0.45) rgba(255, 255, 255, 0.05);
     }
-
-    .sc-recipients-table-scroll::-webkit-scrollbar { width: 6px; }
-    .sc-recipients-table-scroll::-webkit-scrollbar-track { background: #f3f4f6; }
-    .sc-recipients-table-scroll::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 999px; }
-
-    .sc-recipients-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.84rem;
+    html[data-theme="dark"] .tx-table thead tr,
+    html[data-theme="dark"] .tx-table thead th {
+      background: #2b2436 !important;
+      color: #F5C518 !important;
+      box-shadow: 0 2px 0 #3a314a;
     }
-
-    .sc-recipients-table thead tr {
-      background: #f9fafb;
-      border-bottom: 1px solid #e5e7eb;
+    html[data-theme="dark"] .tx-pagination {
+      border-top-color: #3a314a;
+      background: transparent !important;
     }
-
-    .sc-recipients-table thead th {
-      padding: 11px 14px;
-      text-align: left;
-      font-weight: 700;
-      color: #111827;
-      white-space: nowrap;
+    html[data-theme="dark"] .pagination-info,
+    html[data-theme="dark"] .pagination-controls label {
+      color: #d6c8eb;
     }
-
-    .sc-recipients-table tbody tr {
-      border-bottom: 1px solid #f1f5f9;
+    html[data-theme="dark"] .pagination-select,
+    html[data-theme="dark"] .pagination-button {
+      background: #26212e;
+      border-color: #3a314a;
+      color: #ffffff;
     }
-
-    .sc-recipients-table tbody tr:nth-child(even) {
-      background: #f8fafc;
+    html[data-theme="dark"] .pagination-button:hover:not(:disabled) {
+      border-color: #F5C518;
+      color: #F5C518;
+      background: rgba(245, 197, 24, 0.12);
     }
-
-    .sc-recipients-table tbody tr:last-child {
-      border-bottom: none;
-    }
-
-    .sc-recipients-table tbody td {
-      padding: 12px 14px;
-      color: #1f2937;
-      vertical-align: middle;
-    }
-
-    .sc-added-credits-val {
-      font-weight: 700;
-      color: #8a6d1b;
-      white-space: nowrap;
-    }
-
-    .sc-recipients-pagination {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 14px;
-      font-size: 0.8rem;
-      color: #4b5563;
-    }
-
-    .sc-recipients-nav-btns {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .sc-recipients-page-btn {
-      width: 28px;
-      height: 28px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #e5e7eb;
-      border-radius: 6px;
-      background: #fff;
-      color: #374151;
-      cursor: pointer;
-      padding: 0;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .sc-recipients-page-btn:hover:not(:disabled) {
-      background: #f3f4f6;
-      border-color: #d1d5db;
-    }
-
-    .sc-recipients-page-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    .sc-recipients-page-btn svg {
-      width: 14px;
-      height: 14px;
-      stroke: currentColor;
-      stroke-width: 2.2;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .sc-recipients-footer {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 18px;
-    }
-
-    .btn-sc-recipients-close {
-      padding: 9px 22px;
+    html[data-theme="dark"] .pagination-button.is-active {
       background: #F5C518;
-      color: #1a1a1a;
-      border: none;
-      border-radius: 8px;
-      font: inherit;
-      font-size: 0.875rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s;
+      border-color: #F5C518;
+      color: #1A1A2E;
     }
-
-    .btn-sc-recipients-close:hover {
-      background: #e6b800;
+    html[data-theme="dark"] .sc-upload-type-badge {
+      background: rgba(245, 197, 24, 0.18);
+      color: #F5C518;
+    }
+    html[data-theme="dark"] .sc-credits-highlight {
+      color: #4ade80;
     }
 
     @media (max-width: 768px) {
       .page-content.tx-history-page { padding: 18px 16px; }
-      .tx-modal, .sc-recipients-modal { padding: 24px 20px 20px; }
+      .tx-modal { padding: 24px 20px 20px; }
       .tx-detail-label { min-width: 120px; }
     }
   </style>
@@ -801,7 +663,7 @@
                   <line x1="8"  y1="15" x2="12" y2="15"/>
                 </svg>
               </span>
-              Transactions
+              Leave Request
             </a>
           </li>
 
@@ -815,6 +677,21 @@
                 </svg>
               </span>
               History
+            </a>
+          </li>
+
+          <li>
+            <a href="adminReports.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="8" y1="17" x2="8" y2="13"/>
+                  <line x1="12" y1="17" x2="12" y2="11"/>
+                  <line x1="16" y1="17" x2="16" y2="15"/>
+                </svg>
+              </span>
+              Reports
             </a>
           </li>
 
@@ -871,7 +748,7 @@
             <polyline points="3 3 3 8 8 8"/>
             <polyline points="12 7 12 12 15 15"/>
           </svg>
-          Transaction History
+          Service Credit Upload &amp; Leave Request History
         </h1>
         <button
           class="hamburger"
@@ -888,169 +765,177 @@
       <!-- PAGE CONTENT -->
       <main class="page-content tx-history-page" id="mainContent">
 
-        <!-- ── TOP FILTER CARD ────────────────────────────── -->
-        <section class="tx-filter-card" aria-label="Transaction history filters">
+        <!-- ══════════════════════════════════════════════════════
+             CARD 1: SERVICE CREDIT UPLOAD HISTORY
+        ══════════════════════════════════════════════════════ -->
+        <section class="history-section-card" aria-labelledby="scHistorySectionTitle">
+          <h2 class="history-section-title" id="scHistorySectionTitle">Service Credit Upload</h2>
 
-          <!-- Mode Toggle Header -->
-          <div class="tx-toggle-bar" role="tablist" aria-label="History category">
-            <button
-              type="button"
-              id="btnShowServiceCredits"
-              class="tx-mode-pill"
-              role="tab"
-              aria-selected="false"
-              data-mode="service-credits"
-            >
-              <span>Filter/ Show Service Credits</span>
-              <span class="tx-mode-switch-track" aria-hidden="true">
-                <span class="tx-mode-switch-knob">
-                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
-              </span>
-            </button>
-
-            <button
-              type="button"
-              id="btnShowLeaveRequests"
-              class="tx-mode-pill is-active"
-              role="tab"
-              aria-selected="true"
-              data-mode="leave-requests"
-            >
-              <span>Show Leave Requests</span>
-              <span class="tx-mode-switch-track" aria-hidden="true">
-                <span class="tx-mode-switch-knob">
-                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
-              </span>
-            </button>
-          </div>
-
-          <!-- Search + Dropdowns -->
-          <div class="tx-filter-card-body">
-            <div class="tx-toolbar" role="toolbar" aria-label="Search and filter history">
-
-              <div class="tx-search-wrap">
-                <input
-                  type="search"
-                  id="historySearch"
-                  placeholder="Search by name, type, status..."
-                  aria-label="Search transaction history"
-                  autocomplete="off"
-                />
-                <svg class="tx-search-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="11" cy="11" r="7"/>
-                  <line x1="16.5" y1="16.5" x2="22" y2="22"/>
-                </svg>
-              </div>
-
-              <!-- Type dropdown -->
-              <div class="tx-filter-wrap" id="historyTypeDropWrap">
-                <button type="button" class="tx-filter-btn" id="historyTypeDropBtn"
-                        aria-haspopup="listbox" aria-expanded="false">
-                  <span id="historyTypeDropLabel">Type: All</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </button>
-                <div class="tx-dropdown-panel" role="listbox" id="historyTypeDropPanel"></div>
-              </div>
-
-              <!-- Status dropdown -->
-              <div class="tx-filter-wrap" id="historyStatusDropWrap">
-                <button type="button" class="tx-filter-btn" id="historyStatusDropBtn"
-                        aria-haspopup="listbox" aria-expanded="false">
-                  <span id="historyStatusDropLabel">Status: All</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </button>
-                <div class="tx-dropdown-panel" role="listbox" id="historyStatusDropPanel"></div>
-              </div>
-
+          <!-- Toolbar -->
+          <div class="history-toolbar" role="toolbar" aria-label="Service credit upload filters">
+            <div class="history-search-wrap">
+              <input
+                type="search"
+                id="scSearchInput"
+                placeholder="Search by name, uploaded by..."
+                aria-label="Search service credit uploads"
+                autocomplete="off"
+              />
+              <svg class="history-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+              </svg>
             </div>
+
+            <select id="scRoleFilter" class="history-select" aria-label="Filter by role">
+              <option value="all">Role: All</option>
+              <option value="Teaching">Teaching</option>
+              <option value="Non-Teaching">Non-Teaching</option>
+            </select>
+
+            <select id="scCreditTypeFilter" class="history-select" aria-label="Filter by credit type">
+              <option value="all">Credit Type: All</option>
+              <option value="Local">Local</option>
+              <option value="National">National</option>
+              <option value="Wellness">Wellness</option>
+            </select>
+
+            <input
+              type="date"
+              id="scDateFilter"
+              class="history-date-input"
+              aria-label="Filter by upload date"
+            />
           </div>
 
+          <!-- Table -->
+          <div class="tx-table-wrap">
+            <table class="tx-table" aria-label="Service credit upload history">
+              <thead>
+                <tr>
+                  <th>Date Uploaded</th>
+                  <th>Uploaded By</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Credit Type</th>
+                  <th>Added Credits</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="scHistoryTableBody">
+                <tr class="skel-row" aria-hidden="true">
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:75%"></span></td>
+                  <td><span class="skel skel-cell" style="width:80%"></span></td>
+                  <td><span class="skel skel-cell" style="width:65%"></span></td>
+                  <td><span class="skel skel-cell" style="width:60%"></span></td>
+                  <td><span class="skel skel-cell" style="width:50%"></span></td>
+                  <td><span class="skel skel-cell" style="width:60%"></span></td>
+                </tr>
+                <tr class="skel-row" aria-hidden="true">
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:75%"></span></td>
+                  <td><span class="skel skel-cell" style="width:80%"></span></td>
+                  <td><span class="skel skel-cell" style="width:65%"></span></td>
+                  <td><span class="skel skel-cell" style="width:60%"></span></td>
+                  <td><span class="skel skel-cell" style="width:50%"></span></td>
+                  <td><span class="skel skel-cell" style="width:60%"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div
+            class="tx-pagination"
+            id="scHistoryPagination"
+            role="navigation"
+            aria-label="Service credit upload pagination"
+            hidden
+          ></div>
         </section>
 
-        <!-- ── HISTORY TABLE CARD ─────────────────────────── -->
-        <section class="tx-card" aria-labelledby="historyTableTitle">
+        <!-- ══════════════════════════════════════════════════════
+             CARD 2: LEAVE REQUEST HISTORY
+        ══════════════════════════════════════════════════════ -->
+        <section class="history-section-card" aria-labelledby="leaveHistorySectionTitle">
+          <h2 class="history-section-title" id="leaveHistorySectionTitle">Leave Request History</h2>
 
-          <div class="tx-card-header">
-            <h2 class="tx-card-header-title" id="historyTableTitle">Leave Request History</h2>
-          </div>
-
-          <div class="tx-card-body">
-
-            <!-- Leave Request History Table -->
-            <div class="tx-table-wrap" id="leaveHistoryTableWrap">
-              <table class="tx-table" aria-label="Leave request history">
-                <thead>
-                  <tr>
-                    <th>Employee</th>
-                    <th>Leave Details</th>
-                    <th>Deduct From</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="leaveHistoryTableBody">
-                  <tr class="skel-row" aria-hidden="true">
-                    <td><span class="skel skel-cell"></span></td>
-                    <td><span class="skel skel-cell" style="width:65%"></span></td>
-                    <td><span class="skel skel-cell" style="width:60%"></span></td>
-                    <td><span class="skel skel-cell" style="width:55%"></span></td>
-                    <td><span class="skel skel-cell" style="width:70%"></span></td>
-                  </tr>
-                  <tr class="skel-row" aria-hidden="true">
-                    <td><span class="skel skel-cell"></span></td>
-                    <td><span class="skel skel-cell" style="width:70%"></span></td>
-                    <td><span class="skel skel-cell" style="width:60%"></span></td>
-                    <td><span class="skel skel-cell" style="width:55%"></span></td>
-                    <td><span class="skel skel-cell" style="width:70%"></span></td>
-                  </tr>
-                </tbody>
-              </table>
+          <!-- Toolbar -->
+          <div class="history-toolbar" role="toolbar" aria-label="Leave request history filters">
+            <div class="history-search-wrap">
+              <input
+                type="search"
+                id="leaveHistorySearchInput"
+                placeholder="Search by request ID, name, reviewed by..."
+                aria-label="Search leave request history"
+                autocomplete="off"
+              />
+              <svg class="history-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+              </svg>
             </div>
 
-            <!-- Service Credit Upload History Table -->
-            <div class="tx-table-wrap" id="scHistoryTableWrap" hidden>
-              <table class="tx-table" aria-label="Service credit upload history">
-                <thead>
-                  <tr>
-                    <th>Upload Date</th>
-                    <th>File Name</th>
-                    <th>Uploaded By</th>
-                    <th>Records</th>
-                    <th>Status</th>
-                    <th>Posted Date</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="scHistoryTableBody">
-                  <tr class="skel-row" aria-hidden="true">
-                    <td><span class="skel skel-cell"></span></td>
-                    <td><span class="skel skel-cell"></span></td>
-                    <td><span class="skel skel-cell" style="width:60%"></span></td>
-                    <td><span class="skel skel-cell" style="width:40%"></span></td>
-                    <td><span class="skel skel-cell" style="width:55%"></span></td>
-                    <td><span class="skel skel-cell" style="width:50%"></span></td>
-                    <td><span class="skel skel-cell" style="width:50%"></span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <select id="leaveTypeFilter" class="history-select" aria-label="Filter by credit pool">
+              <option value="all">Credit Type: All</option>
+              <option value="local">Local</option>
+              <option value="national">National</option>
+              <option value="wellness">Wellness</option>
+            </select>
 
-            <!-- Pagination -->
-            <div
-              class="tx-pagination"
-              id="historyPagination"
-              role="navigation"
-              aria-label="History pagination"
-              hidden
-            ></div>
-
+            <select id="leaveStatusFilter" class="history-select" aria-label="Filter by status">
+              <option value="all">Status: All</option>
+              <option value="approved">Approved</option>
+              <option value="disapproved">Disapproved</option>
+            </select>
           </div>
+
+          <!-- Table -->
+          <div class="tx-table-wrap">
+            <table class="tx-table" aria-label="Leave request history">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Reviewed By</th>
+                  <th>Name</th>
+                  <th>Leave Details</th>
+                  <th>Deduct From</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="leaveHistoryTableBody">
+                <tr class="skel-row" aria-hidden="true">
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:75%"></span></td>
+                  <td><span class="skel skel-cell"></span></td>
+                  <td><span class="skel skel-cell" style="width:65%"></span></td>
+                  <td><span class="skel skel-cell" style="width:60%"></span></td>
+                  <td><span class="skel skel-cell" style="width:55%"></span></td>
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                </tr>
+                <tr class="skel-row" aria-hidden="true">
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:75%"></span></td>
+                  <td><span class="skel skel-cell"></span></td>
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                  <td><span class="skel skel-cell" style="width:60%"></span></td>
+                  <td><span class="skel skel-cell" style="width:55%"></span></td>
+                  <td><span class="skel skel-cell" style="width:70%"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div
+            class="tx-pagination"
+            id="leaveHistoryPagination"
+            role="navigation"
+            aria-label="Leave request history pagination"
+            hidden
+          ></div>
         </section>
 
         <!-- Logout Modal -->
@@ -1081,7 +966,86 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════
-       REQUEST DETAILS MODAL — READ ONLY
+       SERVICE CREDIT UPLOAD DETAILS MODAL — READ ONLY
+  ══════════════════════════════════════════════════════ -->
+  <div
+    class="tx-modal-overlay"
+    id="scUploadDetailModalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="scUploadDetailModalTitle"
+    tabindex="-1"
+  >
+    <div class="tx-modal" id="scUploadDetailModal" tabindex="-1">
+      <button type="button" class="tx-modal-close" id="scUploadDetailCloseBtn" aria-label="Close">&#10005;</button>
+
+      <h2 class="tx-modal-title" id="scUploadDetailModalTitle">Service Credit Upload Details</h2>
+
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Upload Type</span>
+        <span class="tx-detail-value">
+          <span class="sc-upload-type-badge" id="scDetailUploadType">—</span>
+        </span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">File Name</span>
+        <span class="tx-detail-value" id="scDetailFileName">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Date Uploaded</span>
+        <span class="tx-detail-value" id="scDetailDateUploaded">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Uploaded By</span>
+        <span class="tx-detail-value" id="scDetailUploadedBy">—</span>
+      </div>
+
+      <div class="tx-divider"></div>
+
+      <h3 class="tx-section-heading">Personnel Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Number</span>
+        <span class="tx-detail-value" id="scDetailEmployeeNumber">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Name</span>
+        <span class="tx-detail-value" id="scDetailEmployeeName">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Role</span>
+        <span class="tx-detail-value" id="scDetailRole">—</span>
+      </div>
+
+      <div class="tx-divider"></div>
+
+      <h3 class="tx-section-heading">Activity &amp; Credits</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Name of Activity</span>
+        <span class="tx-detail-value" id="scDetailActivityName">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Activity Dates</span>
+        <span class="tx-detail-value" id="scDetailActivityDates">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Credit Type</span>
+        <span class="tx-detail-value" id="scDetailCreditType">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Added Credits</span>
+        <span class="tx-detail-value sc-credits-highlight" id="scDetailAddedCredits">—</span>
+      </div>
+
+      <div class="tx-modal-footer" style="justify-content: flex-end;">
+        <button type="button" class="tx-modal-close-btn" id="scUploadDetailFooterCloseBtn">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       LEAVE REQUEST DETAILS MODAL — READ ONLY
   ══════════════════════════════════════════════════════ -->
   <div
     class="tx-modal-overlay"
@@ -1211,91 +1175,6 @@
         </button>
       </div>
 
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════
-       SERVICE CREDIT RECIPIENTS MODAL
-  ══════════════════════════════════════════════════════ -->
-  <div
-    class="tx-modal-overlay"
-    id="scRecipientsModalOverlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="scRecipientsModalTitle"
-    tabindex="-1"
-  >
-    <div class="sc-recipients-modal" id="scRecipientsModal" tabindex="-1">
-      <button
-        type="button"
-        class="tx-modal-close"
-        id="scRecipientsCloseBtn"
-        aria-label="Close"
-      >&#10005;</button>
-
-      <h2 class="sc-recipients-title" id="scRecipientsModalTitle">
-        Service Credit Recipients
-      </h2>
-
-      <div class="sc-recipients-meta">
-        <span><strong>File Name:</strong> <span id="scRecipientsFileName">—</span></span>
-        <span><strong>Upload Date:</strong> <span id="scRecipientsUploadDate">—</span></span>
-      </div>
-
-      <p class="sc-recipients-subtitle">
-        The following employees have received added service credits from this upload.
-      </p>
-
-      <div class="sc-recipients-table-box">
-        <div class="sc-recipients-table-scroll">
-          <table class="sc-recipients-table" aria-label="Service credit recipients">
-            <thead>
-              <tr>
-                <th>Employee ID</th>
-                <th>Employee Name</th>
-                <th>Current Role</th>
-                <th>Credit Type</th>
-                <th>Added Credits</th>
-              </tr>
-            </thead>
-            <tbody id="scRecipientsTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="sc-recipients-pagination" id="scRecipientsPagination">
-        <span id="scRecipientsPageInfo">Showing 0 of 0 records</span>
-        <div class="sc-recipients-nav-btns">
-          <button
-            type="button"
-            class="sc-recipients-page-btn"
-            id="scRecipientsPrevBtn"
-            aria-label="Previous page"
-            disabled
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <button
-            type="button"
-            class="sc-recipients-page-btn"
-            id="scRecipientsNextBtn"
-            aria-label="Next page"
-            disabled
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="sc-recipients-footer">
-        <button
-          type="button"
-          class="btn-sc-recipients-close"
-          id="scRecipientsFooterCloseBtn"
-        >
-          Close
-        </button>
-      </div>
     </div>
   </div>
 

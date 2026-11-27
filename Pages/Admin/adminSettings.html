@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,6 +14,7 @@
   <script src="../../scripts/apiConfig.js"></script>
   <script src="../../scripts/adminGuard.js"></script>
 </head>
+
 <body>
 
   <!-- Mobile sidebar backdrop -->
@@ -23,11 +25,7 @@
     <!-- ── SIDEBAR ──────────────────────────────────────── -->
     <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
 
-      <img
-        class="sidebar-avatar"
-        src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
-        alt="Admin profile photo"
-      />
+      <img class="sidebar-avatar" src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A" alt="Admin profile photo" />
       <p class="sidebar-name" id="adminUsername">Loading...</p>
       <p class="sidebar-role" id="adminRole">Loading...</p>
 
@@ -40,10 +38,10 @@
             <a href="adminDashboard.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <rect x="3" y="3" width="7" height="7" rx="1"/>
-                  <rect x="14" y="3" width="7" height="7" rx="1"/>
-                  <rect x="3" y="14" width="7" height="7" rx="1"/>
-                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
               </span>
               My Dashboard
@@ -54,8 +52,8 @@
             <a href="adminProfile.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="8" r="4"/>
-                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                 </svg>
               </span>
               Profile
@@ -66,10 +64,10 @@
             <a href="adminEmployees.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="9" cy="8" r="3.5"/>
-                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
-                  <circle cx="17" cy="8" r="2.5"/>
-                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                  <circle cx="9" cy="8" r="3.5" />
+                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+                  <circle cx="17" cy="8" r="2.5" />
+                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5" />
                 </svg>
               </span>
               Employees
@@ -80,8 +78,8 @@
             <a href="adminServiceCredits.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="9" r="5"/>
-                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                  <circle cx="12" cy="9" r="5" />
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5" />
                 </svg>
               </span>
               Service Credits
@@ -92,13 +90,13 @@
             <a href="adminTransactions.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <rect x="4" y="2" width="16" height="20" rx="2"/>
-                  <line x1="8"  y1="7"  x2="16" y2="7"/>
-                  <line x1="8"  y1="11" x2="16" y2="11"/>
-                  <line x1="8"  y1="15" x2="12" y2="15"/>
+                  <rect x="4" y="2" width="16" height="20" rx="2" />
+                  <line x1="8" y1="7" x2="16" y2="7" />
+                  <line x1="8" y1="11" x2="16" y2="11" />
+                  <line x1="8" y1="15" x2="12" y2="15" />
                 </svg>
               </span>
-              Transactions
+              Leave Request
             </a>
           </li>
 
@@ -106,9 +104,9 @@
             <a href="adminHistory.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
-                  <polyline points="3 3 3 8 8 8"/>
-                  <polyline points="12 7 12 12 15 15"/>
+                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+                  <polyline points="3 3 3 8 8 8" />
+                  <polyline points="12 7 12 12 15 15" />
                 </svg>
               </span>
               History
@@ -116,10 +114,25 @@
           </li>
 
           <li>
+            <a href="adminReports.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="8" y1="17" x2="8" y2="13" />
+                  <line x1="12" y1="17" x2="12" y2="11" />
+                  <line x1="16" y1="17" x2="16" y2="15" />
+                </svg>
+              </span>
+              Reports
+            </a>
+          </li>
+
+          <li>
             <a href="adminSettings.html" class="nav-item active" aria-current="page">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="3"/>
+                  <circle cx="12" cy="12" r="3" />
                   <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
                            2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
                            1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
@@ -134,7 +147,7 @@
                            1.65 1.65 0 0 0 1.82-.33l.06-.06
                            a2 2 0 0 1 2.83 2.83l-.06.06
                            A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
-                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
                 </svg>
               </span>
               Settings
@@ -147,9 +160,9 @@
       <div class="sidebar-logout-container">
         <button type="button" class="btn-logout sidebar-logout">
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
           </svg>
           <span>Logout</span>
         </button>
@@ -163,9 +176,10 @@
       <!-- TOPBAR -->
       <header class="topbar" role="banner">
         <h1 class="topbar-title">
-          <svg style="width:24px;height:24px;stroke:#F5C518;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:8px;"
-               viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="3"/>
+          <svg
+            style="width:24px;height:24px;stroke:#F5C518;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:8px;"
+            viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3" />
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
                      2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
                      1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
@@ -180,18 +194,12 @@
                      1.65 1.65 0 0 0 1.82-.33l.06-.06
                      a2 2 0 0 1 2.83 2.83l-.06.06
                      A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
-                     H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                     H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
           </svg>
           Settings &amp; Accessibility
         </h1>
-        <button
-          class="hamburger"
-          id="hamburger"
-          type="button"
-          aria-controls="sidebar"
-          aria-expanded="false"
-          aria-label="Toggle navigation menu"
-        >
+        <button class="hamburger" id="hamburger" type="button" aria-controls="sidebar" aria-expanded="false"
+          aria-label="Toggle navigation menu">
           <span></span><span></span><span></span>
         </button>
       </header>
@@ -205,10 +213,10 @@
             <div class="settings-hero-badge-row">
               <span class="settings-cookie-pill">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/>
-                  <path d="M8.5 8.5v.01"/>
-                  <path d="M16 15.5v.01"/>
-                  <path d="M12 12v.01"/>
+                  <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+                  <path d="M8.5 8.5v.01" />
+                  <path d="M16 15.5v.01" />
+                  <path d="M12 12v.01" />
                 </svg>
                 Browser Cookie Storage • 1-Year Expiry
               </span>
@@ -219,14 +227,14 @@
             </div>
             <h2 class="settings-hero-title">Personalize Your PERSYS Workspace</h2>
             <p class="settings-hero-subtitle">
-              Customize your theme, font size, and letter spacing. Changes apply immediately across all Admin and User pages and are remembered in your browser cookies.
+              Customize your theme and font size. Changes apply immediately.
             </p>
           </div>
 
           <button type="button" class="btn-reset-defaults" id="resetSettingsBtn">
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
-              <polyline points="3 3 3 8 8 8"/>
+              <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+              <polyline points="3 3 3 8 8 8" />
             </svg>
             Reset to Defaults
           </button>
@@ -243,31 +251,27 @@
               <div class="settings-panel-header">
                 <div class="settings-panel-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="5"/>
-                    <line x1="12" y1="1" x2="12" y2="3"/>
-                    <line x1="12" y1="21" x2="12" y2="23"/>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                    <line x1="1" y1="12" x2="3" y2="12"/>
-                    <line x1="21" y1="12" x2="23" y2="12"/>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" />
+                    <line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
                   </svg>
                 </div>
                 <div class="settings-panel-title-wrap">
                   <h3 class="settings-panel-title" id="themeSectionTitle">Theme Mode</h3>
-                  <p class="settings-panel-desc">Choose between a bright daytime workspace or a low-glare dark interface.</p>
+                  <p class="settings-panel-desc">Choose between a bright daytime workspace or a low-glare dark
+                    interface.</p>
                 </div>
               </div>
 
               <div class="theme-cards-grid" role="group" aria-label="Select color theme">
                 <!-- Light Mode Option -->
-                <button
-                  type="button"
-                  class="mode-option selected"
-                  data-mode="light"
-                  aria-pressed="true"
-                >
+                <button type="button" class="mode-option selected" data-mode="light" aria-pressed="true">
                   <div class="theme-mini-preview theme-mini-preview--light" aria-hidden="true">
                     <div class="theme-mini-sidebar">
                       <span class="theme-mini-dot"></span>
@@ -285,28 +289,23 @@
                   <div class="mode-option-footer">
                     <div class="mode-option-label-group">
                       <svg class="mode-option-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
                       </svg>
                       <span class="mode-option-name">Light Mode</span>
                     </div>
                     <span class="mode-radio" aria-hidden="true"></span>
                   </div>
-                  <p class="mode-option-sub">Default crisp white cards &amp; soft lavender background</p>
+                  <!-- <p class="mode-option-sub">Default crisp white cards &amp; soft lavender background</p> -->
                 </button>
 
                 <!-- Dark Mode Option -->
-                <button
-                  type="button"
-                  class="mode-option"
-                  data-mode="dark"
-                  aria-pressed="false"
-                >
+                <button type="button" class="mode-option" data-mode="dark" aria-pressed="false">
                   <div class="theme-mini-preview theme-mini-preview--dark" aria-hidden="true">
                     <div class="theme-mini-sidebar">
                       <span class="theme-mini-dot"></span>
@@ -324,13 +323,13 @@
                   <div class="mode-option-footer">
                     <div class="mode-option-label-group">
                       <svg class="mode-option-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                       </svg>
                       <span class="mode-option-name">Dark Mode</span>
                     </div>
                     <span class="mode-radio" aria-hidden="true"></span>
                   </div>
-                  <p class="mode-option-sub">Deep plum surfaces built for comfortable low-light viewing</p>
+                  <!-- <p class="mode-option-sub">Deep plum surfaces built for comfortable low-light viewing</p> -->
                 </button>
               </div>
             </section>
@@ -340,9 +339,9 @@
               <div class="settings-panel-header">
                 <div class="settings-panel-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
-                    <polyline points="4 7 4 4 20 4 20 7"/>
-                    <line x1="9" y1="20" x2="15" y2="20"/>
-                    <line x1="12" y1="4" x2="12" y2="20"/>
+                    <polyline points="4 7 4 4 20 4 20 7" />
+                    <line x1="9" y1="20" x2="15" y2="20" />
+                    <line x1="12" y1="4" x2="12" y2="20" />
                   </svg>
                 </div>
                 <div class="settings-panel-title-wrap">
@@ -355,32 +354,26 @@
               <div class="control-section">
                 <div class="control-header">
                   <div class="control-title-wrap">
-                    <label for="fontSizeSlider" class="control-title">Font Size</label>
-                    <span class="control-hint">Scales text across all dashboards, tables, and dialogs (12px – 24px)</span>
+                    <!-- <label for="fontSizeSlider" class="control-title">Font Size</label>
+                    <span class="control-hint">Scales text across all dashboards, tables, and dialogs (12px –
+                      24px)</span> -->
                   </div>
                   <span class="val-badge" id="fontSizeVal">16px</span>
                 </div>
 
-                <input
-                  type="range"
-                  id="fontSizeSlider"
-                  class="settings-range-slider"
-                  min="12"
-                  max="24"
-                  step="1"
-                  value="16"
-                  aria-label="Font size in pixels"
-                />
+                <input type="range" id="fontSizeSlider" class="settings-range-slider" min="12" max="24" step="1"
+                  value="16" aria-label="Font size in pixels" />
                 <div class="range-scale-labels" aria-hidden="true">
-                  <span>12px (Compact)</span>
+                  <!-- <span>12px (Compact)</span>
                   <span>16px (Default)</span>
                   <span>20px (Large)</span>
-                  <span>24px (Max)</span>
+                  <span>24px (Max)</span> -->
                 </div>
 
                 <div class="preset-pills-row" role="group" aria-label="Font size presets">
                   <button type="button" class="preset-pill font-preset-btn" data-size="13">Small (13px)</button>
-                  <button type="button" class="preset-pill font-preset-btn is-active" data-size="16">Default (16px)</button>
+                  <button type="button" class="preset-pill font-preset-btn is-active" data-size="16">Default
+                    (16px)</button>
                   <button type="button" class="preset-pill font-preset-btn" data-size="19">Large (19px)</button>
                   <button type="button" class="preset-pill font-preset-btn" data-size="22">Extra Large (22px)</button>
                 </div>
@@ -389,7 +382,7 @@
               <div class="settings-section-divider" role="separator"></div>
 
               <!-- Letter Spacing Control -->
-              <div class="control-section">
+              <!-- <div class="control-section">
                 <div class="control-header">
                   <div class="control-title-wrap">
                     <label for="textSpacingSlider" class="control-title">Letter Spacing</label>
@@ -398,16 +391,8 @@
                   <span class="val-badge" id="textSpacingVal">0px</span>
                 </div>
 
-                <input
-                  type="range"
-                  id="textSpacingSlider"
-                  class="settings-range-slider"
-                  min="0"
-                  max="5"
-                  step="0.5"
-                  value="0"
-                  aria-label="Letter spacing in pixels"
-                />
+                <input type="range" id="textSpacingSlider" class="settings-range-slider" min="0" max="5" step="0.5"
+                  value="0" aria-label="Letter spacing in pixels" />
                 <div class="range-scale-labels" aria-hidden="true">
                   <span>0px (Normal)</span>
                   <span>1.5px (Relaxed)</span>
@@ -416,12 +401,14 @@
                 </div>
 
                 <div class="preset-pills-row" role="group" aria-label="Letter spacing presets">
-                  <button type="button" class="preset-pill spacing-preset-btn is-active" data-spacing="0">Normal (0px)</button>
+                  <button type="button" class="preset-pill spacing-preset-btn is-active" data-spacing="0">Normal
+                    (0px)</button>
                   <button type="button" class="preset-pill spacing-preset-btn" data-spacing="1">Relaxed (1px)</button>
                   <button type="button" class="preset-pill spacing-preset-btn" data-spacing="2">Wide (2px)</button>
-                  <button type="button" class="preset-pill spacing-preset-btn" data-spacing="3.5">Extra Wide (3.5px)</button>
+                  <button type="button" class="preset-pill spacing-preset-btn" data-spacing="3.5">Extra Wide
+                    (3.5px)</button>
                 </div>
-              </div>
+              </div> -->
 
             </section>
 
@@ -435,13 +422,14 @@
               <div class="settings-panel-header">
                 <div class="settings-panel-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
                   </svg>
                 </div>
                 <div class="settings-panel-title-wrap">
                   <h3 class="settings-panel-title" id="livePreviewTitle">Live Readability Preview</h3>
-                  <p class="settings-panel-desc">See how your selected theme, font size, and letter spacing look in real time.</p>
+                  <p class="settings-panel-desc">See how your selected theme, font size, and letter spacing look in real
+                    time.</p>
                 </div>
               </div>
 
@@ -456,7 +444,8 @@
 
                 <h4 class="live-preview-heading">Service Credit &amp; Leave Management</h4>
                 <p class="live-preview-text">
-                  Good news! Your newly added service credits and leave records are automatically formatted using your preferred text size and character spacing.
+                  Good news! Your newly added service credits and leave records are automatically formatted using your
+                  preferred text size and character spacing.
                 </p>
 
                 <div class="live-preview-sample-row">
@@ -471,12 +460,13 @@
               <div class="settings-panel-header">
                 <div class="settings-panel-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
                 <div class="settings-panel-title-wrap">
                   <h3 class="settings-panel-title" id="cookieSummaryTitle">Active Browser Cookie Preferences</h3>
-                  <p class="settings-panel-desc">Stored locally in your browser cookies without modifying the database.</p>
+                  <p class="settings-panel-desc">Stored locally in your browser cookies without modifying the database.
+                  </p>
                 </div>
               </div>
 
@@ -497,12 +487,12 @@
 
               <div class="cookie-info-note">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="16" x2="12" y2="12"/>
-                  <line x1="12" y1="8" x2="12.01" y2="8"/>
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
                 </svg>
                 <span>
-                  Your preferences are stored in browser cookies (<code>persysTheme</code>, <code>persysFontSize</code>, and <code>persysTextSpacing</code>) with a <strong>365-day expiration</strong> so they remain active even after you close your browser or switch between Admin and User views.
+                  Your preferences are stored in browser with 1 year expiration.
                 </span>
               </div>
             </section>
@@ -518,14 +508,8 @@
   </div>
 
   <!-- Logout Confirmation Modal -->
-  <div
-    class="modal-overlay"
-    id="logoutModal"
-    style="display: none;"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="logoutModalTitle"
-  >
+  <div class="modal-overlay" id="logoutModal" style="display: none;" role="dialog" aria-modal="true"
+    aria-labelledby="logoutModalTitle">
     <div class="modal-box">
       <div class="modal-header">
         <h2 id="logoutModalTitle">Log Out</h2>
@@ -544,4 +528,5 @@
   <script src="../../scripts/settings.js"></script>
   <script src="../../scripts/switchAccount.js"></script>
 </body>
+
 </html>

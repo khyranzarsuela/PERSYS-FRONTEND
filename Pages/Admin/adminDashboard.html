@@ -4,89 +4,968 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PERSYS | Admin Dashboard</title>
-     <link rel="icon" type="image/x-icon" href="assets/SAC logo.jpg">
+  <link rel="icon" type="image/x-icon" href="../../assets/SAC logo.jpg">
 
-  <!--
-    Paths are relative to this file's location:
-      Pages/Admin/adminDashboard.html
-    so we go up two levels (../../) to reach the project root.
-  -->
   <link rel="stylesheet" href="../../styles/admin.css" />
   <link rel="stylesheet" href="../../styles/skeleton.css" />
   <style>
     /* =========================================================
-   GLOBAL SIDEBAR LOGOUT BUTTON
-   Shared by all migrated Admin pages
-   ========================================================= */
+       GLOBAL SIDEBAR LOGOUT BUTTON
+       ========================================================= */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+    }
 
-.sidebar {
-  display: flex;
-  flex-direction: column;
-}
+    .sidebar-logout-container {
+      margin-top: auto;
+      padding: 16px 20px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      flex-shrink: 0;
+    }
 
-.sidebar-logout-container {
-  margin-top: auto;
-  padding: 16px 20px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  flex-shrink: 0;
-}
+    .sidebar-logout {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: transparent;
+      color: #FCA5A5;
+      font: inherit;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
 
-.sidebar-logout {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  background: transparent;
-  color: #FCA5A5;
-  font: inherit;
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-}
+    .sidebar-logout svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-.sidebar-logout svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
+    .sidebar-logout:hover {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(252, 165, 165, 0.4);
+    }
 
-.sidebar-logout:hover {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(252, 165, 165, 0.4);
-}
+    .sidebar-logout:focus-visible {
+      outline: 2px solid #FCA5A5;
+      outline-offset: 3px;
+    }
 
-.sidebar-logout:focus-visible {
-  outline: 2px solid #FCA5A5;
-  outline-offset: 3px;
-}
+    .sidebar-logout:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
 
-.sidebar-logout:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
+    /* =========================================================
+       TOPBAR LIVE DATE & CLOCK
+       ========================================================= */
+    .topbar-datetime {
+      margin-left: auto;
+      text-align: right;
+      color: #ffffff;
+      line-height: 1.25;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+    }
 
+    .topbar-date {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .topbar-time {
+      font-size: 0.9375rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+    }
+
+    /* =========================================================
+       DASHBOARD PAGE LAYOUT (2 ROWS: TOP + BOTTOM)
+       ========================================================= */
+    .page-content.admin-dashboard-page {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch;
+      gap: 24px;
+      padding: 26px 32px;
+      background: #f0eef8;
+      width: 100%;
+      min-height: calc(100vh - var(--topbar-height));
+      box-sizing: border-box;
+    }
+
+    .dashboard-top-row {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .dashboard-bottom-row {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+      width: 100%;
+      flex: 1 1 auto;
+    }
+
+    /* =========================================================
+       TOP-LEFT: 3 HORIZONTAL STAT CARDS
+       ========================================================= */
+    .stat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .stat-card-box {
+      background: #ffffff;
+      border: 1px solid #e5dff5;
+      border-radius: 18px;
+      padding: 22px 18px 26px;
+      box-shadow: 0 4px 14px rgba(107, 15, 186, 0.07);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+      box-sizing: border-box;
+    }
+
+    .stat-card-box-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-card-circle-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #6B0FBA;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-card-circle-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.85;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .stat-card-box-label {
+      margin: 0;
+      font-size: 0.925rem;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.3;
+    }
+
+    .stat-card-box-number {
+      margin: 18px 0 6px;
+      text-align: center;
+      font-size: 3.1rem;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1;
+    }
+
+    /* =========================================================
+       TOP-RIGHT: PENDING LEAVE REQUESTS TABLE CARD
+       ========================================================= */
+    .pending-leave-card {
+      background: #ffffff;
+      border: 1px solid #e5dff5;
+      border-radius: 18px;
+      padding: 20px 24px 22px;
+      box-shadow: 0 4px 14px rgba(107, 15, 186, 0.07);
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+      box-sizing: border-box;
+    }
+
+    .pending-leave-card-title {
+      margin: 0 0 14px;
+      text-align: center;
+      font-size: 1.0625rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .pending-leave-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 165px;
+      border-radius: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(107, 15, 186, 0.28) rgba(107, 15, 186, 0.05);
+    }
+
+    .pending-leave-table-wrap::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .pending-leave-table-wrap::-webkit-scrollbar-track {
+      background: rgba(107, 15, 186, 0.05);
+      border-radius: 3px;
+    }
+    .pending-leave-table-wrap::-webkit-scrollbar-thumb {
+      background: rgba(107, 15, 186, 0.28);
+      border-radius: 3px;
+    }
+
+    .pending-leave-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .pending-leave-table thead tr {
+      background: #e3ddf2;
+    }
+
+    .pending-leave-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #e3ddf2;
+      padding: 10px 14px;
+      text-align: center;
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+    }
+
+    .pending-leave-table thead th:first-child {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    .pending-leave-table thead th:last-child {
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    .pending-leave-table tbody tr {
+      border-bottom: 1px solid #ede8f7;
+    }
+
+    .pending-leave-table tbody tr:hover {
+      background: #faf7ff;
+    }
+
+    .pending-leave-table tbody td {
+      padding: 11px 14px;
+      text-align: center;
+      color: #1f2937;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    /* Universal green pill View button */
+    .dash-view-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 18px;
+      border: none;
+      border-radius: 999px;
+      background: #1B8A4B;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .dash-view-pill-btn:hover {
+      background: #15703C;
+      box-shadow: 0 3px 8px rgba(27, 138, 75, 0.3);
+    }
+
+    /* =========================================================
+       BOTTOM ROW: 2 EMPTY CARDS (Reserved for upcoming features)
+       ========================================================= */
+    .dashboard-empty-card {
+      background: #ffffff;
+      border: 1px solid #e5dff5;
+      border-radius: 18px;
+      padding: 24px 28px;
+      min-height: 330px;
+      box-shadow: 0 4px 14px rgba(107, 15, 186, 0.07);
+      box-sizing: border-box;
+    }
+
+    /* =========================================================
+       READ-ONLY REQUEST DETAILS MODAL
+       ========================================================= */
+    .tx-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .tx-modal-overlay.is-open { display: flex; }
+
+    .tx-modal {
+      background: #fff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px 36px 28px;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .tx-modal-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: #666;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+    .tx-modal-close:hover { background: #f0f0f0; color: #333; }
+
+    .tx-modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #111;
+      margin: 0 0 18px;
+    }
+
+    .tx-detail-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 6px;
+      font-size: 0.875rem;
+    }
+    .tx-detail-label {
+      font-weight: 700;
+      color: #111;
+      min-width: 160px;
+      flex-shrink: 0;
+    }
+    .tx-detail-value { color: #555; }
+
+    .tx-section-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #111;
+      margin: 20px 0 10px;
+    }
+    .tx-divider {
+      height: 1px;
+      background: #eee;
+      margin: 4px 0 16px;
+    }
+
+    .tx-status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #F59E0B;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .tx-status-text { vertical-align: middle; }
+
+    .tx-btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      background: #1B8A4B;
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .tx-btn-download:hover { background: #15703C; }
+    .tx-btn-download svg {
+      width: 15px;
+      height: 15px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tx-doc-pending-note {
+      font-size: 0.8rem;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .tx-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid #eee;
+    }
+
+    .tx-modal-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1.5px solid currentColor;
+      color: #92400E;
+      background: #FFF8E1;
+    }
+
+    .tx-modal-close-btn {
+      padding: 9px 24px;
+      background: transparent;
+      border: 1.5px solid #d0c8e8;
+      border-radius: 8px;
+      color: #6b7280;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tx-modal-close-btn:hover {
+      background: #f3eeff;
+      border-color: #6B0FBA;
+      color: #6B0FBA;
+    }
+
+    /* =========================================================
+       RECENT EDIT REQUEST CARD (BOTTOM LEFT)
+       ========================================================= */
+    .recent-edit-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 22px 26px;
+      box-shadow: 0 4px 16px rgba(60, 20, 100, 0.08);
+      border: 1px solid rgba(107, 15, 186, 0.08);
+      min-height: 310px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .recent-edit-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .recent-edit-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .recent-edit-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #1A1A1A;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .recent-edit-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+
+    .recent-edit-badge.is-zero {
+      background: #F3F4F6;
+      color: #6B7280;
+      border-color: #E5E7EB;
+    }
+
+    .recent-edit-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .recent-edit-search {
+      padding: 6px 11px;
+      border: 1.5px solid #e2daf0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      color: #1f2937;
+      background: #faf8ff;
+      width: 170px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .recent-edit-search:focus {
+      outline: none;
+      border-color: #6B0FBA;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(107, 15, 186, 0.1);
+    }
+
+    .recent-edit-filter-select {
+      padding: 6px 10px;
+      border: 1.5px solid #e2daf0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #374151;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    .recent-edit-filter-select:focus {
+      outline: none;
+      border-color: #6B0FBA;
+    }
+
+    .recent-edit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 230px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .recent-edit-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .recent-edit-list::-webkit-scrollbar-track {
+      background: #f3effa;
+      border-radius: 999px;
+    }
+
+    .recent-edit-list::-webkit-scrollbar-thumb {
+      background: #c7b6e4;
+      border-radius: 999px;
+    }
+
+    .recent-edit-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+    }
+
+    .recent-edit-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #6B0FBA;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 6px rgba(107, 15, 186, 0.22);
+    }
+
+    .recent-edit-bar {
+      flex: 1;
+      min-width: 0;
+      background: #e3ddf2;
+      border-radius: 6px;
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: background 0.15s ease, transform 0.12s ease;
+    }
+
+    .recent-edit-row:hover .recent-edit-bar {
+      background: #d8cef0;
+      transform: translateX(2px);
+    }
+
+    .recent-edit-bar-main {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .recent-edit-bar-text {
+      font-size: 0.92rem;
+      color: #1f2937;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .recent-edit-bar-text strong {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .recent-edit-status-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      flex-shrink: 0;
+    }
+
+    .recent-edit-status-tag.status-pending {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .recent-edit-status-tag.status-resolved {
+      background: #DCFCE7;
+      color: #166534;
+    }
+
+    .recent-edit-status-tag.status-declined {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .recent-edit-msg-btn {
+      background: transparent;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      color: #6b6380;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      flex-shrink: 0;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+
+    .recent-edit-msg-btn:hover {
+      color: #4A0882;
+      background: rgba(107, 15, 186, 0.1);
+    }
+
+    .recent-edit-msg-btn svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .recent-edit-msg-btn svg circle {
+      fill: currentColor;
+      stroke: none;
+    }
+
+    .recent-edit-empty {
+      text-align: center;
+      padding: 36px 16px;
+      color: #9ca3af;
+      font-size: 0.88rem;
+      font-style: italic;
+    }
+
+    /* ── Admin Edit Request Review Modal Controls ── */
+    .edit-req-message-box {
+      background: #f9f7fd;
+      border: 1px solid #e4dcf5;
+      border-radius: 10px;
+      padding: 13px 15px;
+      font-size: 0.88rem;
+      color: #1f2937;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 8px 0 14px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .edit-req-jump-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      background: #f3ecff;
+      color: #6B0FBA;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid #d8c6f7;
+      margin-bottom: 14px;
+      transition: background 0.15s ease;
+    }
+
+    .edit-req-jump-link:hover {
+      background: #e7d9ff;
+    }
+
+    .edit-req-jump-link svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edit-req-note-textarea {
+      width: 100%;
+      min-height: 74px;
+      padding: 10px 12px;
+      border: 1.5px solid #d9d0ec;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 0.84rem;
+      color: #1f2937;
+      resize: vertical;
+      box-sizing: border-box;
+      margin-top: 6px;
+    }
+
+    .edit-req-note-textarea:focus {
+      outline: none;
+      border-color: #6B0FBA;
+      box-shadow: 0 0 0 3px rgba(107, 15, 186, 0.12);
+    }
+
+    .edit-req-feedback {
+      display: none;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .edit-req-feedback.is-error {
+      display: block;
+      background: #FEF2F2;
+      color: #B91C1C;
+      border: 1px solid #FECACA;
+    }
+
+    .edit-req-feedback.is-success {
+      display: block;
+      background: #F0FDF4;
+      color: #15803D;
+      border: 1px solid #BBF7D0;
+    }
+
+    .edit-req-modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-edit-req-decline {
+      padding: 9px 18px;
+      background: #FEE2E2;
+      color: #B91C1C;
+      border: 1px solid #FECACA;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-edit-req-decline:hover:not(:disabled) {
+      background: #FECACA;
+    }
+
+    .btn-edit-req-resolve {
+      padding: 9px 20px;
+      background: #1B8A4B;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-edit-req-resolve:hover:not(:disabled) {
+      background: #15703C;
+    }
+
+    .btn-edit-req-decline:disabled,
+    .btn-edit-req-resolve:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+    @media (max-width: 1200px) {
+      .dashboard-top-row,
+      .dashboard-bottom-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-content.admin-dashboard-page {
+        padding: 18px 16px;
+      }
+      .stat-cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .topbar-datetime {
+        display: none;
+      }
+    }
+
+    /* =========================================================
+       DARK MODE OVERRIDES
+       ========================================================= */
+    html[data-theme="dark"] .page-content.admin-dashboard-page {
+      background-color: var(--clr-cream-bg) !important;
+    }
+
+    html[data-theme="dark"] .stat-card-box,
+    html[data-theme="dark"] .pending-leave-card,
+    html[data-theme="dark"] .recent-edit-card,
+    html[data-theme="dark"] .dashboard-empty-card {
+      background: #1e1926;
+      border-color: #3a314a;
+      color: #ffffff;
+    }
+
+    html[data-theme="dark"] .stat-card-box-label,
+    html[data-theme="dark"] .stat-card-box-number,
+    html[data-theme="dark"] .pending-leave-card-title,
+    html[data-theme="dark"] .recent-edit-title {
+      color: #ffffff;
+    }
+
+    html[data-theme="dark"] .recent-edit-bar {
+      background: #2b2436;
+    }
+
+    html[data-theme="dark"] .recent-edit-row:hover .recent-edit-bar {
+      background: #352c43;
+    }
+
+    html[data-theme="dark"] .recent-edit-bar-text,
+    html[data-theme="dark"] .recent-edit-bar-text strong {
+      color: #f3e8ff;
+    }
+
+    html[data-theme="dark"] .recent-edit-msg-btn {
+      color: #c4b5fd;
+    }
+
+    html[data-theme="dark"] .recent-edit-search,
+    html[data-theme="dark"] .recent-edit-filter-select {
+      background: #2b2436;
+      border-color: #3a314a;
+      color: #f3e8ff;
+    }
+
+    html[data-theme="dark"] .pending-leave-table thead tr,
+    html[data-theme="dark"] .pending-leave-table thead th {
+      background: #2b2436;
+      color: #F5C518;
+    }
+
+    html[data-theme="dark"] .pending-leave-table tbody tr {
+      border-bottom-color: #3a314a;
+    }
+
+    html[data-theme="dark"] .pending-leave-table tbody tr:hover {
+      background: #26212e;
+    }
+
+    html[data-theme="dark"] .pending-leave-table tbody td {
+      color: #e9e0f5;
+    }
   </style>
+
   <script src="../../scripts/apiConfig.js"></script>
   <script src="../../scripts/adminGuard.js"></script>
   <link rel="stylesheet" href="../../styles/switchAccount.css" />
 </head>
 <body>
-
-  <!-- ======================================================
-       Admin Dashboard
-       Layout: .app-shell → .sidebar + .main-wrapper
-                               (.topbar + .page-content)
-  ====================================================== -->
 
   <!-- Mobile sidebar overlay (click to close) -->
   <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
@@ -120,7 +999,6 @@
               aria-current="page"
             >
               <span class="nav-icon" aria-hidden="true">
-                <!-- Grid / dashboard icon -->
                 <svg viewBox="0 0 24 24">
                   <rect x="3" y="3" width="7" height="7" rx="1"/>
                   <rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -136,7 +1014,6 @@
           <li>
             <a href="adminProfile.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
-                <!-- Person icon -->
                 <svg viewBox="0 0 24 24">
                   <circle cx="12" cy="8" r="4"/>
                   <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
@@ -150,7 +1027,6 @@
           <li>
             <a href="adminEmployees.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
-                <!-- Group / people icon -->
                 <svg viewBox="0 0 24 24">
                   <circle cx="9" cy="8" r="3.5"/>
                   <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
@@ -166,7 +1042,6 @@
           <li>
             <a href="adminServiceCredits.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
-                <!-- Badge / award icon -->
                 <svg viewBox="0 0 24 24">
                   <circle cx="12" cy="9" r="5"/>
                   <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
@@ -176,11 +1051,10 @@
             </a>
           </li>
 
-          <!-- Transactions -->
+          <!-- Leave Request -->
           <li>
             <a href="adminTransactions.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
-                <!-- Receipt / transactions icon -->
                 <svg viewBox="0 0 24 24">
                   <rect x="4" y="2" width="16" height="20" rx="2"/>
                   <line x1="8" y1="7" x2="16" y2="7"/>
@@ -188,7 +1062,7 @@
                   <line x1="8" y1="15" x2="12" y2="15"/>
                 </svg>
               </span>
-              Transactions
+              Leave Request
             </a>
           </li>
 
@@ -196,7 +1070,6 @@
           <li>
             <a href="adminHistory.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
-                <!-- Clock / history icon -->
                 <svg viewBox="0 0 24 24">
                   <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
                   <polyline points="3 3 3 8 8 8"/>
@@ -207,11 +1080,26 @@
             </a>
           </li>
 
+          <!-- Reports -->
+          <li>
+            <a href="adminReports.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="8" y1="17" x2="8" y2="13"/>
+                  <line x1="12" y1="17" x2="12" y2="11"/>
+                  <line x1="16" y1="17" x2="16" y2="15"/>
+                </svg>
+              </span>
+              Reports
+            </a>
+          </li>
+
           <!-- Settings -->
           <li>
             <a href="adminSettings.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
-                <!-- Gear icon -->
                 <svg viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="3"/>
                   <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
@@ -238,7 +1126,7 @@
         </ul>
       </nav>
 
-       <!-- Global Logout button at the bottom of the sidebar -->
+      <!-- Global Logout button at the bottom of the sidebar -->
       <div class="sidebar-logout-container">
         <button type="button" class="btn-logout sidebar-logout">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -249,7 +1137,6 @@
           <span>Logout</span>
         </button>
       </div>
-
 
     </aside>
     <!-- ── END SIDEBAR ───────────────────────────────────── -->
@@ -265,6 +1152,12 @@
           <span></span><span></span>
         </div>
         <h1 class="topbar-title">My Dashboard</h1>
+
+        <!-- Live Date & Clock on Top Right -->
+        <div class="topbar-datetime" aria-live="off">
+          <span class="topbar-date" id="topbarLiveDate">—</span>
+          <span class="topbar-time" id="topbarLiveTime">—</span>
+        </div>
 
         <!-- Mobile hamburger -->
         <button
@@ -282,90 +1175,320 @@
       </header>
 
       <!-- Page content -->
-      <main class="page-content" id="mainContent">
+      <main class="page-content admin-dashboard-page" id="mainContent">
 
-        <!-- ── LEFT COLUMN: STAT CARDS ─────────────────── -->
-        <section class="stat-cards" aria-label="Personnel statistics">
+        <!-- ══════════════════════════════════════════════════════
+             TOP ROW: 3 STAT CARDS (LEFT) + PENDING LEAVE REQUESTS (RIGHT)
+        ══════════════════════════════════════════════════════ -->
+        <div class="dashboard-top-row">
 
-          <!-- Card 1 — Active Teaching Personnel -->
-          <article class="stat-card">
-            <div class="stat-card-header">
-              <div class="stat-icon" aria-hidden="true">
-                <!-- Teaching / person with book icon -->
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="7" r="4"/>
-                  <path d="M5.5 21a7 7 0 0 1 13 0"/>
-                  <path d="M17 11l2 2 4-4" stroke-width="2"/>
-                </svg>
+          <!-- 3 Horizontal Stat Cards -->
+          <section class="stat-cards-grid" aria-label="Personnel statistics">
+
+            <!-- Card 1 — Active Teaching Personnel -->
+            <article class="stat-card-box">
+              <div class="stat-card-box-header">
+                <div class="stat-card-circle-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="10" cy="7" r="4"/>
+                    <path d="M3.5 21a7 7 0 0 1 13 0"/>
+                    <path d="M16 11l2 2 4-4" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h2 class="stat-card-box-label">Active Teaching Personnel</h2>
               </div>
-              <h2 class="stat-label">Active Teaching Personnel</h2>
-            </div>
-            <!-- Number intentionally left as placeholder — backend will populate -->
-            <p class="stat-number" data-stat="active-teaching">—</p>
-          </article>
+              <p class="stat-card-box-number" data-stat="active-teaching">—</p>
+            </article>
 
-          <!-- Card 2 — Active Non-Teaching Personnel -->
-          <article class="stat-card">
-            <div class="stat-card-header">
-              <div class="stat-icon" aria-hidden="true">
-                <!-- Person with gear (non-teaching) icon -->
-                <svg viewBox="0 0 24 24">
-                  <circle cx="10" cy="7" r="4"/>
-                  <path d="M3.5 21a7 7 0 0 1 13 0"/>
-                  <circle cx="19" cy="14" r="2"/>
-                  <path d="M19 10v1M19 17v1M15.5 12.3l.7.7M22.5 14.7l-.7.7M15.5 16.7l.7-.7M22.5 12.3l-.7.7"/>
-                </svg>
+            <!-- Card 2 — Active Non-Teaching Personnel -->
+            <article class="stat-card-box">
+              <div class="stat-card-box-header">
+                <div class="stat-card-circle-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="10" cy="7" r="4"/>
+                    <path d="M3.5 21a7 7 0 0 1 13 0"/>
+                    <circle cx="19" cy="14" r="2"/>
+                    <path d="M19 10v1M19 17v1M15.5 12.3l.7.7M22.5 14.7l-.7.7M15.5 16.7l.7-.7M22.5 12.3l-.7.7"/>
+                  </svg>
+                </div>
+                <h2 class="stat-card-box-label">Active Non-Teaching Personnel</h2>
               </div>
-              <h2 class="stat-label">Active Non-Teaching Personnel</h2>
-            </div>
-          <p class="stat-number" data-stat="active-nonteaching">—</p>
-          </article>
+              <p class="stat-card-box-number" data-stat="active-nonteaching">—</p>
+            </article>
 
-          <!-- Card 3 — Pending Leave Request -->
-          <article class="stat-card">
-            <div class="stat-card-header">
-              <div class="stat-icon" aria-hidden="true">
-                <!-- Document / leave request icon -->
-                <svg viewBox="0 0 24 24">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <line x1="8" y1="13" x2="16" y2="13"/>
-                  <line x1="8" y1="17" x2="12" y2="17"/>
-                </svg>
+            <!-- Card 3 — Pending Leave Request -->
+            <article class="stat-card-box">
+              <div class="stat-card-box-header">
+                <div class="stat-card-circle-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="8" y1="13" x2="16" y2="13"/>
+                    <line x1="8" y1="17" x2="12" y2="17"/>
+                  </svg>
+                </div>
+                <h2 class="stat-card-box-label">Pending Leave Request</h2>
               </div>
-              <h2 class="stat-label">Pending Leave Request</h2>
+              <p class="stat-card-box-number" data-stat="pending-leave">—</p>
+            </article>
+
+          </section>
+
+          <!-- Pending Leave Requests Table Card -->
+          <section class="pending-leave-card" aria-labelledby="pendingLeaveCardTitle">
+            <h2 class="pending-leave-card-title" id="pendingLeaveCardTitle">Pending Leave Requests</h2>
+
+            <div class="pending-leave-table-wrap">
+              <table class="pending-leave-table" aria-label="Pending leave requests">
+                <thead>
+                  <tr>
+                    <th>Date Filed</th>
+                    <th>Request No.</th>
+                    <th>Name</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody id="pendingLeaveTableBody">
+                  <tr>
+                    <td colspan="4" style="text-align:center; padding:18px; color:#9ca3af;">
+                      Loading pending leave requests...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <p class="stat-number" data-stat="pending-leave">—</p>
-          </article>
+          </section>
 
-        </section>
-        <!-- ── END STAT CARDS ──────────────────────────── -->
+        </div>
 
-        <!-- ── RIGHT COLUMN: NOTIFICATIONS PANEL ──────── -->
-        <aside class="notif-panel" aria-label="Recent leave request notifications">
+        <!-- ══════════════════════════════════════════════════════
+             BOTTOM ROW: RECENT EDIT REQUEST (LEFT) & CALENDAR (RIGHT)
+        ══════════════════════════════════════════════════════ -->
+        <div class="dashboard-bottom-row">
+          <section class="recent-edit-card" id="recentEditRequestCard" aria-labelledby="recentEditRequestTitle">
+            <div class="recent-edit-header">
+              <div class="recent-edit-title-group">
+                <h2 class="recent-edit-title" id="recentEditRequestTitle">Recent Edit Request</h2>
+                <span class="recent-edit-badge is-zero" id="editReqPendingBadge" title="Pending profile edit requests">0 Pending</span>
+              </div>
 
-          <!-- Panel header -->
-          <div class="notif-header">
-            <h2 class="notif-header-title">Recent Leave Request Notifications</h2>
-          </div>
+              <div class="recent-edit-toolbar">
+                <input
+                  type="search"
+                  class="recent-edit-search"
+                  id="editReqSearchInput"
+                  placeholder="Search name or ID..."
+                  aria-label="Search profile edit requests"
+                />
+                <select
+                  class="recent-edit-filter-select"
+                  id="editReqStatusFilter"
+                  aria-label="Filter edit requests by status"
+                >
+                  <option value="ALL">All Status</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="RESOLVED">Resolved</option>
+                  <option value="DECLINED">Declined</option>
+                </select>
+              </div>
+            </div>
 
-          <!-- Notification items -->
-          <ul class="notif-list">
-              <li class="notif-item" id="recentLeaveRequests">
-                <p style="text-align: center; padding: 8px 0;">
-                  Loading recent leave requests...
-                </p>
-              </li>
-          </ul>
-        </aside>
-        <!-- ── END NOTIFICATIONS PANEL ────────────────── -->
+            <div class="recent-edit-list" id="recentEditRequestList" role="list">
+              <div class="recent-edit-empty">Loading profile edit requests...</div>
+            </div>
+          </section>
+
+          <section class="dashboard-empty-card" id="calendarHolidaysCard" aria-label="Calendar and Philippine holidays section"></section>
+        </div>
 
       </main>
     </div>
     <!-- ── END MAIN WRAPPER ──────────────────────────────── -->
 
   </div>
-  <!-- Global Logout Confirmation Modal -->
+
+  <!-- ══════════════════════════════════════════════════════
+       READ-ONLY REQUEST DETAILS MODAL
+  ══════════════════════════════════════════════════════ -->
+  <div
+    class="tx-modal-overlay"
+    id="dashRequestModalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="dashRequestModalTitle"
+    tabindex="-1"
+  >
+    <div class="tx-modal" id="dashRequestModal" tabindex="-1">
+      <input type="hidden" id="dashModalRequestId" value="" />
+
+      <button type="button" class="tx-modal-close" id="dashModalClose" aria-label="Close">&#10005;</button>
+
+      <h2 class="tx-modal-title" id="dashRequestModalTitle">Request Details</h2>
+
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Transaction #</span>
+        <span class="tx-detail-value" id="dashRequestNumber">—</span>
+      </div>
+      <div class="tx-detail-row" style="margin-bottom:4px;">
+        <span class="tx-detail-label">Status</span>
+        <span class="tx-detail-value">
+          <span class="tx-status-dot" aria-hidden="true"></span>
+          <span class="tx-status-text" id="dashStatusText">Pending</span>
+        </span>
+      </div>
+
+      <div class="tx-divider"></div>
+
+      <h3 class="tx-section-heading">Employee Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Name</span>
+        <span class="tx-detail-value" id="dashEmployeeName">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Number</span>
+        <span class="tx-detail-value" id="dashEmployeeNumber">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Position</span>
+        <span class="tx-detail-value" id="dashPosition">—</span>
+      </div>
+
+      <h3 class="tx-section-heading">Request Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Leave Type</span>
+        <span class="tx-detail-value" id="dashLeaveType">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Reason</span>
+        <span class="tx-detail-value" id="dashReason">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Start Date</span>
+        <span class="tx-detail-value" id="dashStartDate">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">End Date</span>
+        <span class="tx-detail-value" id="dashEndDate">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Total Days</span>
+        <span class="tx-detail-value" id="dashTotalDays">—</span>
+      </div>
+
+      <h3 class="tx-section-heading">Service Credit Information</h3>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Credit Type</span>
+        <span class="tx-detail-value" id="dashCreditType">Not selected</span>
+      </div>
+
+      <h3 class="tx-section-heading">Submitted Document</h3>
+      <button type="button" class="tx-btn-download" id="dashModalForm6">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="8" y1="13" x2="16" y2="13"/>
+          <line x1="8" y1="17" x2="12" y2="17"/>
+        </svg>
+        Generate / Print Form 6
+      </button>
+      <p class="tx-doc-pending-note">
+        This file is available for download and print.
+      </p>
+
+      <div class="tx-modal-footer">
+        <span class="tx-modal-status-pill" id="dashModalStatusBadge">
+          Status: Pending
+        </span>
+        <button type="button" class="tx-modal-close-btn" id="dashModalCloseFooter">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ADMIN PROFILE EDIT REQUEST REVIEW MODAL
+  ══════════════════════════════════════════════════════ -->
+  <div
+    class="tx-modal-overlay"
+    id="adminEditReqModalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="adminEditReqModalTitle"
+    tabindex="-1"
+  >
+    <div class="tx-modal" id="adminEditReqModal" tabindex="-1">
+      <input type="hidden" id="adminEditReqId" value="" />
+
+      <button type="button" class="tx-modal-close" id="adminEditReqModalClose" aria-label="Close">&#10005;</button>
+
+      <h2 class="tx-modal-title" id="adminEditReqModalTitle">Profile Edit Request</h2>
+
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Request ID</span>
+        <span class="tx-detail-value" id="adminEditReqNumber">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee Name</span>
+        <span class="tx-detail-value" id="adminEditReqEmpName">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Employee No.</span>
+        <span class="tx-detail-value" id="adminEditReqEmpId">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Section to Edit</span>
+        <span class="tx-detail-value" id="adminEditReqCategory">—</span>
+      </div>
+      <div class="tx-detail-row">
+        <span class="tx-detail-label">Date Submitted</span>
+        <span class="tx-detail-value" id="adminEditReqCreatedAt">—</span>
+      </div>
+      <div class="tx-detail-row" style="margin-bottom: 4px;">
+        <span class="tx-detail-label">Status</span>
+        <span class="tx-detail-value" id="adminEditReqStatusText">PENDING</span>
+      </div>
+
+      <div class="tx-divider"></div>
+
+      <h3 class="tx-section-heading">Requested Changes / Message</h3>
+      <div class="edit-req-message-box" id="adminEditReqMessage">—</div>
+
+      <a href="adminEmployees.html" class="edit-req-jump-link" id="adminEditReqJumpLink">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        Open Employees Page to Edit Record
+      </a>
+
+      <h3 class="tx-section-heading" style="margin-top: 4px;">Admin Note (Optional)</h3>
+      <textarea
+        class="edit-req-note-textarea"
+        id="adminEditReqNoteInput"
+        maxlength="500"
+        placeholder="Add an optional note for the employee (e.g., Updated your contact number and civil status as requested)..."
+      ></textarea>
+
+      <div class="edit-req-feedback" id="adminEditReqFeedback" role="alert"></div>
+
+      <div class="tx-modal-footer">
+        <button type="button" class="tx-modal-close-btn" id="adminEditReqCloseFooter">
+          Close
+        </button>
+
+        <div class="edit-req-modal-actions">
+          <button type="button" class="btn-edit-req-decline" id="btnDeclineEditReq">
+            Decline
+          </button>
+          <button type="button" class="btn-edit-req-resolve" id="btnResolveEditReq">
+            Mark as Resolved
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Global Logout Confirmation Modal -->
   <div
@@ -396,9 +1519,6 @@
       </div>
     </div>
   </div>
-
-
-  <!-- ── END APP SHELL ──────────────────────────────────── -->
 
   <script src="../../scripts/admin.js"></script>
   <script src="../../scripts/apiErrorHandler.js"></script>

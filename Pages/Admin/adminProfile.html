@@ -168,7 +168,7 @@
             </a>
           </li>
 
-          <!-- Transactions -->
+          <!-- Leave Request -->
           <li>
             <a href="adminTransactions.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
@@ -179,7 +179,7 @@
                   <line x1="8" y1="15" x2="12" y2="15"/>
                 </svg>
               </span>
-              Transactions
+              Leave Request
             </a>
           </li>
 
@@ -194,6 +194,22 @@
                 </svg>
               </span>
               History
+            </a>
+          </li>
+
+          <!-- Reports -->
+          <li>
+            <a href="adminReports.html" class="nav-item">
+              <span class="nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="8" y1="17" x2="8" y2="13"/>
+                  <line x1="12" y1="17" x2="12" y2="11"/>
+                  <line x1="16" y1="17" x2="16" y2="15"/>
+                </svg>
+              </span>
+              Reports
             </a>
           </li>
 
@@ -224,10 +240,6 @@
             </a>
           </li>
 
-        </ul>
-      </nav>
-
-      
         </ul>
       </nav>
 
@@ -304,8 +316,9 @@
       </div>
 
       <button class="profile-edit-btn profile-hero-edit"
-              type="button" disabled
-              title="Editing will be available in a future update">
+              id="btnOpenEditProfile"
+              type="button"
+              title="Edit your profile information">
         ✎ Edit Profile
       </button>
     </div>
@@ -325,8 +338,6 @@
             <p>Basic personal details</p>
           </div>
         </div>
-        <button class="profile-edit-btn" type="button" disabled
-                title="Editing is not available yet">✎ Edit</button>
       </div>
 
       <dl class="profile-fields">
@@ -355,8 +366,6 @@
             <p>Official employment details</p>
           </div>
         </div>
-        <button class="profile-edit-btn" type="button" disabled
-                title="Editing is not available yet">✎ Edit</button>
       </div>
 
       <dl class="profile-fields">
@@ -398,8 +407,6 @@
             <p>System access and account details</p>
           </div>
         </div>
-        <button class="profile-edit-btn" type="button" disabled
-                title="Account editing is not available yet">✎ Edit</button>
       </div>
 
       <dl class="profile-fields profile-account-fields">
@@ -432,6 +439,189 @@
 
   </div>
   <!-- ── END APP SHELL ──────────────────────────────────── -->
+  <!-- ── EDIT PROFILE MODAL (Admin Self-Edit) ─────────── -->
+  <div
+    class="profile-modal-overlay"
+    id="editProfileModalOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="editProfileModalTitle"
+    hidden
+  >
+    <div class="profile-modal-box">
+      <div class="profile-modal-header">
+        <div>
+          <h2 id="editProfileModalTitle">Edit Profile</h2>
+          <p>Update your personal, employment, and account information. Fields marked * are required.</p>
+        </div>
+        <button type="button" class="profile-modal-close-x" id="btnCloseEditProfileX" aria-label="Close">&times;</button>
+      </div>
+
+      <form id="editProfileForm" novalidate>
+        <div class="profile-modal-body">
+
+          <div id="editProfileFormNotice" class="profile-modal-notice" hidden role="alert"></div>
+
+          <!-- SECTION 0: PROFILE PICTURE & BANNER UPLOAD (UI ready for future implementation) -->
+          <section class="profile-modal-section">
+            <h3 class="profile-modal-section-title">Profile Appearance</h3>
+            <div class="profile-modal-grid">
+              <div class="profile-modal-field">
+                <label for="ep_profile_picture">Profile Picture Upload</label>
+                <input
+                  type="file"
+                  id="ep_profile_picture"
+                  name="profile_picture"
+                  accept="image/*"
+                  class="profile-file-input"
+                />
+                <small class="profile-field-hint">Upload a new avatar photo (.jpg, .png, .webp).</small>
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_banner_image">Banner Upload</label>
+                <input
+                  type="file"
+                  id="ep_banner_image"
+                  name="banner_image"
+                  accept="image/*"
+                  class="profile-file-input"
+                />
+                <small class="profile-field-hint">Upload a custom profile cover banner (.jpg, .png, .webp).</small>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 1: PERSONAL INFORMATION -->
+          <section class="profile-modal-section">
+            <h3 class="profile-modal-section-title">Personal Information</h3>
+            <div class="profile-modal-grid profile-modal-grid-3">
+              <div class="profile-modal-field">
+                <label for="ep_last_name">Last Name *</label>
+                <input type="text" id="ep_last_name" name="last_name" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_first_name">First Name *</label>
+                <input type="text" id="ep_first_name" name="first_name" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_middle_name">Middle Name</label>
+                <input type="text" id="ep_middle_name" name="middle_name" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 2: EMPLOYEE INFORMATION -->
+          <section class="profile-modal-section">
+            <h3 class="profile-modal-section-title">Employee Information</h3>
+            <div class="profile-modal-grid">
+              <div class="profile-modal-field">
+                <label for="ep_employee_number">Employee Number *</label>
+                <input type="text" id="ep_employee_number" name="employee_number" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_personnel_type">Personnel Type</label>
+                <input type="text" id="ep_personnel_type" readonly disabled />
+                <small class="profile-field-hint">Personnel type is read-only.</small>
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_plantilla">Plantilla Item Number *</label>
+                <input type="text" id="ep_plantilla" name="plantilla_item_number" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_position">Position *</label>
+                <input type="text" id="ep_position" name="position" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_salary_grade">Salary Grade *</label>
+                <input type="number" id="ep_salary_grade" name="salary_grade" min="1" step="1" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_step_increment">Step Increment *</label>
+                <input type="number" id="ep_step_increment" name="step_increment" min="1" step="1" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_date_orig">Date of Original Appointment *</label>
+                <input type="date" id="ep_date_orig" name="date_original_appointment" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_date_promo">Date of Last Promotion</label>
+                <input type="date" id="ep_date_promo" name="date_last_promotion" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 3: ACCOUNT INFORMATION -->
+          <section class="profile-modal-section">
+            <h3 class="profile-modal-section-title">Account Information</h3>
+            <div class="profile-modal-grid">
+              <div class="profile-modal-field">
+                <label for="ep_username">Username *</label>
+                <input type="text" id="ep_username" name="username" autocomplete="username" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_deped_email">DepEd Email *</label>
+                <input type="email" id="ep_deped_email" name="deped_email" autocomplete="email" required />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_account_role">Account Role</label>
+                <input type="text" id="ep_account_role" readonly disabled />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_account_status">Account Status</label>
+                <input type="text" id="ep_account_status" readonly disabled />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_new_password">New Password (Optional)</label>
+                <input
+                  type="password"
+                  id="ep_new_password"
+                  name="new_password"
+                  placeholder="Leave blank to keep current password"
+                  autocomplete="new-password"
+                />
+              </div>
+
+              <div class="profile-modal-field">
+                <label for="ep_confirm_password">Confirm New Password</label>
+                <input
+                  type="password"
+                  id="ep_confirm_password"
+                  name="confirm_password"
+                  placeholder="Re-enter new password"
+                  autocomplete="new-password"
+                />
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="profile-modal-footer">
+          <button type="button" id="btnCancelEditProfile" class="profile-modal-btn-cancel">
+            Cancel
+          </button>
+          <button type="submit" id="btnSaveEditProfile" class="profile-modal-btn-save">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="logoutModal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
     <div class="modal-box">
       <div class="modal-header">

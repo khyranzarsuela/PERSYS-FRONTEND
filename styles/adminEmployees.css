@@ -88,27 +88,28 @@
       flex-wrap: wrap;
     }
 
-    /* "+ Add Employee" button */
+    /* "+ Add Employee", "Master File Upload", "Edit", and "View" buttons */
     .btn-add-employee {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      padding: 10px 20px;
-      background-color: #F5C518;
-      color: #1a1a1a;
-      font-size: 0.875rem;
+      padding: 7px 22px;
+      background-color: #1B8A4B;
+      color: #ffffff;
+      font-size: 0.825rem;
       font-weight: 700;
       border: none;
-      border-radius: 8px;
+      border-radius: 999px;
       cursor: pointer;
       white-space: nowrap;
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
       flex-shrink: 0;
     }
 
     .btn-add-employee:hover {
-      background-color: #e6b800;
-      box-shadow: 0 3px 10px rgba(245, 197, 24, 0.4);
+      background-color: #15703C;
+      box-shadow: 0 3px 10px rgba(27, 138, 75, 0.35);
     }
 
     /* Search bar wrapper */
@@ -330,9 +331,14 @@
 
     /* Style the main button */
 #openBtn {
-  padding: 12px 24px;
-  font-size: 16px;
+  padding: 9px 22px;
+  font-size: 0.85rem;
   cursor: pointer;
+}
+
+.emp-toolbar > .btn-add-employee {
+  padding: 9px 22px;
+  font-size: 0.85rem;
 }
 
 /* Style the big card window */
@@ -1375,13 +1381,24 @@ dialog#addEmployeeDialog {
 }
 
 /* 4. Employee action buttons */
-.employees-page .emp-table button {
-    min-height: 44px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 0.9375rem;
-    font-weight: 600;
+.employees-page .emp-table button,
+.employees-page .emp-table .btn-add-employee {
+    min-height: 34px;
+    padding: 7px 22px;
+    border-radius: 999px;
+    background-color: #1B8A4B;
+    color: #ffffff;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.employees-page .emp-table button:hover:not(:disabled),
+.employees-page .emp-table .btn-add-employee:hover:not(:disabled) {
+    background-color: #15703C;
+    box-shadow: 0 3px 10px rgba(27, 138, 75, 0.35);
 }
 
 .employees-page .emp-table button:disabled {
@@ -1478,11 +1495,24 @@ dialog#addEmployeeDialog {
     font-weight: 600;
 }
 
-/* Add Employee remains the primary action */
-.employees-page .btn-add-employee {
-    background-color: #f5c518;
-    color: #1a1a1a;
-    padding: 10px 20px;
+/* Add Employee & Master File Upload use universal green styling */
+.employees-page .btn-add-employee,
+.employees-page .emp-toolbar .btn-add-employee,
+.employees-page #openBtn {
+    background-color: #1B8A4B;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-weight: 700;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.employees-page .btn-add-employee:hover,
+.employees-page .emp-toolbar .btn-add-employee:hover,
+.employees-page #openBtn:hover {
+    background-color: #15703C;
+    box-shadow: 0 3px 10px rgba(27, 138, 75, 0.35);
 }
 
 /* Wider search */
