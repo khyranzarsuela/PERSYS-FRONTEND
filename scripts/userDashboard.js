@@ -308,15 +308,16 @@ function wireRequestEditProfileModal() {
         return;
       }
 
-      const checked =
+      if (response.status === 401 || response.status === 403) {
         await window.PERSYSApiErrors.handleResponse(response);
-      if (!checked) return;
+        return;
+      }
 
-      const result = await checked.json();
-      if (!response.ok || !result.success) {
+      const result = await response.json().catch(() => null);
+      if (!response.ok || !result || !result.success) {
         showNotice(
           "error",
-          result.message || "Unable to submit profile edit request."
+          result?.message || "Unable to submit profile edit request."
         );
         return;
       }

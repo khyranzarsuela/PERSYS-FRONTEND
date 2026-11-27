@@ -427,12 +427,14 @@ async function loadRecentEditRequests() {
       headers: { Accept: "application/json" }
     });
 
-    const checkedResponse = await window.PERSYSApiErrors.handleResponse(response);
-    if (!checkedResponse) return;
+    if (response.status === 401 || response.status === 403) {
+      await window.PERSYSApiErrors.handleResponse(response);
+      return;
+    }
 
-    const result = await checkedResponse.json();
-    if (!response.ok || !result.success) {
-      throw new Error(result.message || "Unable to load profile edit requests.");
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result || !result.success) {
+      throw new Error(result?.message || "Unable to load profile edit requests.");
     }
 
     const pendingCount = Number(result.data?.pending_count || 0);
