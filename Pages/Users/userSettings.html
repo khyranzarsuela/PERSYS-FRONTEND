@@ -533,6 +533,121 @@
 
         </div>
 
+        <!-- ── ACCOUNT SECURITY (ALL ROLES — OFFLINE-FRIENDLY) ── -->
+        <section class="settings-panel-card account-security-card" id="accountSecuritySection" aria-labelledby="accountSecurityTitle">
+          <div class="settings-panel-header">
+            <div class="settings-panel-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div class="settings-panel-title-wrap">
+              <h3 class="settings-panel-title" id="accountSecurityTitle">Account Security</h3>
+              <p class="settings-panel-desc">
+                Update your login username or password at any time using your current password. Works offline without email verification.
+              </p>
+            </div>
+          </div>
+
+          <div class="account-security-grid">
+
+            <!-- FORM 1: CHANGE USERNAME -->
+            <form id="changeUsernameForm" class="security-subcard" novalidate>
+              <div class="security-subcard-header">
+                <div>
+                  <h4 class="security-subcard-title">Change Username</h4>
+                  <p class="security-subcard-desc">Choose a unique username (3–50 characters) for signing in to PERSYS.</p>
+                </div>
+                <span class="security-current-badge">
+                  Current: <strong id="securityCurrentUsername">—</strong>
+                </span>
+              </div>
+
+              <div class="security-field-group">
+                <label class="security-label" for="secNewUsername">New Username</label>
+                <input type="text" id="secNewUsername" name="new_username" class="security-input"
+                  placeholder="Enter new username" minlength="3" maxlength="50" autocomplete="username" required />
+              </div>
+
+              <div class="security-field-group">
+                <label class="security-label" for="secUsernameCurrentPassword">Current Password</label>
+                <div class="security-pw-wrap">
+                  <input type="password" id="secUsernameCurrentPassword" name="current_password" class="security-input"
+                    placeholder="Enter current password to confirm" autocomplete="current-password" required />
+                  <button type="button" class="security-pw-toggle" data-target="secUsernameCurrentPassword"
+                    aria-label="Toggle current password visibility" aria-pressed="false">
+                    Show
+                  </button>
+                </div>
+              </div>
+
+              <div id="changeUsernameFeedback" class="security-feedback" role="alert" aria-live="polite" hidden></div>
+
+              <div class="security-form-actions">
+                <button type="submit" class="btn-security-submit" id="btnSubmitChangeUsername">
+                  Update Username
+                </button>
+              </div>
+            </form>
+
+            <!-- FORM 2: CHANGE PASSWORD -->
+            <form id="changePasswordForm" class="security-subcard" novalidate>
+              <div class="security-subcard-header">
+                <div>
+                  <h4 class="security-subcard-title">Change Password</h4>
+                  <p class="security-subcard-desc">Use at least 8 characters. Updating your password will ask you to log in again.</p>
+                </div>
+              </div>
+
+              <div class="security-field-group">
+                <label class="security-label" for="secCurrentPassword">Current Password</label>
+                <div class="security-pw-wrap">
+                  <input type="password" id="secCurrentPassword" name="current_password" class="security-input"
+                    placeholder="Enter current password" autocomplete="current-password" required />
+                  <button type="button" class="security-pw-toggle" data-target="secCurrentPassword"
+                    aria-label="Toggle current password visibility" aria-pressed="false">
+                    Show
+                  </button>
+                </div>
+              </div>
+
+              <div class="security-field-group">
+                <label class="security-label" for="secNewPassword">New Password</label>
+                <div class="security-pw-wrap">
+                  <input type="password" id="secNewPassword" name="new_password" class="security-input"
+                    placeholder="At least 8 characters" minlength="8" autocomplete="new-password" required />
+                  <button type="button" class="security-pw-toggle" data-target="secNewPassword"
+                    aria-label="Toggle new password visibility" aria-pressed="false">
+                    Show
+                  </button>
+                </div>
+              </div>
+
+              <div class="security-field-group">
+                <label class="security-label" for="secConfirmPassword">Confirm New Password</label>
+                <div class="security-pw-wrap">
+                  <input type="password" id="secConfirmPassword" name="confirm_password" class="security-input"
+                    placeholder="Re-enter new password" minlength="8" autocomplete="new-password" required />
+                  <button type="button" class="security-pw-toggle" data-target="secConfirmPassword"
+                    aria-label="Toggle confirm password visibility" aria-pressed="false">
+                    Show
+                  </button>
+                </div>
+              </div>
+
+              <div id="changePasswordFeedback" class="security-feedback" role="alert" aria-live="polite" hidden></div>
+
+              <div class="security-form-actions">
+                <button type="submit" class="btn-security-submit" id="btnSubmitChangePassword">
+                  Update Password
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </section>
+
       </main>
 
     </div>

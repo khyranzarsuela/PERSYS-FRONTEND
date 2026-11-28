@@ -690,15 +690,33 @@ async function inlineDecision(r, targetStatus) {
   const creditTypeId = rowPoolState[rid] ?? '';
 
   if (targetStatus === 'Approved' && !creditTypeId) {
-    alert('Please select a credit pool before approving.');
+    if (window.PERSYSModal) {
+      await window.PERSYSModal.alert(
+        'Please select a credit pool before approving.',
+        'Credit Pool Required'
+      );
+    } else {
+      alert('Please select a credit pool before approving.');
+    }
     return;
   }
 
-  const confirmMsg = targetStatus === 'Approved'
+  const isApprove = targetStatus === 'Approved';
+  const confirmTitle = isApprove ? 'Approve Leave Request' : 'Disapprove Leave Request';
+  const confirmMsg = isApprove
     ? `Approve this request and deduct ${r.total_leave_days} days from the selected credit pool?`
-    : 'Reject this leave request? No credits will be deducted.';
+    : 'Disapprove this leave request? No credits will be deducted.';
 
-  if (!window.confirm(confirmMsg)) return;
+  const confirmed = window.PERSYSModal
+    ? await window.PERSYSModal.confirm(
+        confirmMsg,
+        confirmTitle,
+        isApprove ? 'Approve' : 'Disapprove',
+        'Cancel'
+      )
+    : window.confirm(confirmMsg);
+
+  if (!confirmed) return;
 
   // Disable all action buttons on this row while processing
   const tr = document.querySelector(`tr[data-request-id="${rid}"]`);
@@ -736,7 +754,12 @@ async function inlineDecision(r, targetStatus) {
     const result = await checked.json();
 
     if (!result.success) {
-      alert(result.message || 'Unable to save the decision.');
+      const failMsg = result.message || 'Unable to save the decision.';
+      if (window.PERSYSModal) {
+        await window.PERSYSModal.alert(failMsg, 'Action Failed');
+      } else {
+        alert(failMsg);
+      }
       btns.forEach(b => { b.disabled = false; });
       return;
     }
@@ -766,7 +789,11 @@ async function inlineDecision(r, targetStatus) {
 
   } catch (err) {
     console.error('inlineDecision error:', err);
-    alert('A server error occurred. Please try again.');
+    if (window.PERSYSModal) {
+      await window.PERSYSModal.alert('A server error occurred. Please try again.', 'Server Error');
+    } else {
+      alert('A server error occurred. Please try again.');
+    }
     btns.forEach(b => { b.disabled = false; });
   }
 }
@@ -779,7 +806,14 @@ async function openForm6(rid, triggerBtn = null) {
   const r = allRequests.find(x => String(x.leave_request_id) === String(rid));
   const statusLow = String(r?.status ?? '').toLowerCase();
   if (statusLow === 'rejected' || statusLow === 'disapproved') {
-    alert('Form 6 is unavailable for rejected requests.');
+    if (window.PERSYSModal) {
+      await window.PERSYSModal.alert(
+        'Form 6 is unavailable for disapproved requests.',
+        'Form 6 Unavailable'
+      );
+    } else {
+      alert('Form 6 is unavailable for disapproved requests.');
+    }
     return;
   }
 
@@ -829,7 +863,12 @@ async function openForm6(rid, triggerBtn = null) {
 
   } catch (err) {
     console.error('Form 6 generation error:', err);
-    alert(err.message || 'Unable to generate Form 6. Please try again.');
+    const errMsg = err.message || 'Unable to generate Form 6. Please try again.';
+    if (window.PERSYSModal) {
+      await window.PERSYSModal.alert(errMsg, 'Form 6 Unavailable');
+    } else {
+      alert(errMsg);
+    }
   } finally {
     if (triggerBtn) {
       triggerBtn.disabled = false;

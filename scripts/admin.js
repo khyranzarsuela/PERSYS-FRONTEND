@@ -253,3 +253,138 @@
 
   
 })();
+
+
+/* ============================================================
+   GLOBAL NOTIFICATION & CONFIRMATION MODAL (window.PERSYSModal)
+   Uses the standard .modal-overlay / .modal-box design.
+   ============================================================ */
+
+(function () {
+  'use strict';
+
+  let activeResolver = null;
+
+  function ensureModalElements() {
+    let modal = document.getElementById('persysNotifyModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.id = 'persysNotifyModal';
+      modal.style.display = 'none';
+      modal.style.zIndex = '200';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('aria-labelledby', 'persysNotifyModalTitle');
+      modal.innerHTML =
+        '<div class="modal-box">' +
+          '<div class="modal-header">' +
+            '<h2 id="persysNotifyModalTitle">Notice</h2>' +
+          '</div>' +
+          '<div class="modal-body">' +
+            '<p id="persysNotifyModalMessage"></p>' +
+          '</div>' +
+          '<div class="modal-footer">' +
+            '<button type="button" id="persysNotifyCancelBtn" class="btn-secondary" style="display:none;">Cancel</button>' +
+            '<button type="button" id="persysNotifyConfirmBtn" class="btn-yellow">OK</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(modal);
+    }
+
+    const titleEl    = document.getElementById('persysNotifyModalTitle');
+    const messageEl  = document.getElementById('persysNotifyModalMessage');
+    const cancelBtn  = document.getElementById('persysNotifyCancelBtn');
+    const confirmBtn = document.getElementById('persysNotifyConfirmBtn');
+
+    if (!modal.dataset.wired) {
+      modal.dataset.wired = '1';
+
+      confirmBtn.addEventListener('click', function () {
+        closeDialog(true);
+      });
+
+      cancelBtn.addEventListener('click', function () {
+        closeDialog(false);
+      });
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          closeDialog(false);
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.style.display !== 'none') {
+          closeDialog(false);
+        }
+      });
+    }
+
+    return { modal, titleEl, messageEl, cancelBtn, confirmBtn };
+  }
+
+  function closeDialog(result) {
+    const modal = document.getElementById('persysNotifyModal');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+    if (typeof activeResolver === 'function') {
+      const resolve = activeResolver;
+      activeResolver = null;
+      resolve(Boolean(result));
+    }
+  }
+
+  function openDialog(options) {
+    const opts = options || {};
+    const { modal, titleEl, messageEl, cancelBtn, confirmBtn } = ensureModalElements();
+
+    if (activeResolver) {
+      const prev = activeResolver;
+      activeResolver = null;
+      prev(false);
+    }
+
+    titleEl.textContent = opts.title || 'Notice';
+    messageEl.textContent = opts.message || '';
+
+    if (opts.isConfirm) {
+      cancelBtn.style.display = 'inline-flex';
+      cancelBtn.textContent = opts.cancelText || 'Cancel';
+      confirmBtn.textContent = opts.confirmText || 'OK';
+    } else {
+      cancelBtn.style.display = 'none';
+      confirmBtn.textContent = opts.confirmText || 'OK';
+    }
+
+    modal.style.display = 'flex';
+    setTimeout(function () {
+      confirmBtn.focus();
+    }, 20);
+
+    return new Promise(function (resolve) {
+      activeResolver = resolve;
+    });
+  }
+
+  window.PERSYSModal = {
+    alert: function (message, title, confirmText) {
+      return openDialog({
+        isConfirm: false,
+        title: title || 'Notice',
+        message: message,
+        confirmText: confirmText || 'OK'
+      });
+    },
+    confirm: function (message, title, confirmText, cancelText) {
+      return openDialog({
+        isConfirm: true,
+        title: title || 'Confirm Action',
+        message: message,
+        confirmText: confirmText || 'OK',
+        cancelText: cancelText || 'Cancel'
+      });
+    }
+  };
+})();

@@ -568,7 +568,14 @@ function buildLeaveHistoryRow(r) {
 async function openForm6(r, triggerBtn = null) {
   const statusLow = String(r.status ?? '').toLowerCase();
   if (statusLow === 'rejected' || statusLow === 'disapproved') {
-    alert('Form 6 is unavailable for disapproved requests.');
+    if (window.PERSYSModal) {
+      await window.PERSYSModal.alert(
+        'Form 6 is unavailable for disapproved requests.',
+        'Form 6 Unavailable'
+      );
+    } else {
+      alert('Form 6 is unavailable for disapproved requests.');
+    }
     return;
   }
 
@@ -616,7 +623,12 @@ async function openForm6(r, triggerBtn = null) {
 
   } catch (err) {
     console.error('Form 6 generation error:', err);
-    alert(err.message || 'Unable to generate Form 6. Please try again.');
+    const errMsg = err.message || 'Unable to generate Form 6. Please try again.';
+    if (window.PERSYSModal) {
+      await window.PERSYSModal.alert(errMsg, 'Form 6 Unavailable');
+    } else {
+      alert(errMsg);
+    }
   } finally {
     if (triggerBtn) {
       triggerBtn.disabled = false;

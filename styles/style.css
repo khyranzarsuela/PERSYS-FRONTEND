@@ -458,6 +458,12 @@ html, body {
   font-weight: 600;
 }
 
+.login-message.is-success {
+  color: #166534;
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
 .login-message[hidden] {
   display: none;
 }
@@ -809,4 +815,380 @@ html, body {
         right: 24px;
         bottom: 24px;
     }
+}
+
+/* ============================================================
+   FORGOT PASSWORD — 3-Step Modal & Light/Dark Theme Styles
+   ============================================================ */
+
+.fp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(24, 6, 44, 0.65);
+  backdrop-filter: blur(4px);
+}
+
+.fp-modal-overlay[hidden] {
+  display: none !important;
+}
+
+.fp-modal-card {
+  width: 100%;
+  max-width: 460px;
+  background: #ffffff;
+  color: #1a0a2e;
+  border-radius: 18px;
+  border: 1px solid #e5dff5;
+  box-shadow: 0 22px 50px rgba(29, 0, 51, 0.28);
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: fpModalIn 0.18s ease-out;
+}
+
+@keyframes fpModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.fp-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fp-modal-eyebrow {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6B0FBA;
+  margin-bottom: 2px;
+}
+
+.fp-modal-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1a0a2e;
+  margin: 0;
+}
+
+.fp-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid #e5dff5;
+  background: #faf8ff;
+  color: #4b5563;
+  font-size: 1.35rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.fp-modal-close:hover {
+  background: #ede9fe;
+  color: #2D0057;
+}
+
+/* 3-Step Progress Bar */
+.fp-steps-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f7f4fd;
+  border: 1px solid #ebe4f9;
+}
+
+.fp-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.fp-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e5dff5;
+  color: #4b5563;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.fp-step-pill.is-active {
+  color: #2D0057;
+}
+
+.fp-step-pill.is-active .fp-step-num {
+  background: #6B0FBA;
+  color: #ffffff;
+}
+
+.fp-step-pill.is-done {
+  color: #15803d;
+}
+
+.fp-step-pill.is-done .fp-step-num {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.fp-step-line {
+  flex: 1;
+  height: 2px;
+  background: #dfd6f3;
+  min-width: 12px;
+}
+
+/* Modal Alert Box */
+.fp-alert {
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.fp-alert[hidden] {
+  display: none !important;
+}
+
+.fp-alert.is-error {
+  background: #fef3f2;
+  color: #b42318;
+  border: 1px solid #fecdca;
+}
+
+.fp-alert.is-success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.fp-alert.is-info {
+  background: #f5f3ff;
+  color: #4c1d95;
+  border: 1px solid #ddd6fe;
+}
+
+.fp-step-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fp-step-form[hidden] {
+  display: none !important;
+}
+
+.fp-step-desc {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.fp-otp-input {
+  text-align: center;
+  font-size: 1.45rem !important;
+  font-weight: 800;
+  letter-spacing: 0.35em;
+  padding-left: 20px !important;
+}
+
+.fp-resend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+}
+
+.fp-resend-text {
+  color: #6b7280;
+}
+
+.fp-resend-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #6B0FBA;
+  cursor: pointer;
+}
+
+.fp-resend-btn:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.fp-resend-btn:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.fp-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.fp-btn-primary,
+.fp-btn-secondary {
+  padding: 11px 18px;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.fp-btn-primary {
+  border: none;
+  background: #6B0FBA;
+  color: #ffffff;
+}
+
+.fp-btn-primary:hover:not(:disabled) {
+  background: #530994;
+}
+
+.fp-btn-secondary {
+  border: 1.5px solid #d8d0ea;
+  background: #ffffff;
+  color: #374151;
+}
+
+.fp-btn-secondary:hover:not(:disabled) {
+  background: #f5f2fc;
+  border-color: #c4b5fd;
+}
+
+.fp-btn-primary:disabled,
+.fp-btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Dark mode support for Login & Forgot Password modal */
+html[data-theme="dark"] .form-panel {
+  background-color: #17131d;
+  color: #f3e8ff;
+}
+
+html[data-theme="dark"] .brand-name,
+html[data-theme="dark"] .form-title,
+html[data-theme="dark"] .field-label,
+html[data-theme="dark"] .remember-label {
+  color: #f3e8ff;
+}
+
+html[data-theme="dark"] .form-subtitle {
+  color: #c4b5fd;
+}
+
+html[data-theme="dark"] .field-input {
+  background-color: #241e2e;
+  border-color: #483d5b;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .forgot-link {
+  color: #F5C518;
+}
+
+html[data-theme="dark"] .fp-modal-card {
+  background: #221c2b;
+  border-color: #463a58;
+  color: #f3e8ff;
+}
+
+html[data-theme="dark"] .fp-modal-eyebrow {
+  color: #F5C518;
+}
+
+html[data-theme="dark"] .fp-modal-title {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .fp-modal-close {
+  background: #2e263b;
+  border-color: #483d5b;
+  color: #e9d5ff;
+}
+
+html[data-theme="dark"] .fp-steps-bar {
+  background: #1a1522;
+  border-color: #3a304a;
+}
+
+html[data-theme="dark"] .fp-step-pill {
+  color: #a799be;
+}
+
+html[data-theme="dark"] .fp-step-pill.is-active {
+  color: #F5C518;
+}
+
+html[data-theme="dark"] .fp-step-pill.is-active .fp-step-num {
+  background: #F5C518;
+  color: #1a0a2e;
+}
+
+html[data-theme="dark"] .fp-step-desc,
+html[data-theme="dark"] .fp-resend-text {
+  color: #d8c8f0;
+}
+
+html[data-theme="dark"] .fp-resend-btn {
+  color: #F5C518;
+}
+
+html[data-theme="dark"] .fp-btn-secondary {
+  background: #2e263b;
+  border-color: #483d5b;
+  color: #f3e8ff;
+}
+
+@media (max-width: 480px) {
+  .fp-modal-card {
+    padding: 20px 18px;
+  }
+  .fp-step-label {
+    display: none;
+  }
 }

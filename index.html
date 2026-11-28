@@ -95,7 +95,7 @@
               <span class="custom-checkbox" aria-hidden="true"></span>
               Remember me
             </label>
-            <a href="#" class="forgot-link">Forgot Password?</a>
+            <a href="#" class="forgot-link" id="forgotPasswordLink">Forgot Password?</a>
           </div>
 
           <!-- Submit button -->
@@ -161,6 +161,157 @@
     <!-- ── END RIGHT PANEL ──────────────────────────────────── -->
 
   </main>
+
+  <!-- ========================================================
+       FORGOT PASSWORD — 3-Step Modal (OTP via Gmail SMTP)
+  ======================================================== -->
+  <div class="fp-modal-overlay" id="forgotPasswordModalOverlay" role="dialog" aria-modal="true"
+    aria-labelledby="fpModalTitle" hidden>
+    <div class="fp-modal-card">
+
+      <!-- Modal Header -->
+      <div class="fp-modal-header">
+        <div>
+          <span class="fp-modal-eyebrow">Account Recovery</span>
+          <h2 class="fp-modal-title" id="fpModalTitle">Forgot Password</h2>
+        </div>
+        <button type="button" class="fp-modal-close" id="fpModalCloseBtn" aria-label="Close forgot password dialog">
+          &times;
+        </button>
+      </div>
+
+      <!-- 3-Step Indicator -->
+      <div class="fp-steps-bar" aria-label="Password reset progress">
+        <div class="fp-step-pill is-active" id="fpStepIndicator1">
+          <span class="fp-step-num">1</span>
+          <span class="fp-step-label">Account</span>
+        </div>
+        <div class="fp-step-line" aria-hidden="true"></div>
+        <div class="fp-step-pill" id="fpStepIndicator2">
+          <span class="fp-step-num">2</span>
+          <span class="fp-step-label">Verify OTP</span>
+        </div>
+        <div class="fp-step-line" aria-hidden="true"></div>
+        <div class="fp-step-pill" id="fpStepIndicator3">
+          <span class="fp-step-num">3</span>
+          <span class="fp-step-label">New Password</span>
+        </div>
+      </div>
+
+      <!-- Modal Feedback Alert -->
+      <div id="fpModalFeedback" class="fp-alert" role="alert" aria-live="polite" hidden></div>
+
+      <!-- STEP 1: Enter Email or Username -->
+      <form id="fpStep1Form" class="fp-step-form" novalidate>
+        <p class="fp-step-desc">
+          Enter your registered DepEd email address or username. We will send a 6-digit verification code to your email.
+        </p>
+
+        <div class="field-group" id="fpIdentifierGroup">
+          <label class="field-label" for="fpIdentifierInput">Email or Username</label>
+          <input type="text" class="field-input" id="fpIdentifierInput" name="identifier"
+            placeholder="e.g. juan.delacruz@deped.gov.ph or username" autocomplete="username" required />
+          <span class="field-error" id="fpIdentifierError" role="alert"></span>
+        </div>
+
+        <div class="fp-modal-footer">
+          <button type="button" class="fp-btn-secondary" id="fpCancelStep1Btn">Cancel</button>
+          <button type="submit" class="fp-btn-primary" id="fpStep1SubmitBtn">Send Verification Code</button>
+        </div>
+      </form>
+
+      <!-- STEP 2: Enter 6-Digit OTP -->
+      <form id="fpStep2Form" class="fp-step-form" novalidate hidden>
+        <p class="fp-step-desc">
+          Enter the 6-digit verification code sent to your email. The code is valid for <strong>10 minutes</strong>.
+        </p>
+
+        <div class="field-group" id="fpOtpGroup">
+          <label class="field-label" for="fpOtpInput">6-Digit Verification Code</label>
+          <input type="text" class="field-input fp-otp-input" id="fpOtpInput" name="otp"
+            placeholder="000000" maxlength="6" inputmode="numeric" pattern="[0-9]{6}"
+            autocomplete="one-time-code" required />
+          <span class="field-error" id="fpOtpError" role="alert"></span>
+        </div>
+
+        <div class="fp-resend-row">
+          <span class="fp-resend-text">Didn't receive the code?</span>
+          <button type="button" class="fp-resend-btn" id="fpResendOtpBtn" disabled>
+            Resend in 60s
+          </button>
+        </div>
+
+        <div class="fp-modal-footer">
+          <button type="button" class="fp-btn-secondary" id="fpBackToStep1Btn">Back</button>
+          <button type="submit" class="fp-btn-primary" id="fpStep2SubmitBtn">Verify Code</button>
+        </div>
+      </form>
+
+      <!-- STEP 3: Enter New Password & Confirm Password -->
+      <form id="fpStep3Form" class="fp-step-form" novalidate hidden>
+        <p class="fp-step-desc">
+          Create a new password for your account. Your password must be at least <strong>8 characters</strong> long.
+        </p>
+
+        <div class="field-group" id="fpNewPasswordGroup">
+          <label class="field-label" for="fpNewPasswordInput">New Password</label>
+          <div class="password-wrapper">
+            <input type="password" class="field-input" id="fpNewPasswordInput" name="new_password"
+              placeholder="At least 8 characters" autocomplete="new-password" required />
+            <button type="button" class="toggle-password fp-toggle-pw" data-target="fpNewPasswordInput"
+              aria-label="Toggle new password visibility" aria-pressed="false">
+              <svg class="eye-icon eye-off" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20C7 20 2.73 16.11 1 12c.75-1.8 1.98-3.37 3.52-4.56M9.9 4.24A9.12 9.12 0 0 1 12 4c5 0 9.27 3.89 11 8a10.15 10.15 0 0 1-1.67 2.67"
+                  stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M1 1l22 22" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" />
+                <path d="M10.73 10.73A3 3 0 0 0 14.83 14.83" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <svg class="eye-icon eye-on" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M1 12C2.73 7.89 7 4 12 4s9.27 3.89 11 8c-1.73 4.11-6 8-11 8S2.73 16.11 1 12Z"
+                  stroke="#6A0DAD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="12" cy="12" r="3" stroke="#6A0DAD" stroke-width="2" />
+              </svg>
+            </button>
+          </div>
+          <span class="field-error" id="fpNewPasswordError" role="alert"></span>
+        </div>
+
+        <div class="field-group" id="fpConfirmPasswordGroup">
+          <label class="field-label" for="fpConfirmPasswordInput">Confirm New Password</label>
+          <div class="password-wrapper">
+            <input type="password" class="field-input" id="fpConfirmPasswordInput" name="confirm_password"
+              placeholder="Re-enter new password" autocomplete="new-password" required />
+            <button type="button" class="toggle-password fp-toggle-pw" data-target="fpConfirmPasswordInput"
+              aria-label="Toggle confirm password visibility" aria-pressed="false">
+              <svg class="eye-icon eye-off" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20C7 20 2.73 16.11 1 12c.75-1.8 1.98-3.37 3.52-4.56M9.9 4.24A9.12 9.12 0 0 1 12 4c5 0 9.27 3.89 11 8a10.15 10.15 0 0 1-1.67 2.67"
+                  stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M1 1l22 22" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" />
+                <path d="M10.73 10.73A3 3 0 0 0 14.83 14.83" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <svg class="eye-icon eye-on" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M1 12C2.73 7.89 7 4 12 4s9.27 3.89 11 8c-1.73 4.11-6 8-11 8S2.73 16.11 1 12Z"
+                  stroke="#6A0DAD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="12" cy="12" r="3" stroke="#6A0DAD" stroke-width="2" />
+              </svg>
+            </button>
+          </div>
+          <span class="field-error" id="fpConfirmPasswordError" role="alert"></span>
+        </div>
+
+        <div class="fp-modal-footer">
+          <button type="button" class="fp-btn-secondary" id="fpCancelStep3Btn">Cancel</button>
+          <button type="submit" class="fp-btn-primary" id="fpStep3SubmitBtn">Reset Password</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
   <script src="scripts/apiConfig.js"></script>
   <script src="scripts/index.js"></script>
 </body>

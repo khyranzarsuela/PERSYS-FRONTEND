@@ -996,6 +996,29 @@
           </div>
         </div>
 
+        <!-- Notification & Confirmation Modal -->
+        <div
+          class="modal-overlay"
+          id="persysNotifyModal"
+          style="display:none; z-index:200;"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="persysNotifyModalTitle"
+        >
+          <div class="modal-box">
+            <div class="modal-header">
+              <h2 id="persysNotifyModalTitle">Notice</h2>
+            </div>
+            <div class="modal-body">
+              <p id="persysNotifyModalMessage"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="persysNotifyCancelBtn" class="btn-secondary" style="display:none;">Cancel</button>
+              <button type="button" id="persysNotifyConfirmBtn" class="btn-yellow">OK</button>
+            </div>
+          </div>
+        </div>
+
       </main>
     </div>
   </div>

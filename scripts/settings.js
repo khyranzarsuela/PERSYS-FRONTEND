@@ -305,6 +305,11 @@
         var initial = encodeURIComponent(username.charAt(0).toUpperCase());
         avatarEl.src = 'https://placehold.co/72x72/6B0FBA/FFFFFF?text=' + initial;
       }
+
+      var secCurrentUserEl = document.getElementById('securityCurrentUsername');
+      if (secCurrentUserEl && username) {
+        secCurrentUserEl.textContent = username;
+      }
     }).catch(function () {
       // Ignore session display errors; guard handles redirects
     });
@@ -314,12 +319,232 @@
     document.addEventListener('DOMContentLoaded', function () {
       syncSettingsPageControls();
       populateSettingsSidebarProfile();
+      initAccountSecuritySection();
       initAdminSystemJobsAndScheduler();
     });
   } else {
     syncSettingsPageControls();
     populateSettingsSidebarProfile();
+    initAccountSecuritySection();
     initAdminSystemJobsAndScheduler();
+  }
+
+  /* =====================================================================
+     ACCOUNT SECURITY (CHANGE USERNAME & CHANGE PASSWORD — ALL ROLES)
+     ===================================================================== */
+
+  function initAccountSecuritySection() {
+    var section = document.getElementById('accountSecuritySection');
+    if (!section || !window.PERSYS_CONFIG) return;
+
+    // Wire Show / Hide password buttons inside Account Security
+    section.querySelectorAll('.security-pw-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var targetId = this.getAttribute('data-target');
+        var input = targetId ? document.getElementById(targetId) : null;
+        if (!input) return;
+        var isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        this.textContent = isHidden ? 'Hide' : 'Show';
+        this.setAttribute('aria-pressed', String(isHidden));
+        input.focus();
+      });
+    });
+
+    function showSecurityFeedback(el, message, isError) {
+      if (!el) return;
+      if (!message) {
+        el.hidden = true;
+        el.textContent = '';
+        el.className = 'security-feedback';
+        return;
+      }
+      el.hidden = false;
+      el.textContent = message;
+      el.className = 'security-feedback ' + (isError ? 'is-error' : 'is-success');
+    }
+
+    // 1. Change Username Form
+    var usernameForm = document.getElementById('changeUsernameForm');
+    var newUsernameInput = document.getElementById('secNewUsername');
+    var usernamePwInput = document.getElementById('secUsernameCurrentPassword');
+    var usernameFeedback = document.getElementById('changeUsernameFeedback');
+    var usernameSubmitBtn = document.getElementById('btnSubmitChangeUsername');
+
+    if (usernameForm) {
+      usernameForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        showSecurityFeedback(usernameFeedback, '', false);
+
+        var newUsername = (newUsernameInput ? newUsernameInput.value : '').trim();
+        var currentPassword = usernamePwInput ? usernamePwInput.value : '';
+
+        if (!newUsername) {
+          showSecurityFeedback(usernameFeedback, 'Please enter a new username.', true);
+          if (newUsernameInput) newUsernameInput.focus();
+          return;
+        }
+        if (newUsername.length < 3 || newUsername.length > 50) {
+          showSecurityFeedback(usernameFeedback, 'New username must be between 3 and 50 characters.', true);
+          if (newUsernameInput) newUsernameInput.focus();
+          return;
+        }
+        if (!currentPassword) {
+          showSecurityFeedback(usernameFeedback, 'Please enter your current password to confirm.', true);
+          if (usernamePwInput) usernamePwInput.focus();
+          return;
+        }
+
+        if (usernameSubmitBtn) {
+          usernameSubmitBtn.disabled = true;
+          usernameSubmitBtn.textContent = 'Updating...';
+        }
+
+        fetch(window.PERSYS_CONFIG.API_BASE_URL + '/api/auth/changeUsername.php', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            new_username: newUsername,
+            current_password: currentPassword
+          })
+        })
+          .then(function (res) {
+            return res.json().catch(function () { return null; }).then(function (data) {
+              return { ok: res.ok, data: data };
+            });
+          })
+          .then(function (payload) {
+            var result = payload.data;
+            if (!payload.ok || !result || !result.success) {
+              var errMsg = (result && result.message) || 'Unable to update username.';
+              showSecurityFeedback(usernameFeedback, errMsg, true);
+              return;
+            }
+
+            var updatedUsername = (result.data && result.data.username) || newUsername;
+            var currentBadgeEl = document.getElementById('securityCurrentUsername');
+            if (currentBadgeEl) currentBadgeEl.textContent = updatedUsername;
+
+            var sidebarNameEl = document.querySelector('#sidebar .sidebar-name');
+            if (sidebarNameEl) sidebarNameEl.textContent = updatedUsername;
+
+            var sidebarAvatarEl = document.querySelector('#sidebar .sidebar-avatar');
+            if (sidebarAvatarEl && updatedUsername) {
+              var initial = encodeURIComponent(updatedUsername.charAt(0).toUpperCase());
+              sidebarAvatarEl.src = 'https://placehold.co/72x72/6B0FBA/FFFFFF?text=' + initial;
+            }
+
+            usernameForm.reset();
+            showSecurityFeedback(usernameFeedback, result.message || 'Username updated successfully.', false);
+            showSavedToast('Username updated');
+          })
+          .catch(function () {
+            showSecurityFeedback(usernameFeedback, 'Unable to contact the server. Please try again.', true);
+          })
+          .finally(function () {
+            if (usernameSubmitBtn) {
+              usernameSubmitBtn.disabled = false;
+              usernameSubmitBtn.textContent = 'Update Username';
+            }
+          });
+      });
+    }
+
+    // 2. Change Password Form
+    var passwordForm = document.getElementById('changePasswordForm');
+    var currentPwInput = document.getElementById('secCurrentPassword');
+    var newPwInput = document.getElementById('secNewPassword');
+    var confirmPwInput = document.getElementById('secConfirmPassword');
+    var passwordFeedback = document.getElementById('changePasswordFeedback');
+    var passwordSubmitBtn = document.getElementById('btnSubmitChangePassword');
+
+    if (passwordForm) {
+      passwordForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        showSecurityFeedback(passwordFeedback, '', false);
+
+        var currentPassword = currentPwInput ? currentPwInput.value : '';
+        var newPassword = newPwInput ? newPwInput.value : '';
+        var confirmPassword = confirmPwInput ? confirmPwInput.value : '';
+
+        if (!currentPassword) {
+          showSecurityFeedback(passwordFeedback, 'Please enter your current password.', true);
+          if (currentPwInput) currentPwInput.focus();
+          return;
+        }
+        if (newPassword.length < 8) {
+          showSecurityFeedback(passwordFeedback, 'New password must be at least 8 characters long.', true);
+          if (newPwInput) newPwInput.focus();
+          return;
+        }
+        if (newPassword !== confirmPassword) {
+          showSecurityFeedback(passwordFeedback, 'New password and confirmation password do not match.', true);
+          if (confirmPwInput) confirmPwInput.focus();
+          return;
+        }
+        if (newPassword === currentPassword) {
+          showSecurityFeedback(passwordFeedback, 'New password must be different from your current password.', true);
+          if (newPwInput) newPwInput.focus();
+          return;
+        }
+
+        if (passwordSubmitBtn) {
+          passwordSubmitBtn.disabled = true;
+          passwordSubmitBtn.textContent = 'Updating...';
+        }
+
+        fetch(window.PERSYS_CONFIG.API_BASE_URL + '/api/auth/changePassword.php', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            current_password: currentPassword,
+            new_password: newPassword,
+            confirm_password: confirmPassword
+          })
+        })
+          .then(function (res) {
+            return res.json().catch(function () { return null; }).then(function (data) {
+              return { ok: res.ok, data: data };
+            });
+          })
+          .then(function (payload) {
+            var result = payload.data;
+            if (!payload.ok || !result || !result.success) {
+              var errMsg = (result && result.message) || 'Unable to update password.';
+              showSecurityFeedback(passwordFeedback, errMsg, true);
+              return;
+            }
+
+            passwordForm.reset();
+            showSecurityFeedback(
+              passwordFeedback,
+              result.message || 'Password updated. Please log in again.',
+              false
+            );
+
+            setTimeout(function () {
+              window.location.replace('../../index.html?password_updated=1');
+            }, 600);
+          })
+          .catch(function () {
+            showSecurityFeedback(passwordFeedback, 'Unable to contact the server. Please try again.', true);
+          })
+          .finally(function () {
+            if (passwordSubmitBtn) {
+              passwordSubmitBtn.disabled = false;
+              passwordSubmitBtn.textContent = 'Update Password';
+            }
+          });
+      });
+    }
   }
 
   /* =====================================================================

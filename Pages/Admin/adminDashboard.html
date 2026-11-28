@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -146,7 +147,7 @@
       box-shadow: 0 4px 14px rgba(107, 15, 186, 0.07);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      /* justify-content: space-between; */
       min-height: 220px;
       box-sizing: border-box;
     }
@@ -155,6 +156,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      min-height: 58px;
     }
 
     .stat-card-circle-icon {
@@ -188,9 +190,9 @@
     }
 
     .stat-card-box-number {
-      margin: 18px 0 6px;
+      margin: 32px 0 6px;
       text-align: center;
-      font-size: 3.1rem;
+      font-size: 3.5rem;
       font-weight: 800;
       color: #111827;
       line-height: 1;
@@ -233,10 +235,12 @@
       width: 6px;
       height: 6px;
     }
+
     .pending-leave-table-wrap::-webkit-scrollbar-track {
       background: rgba(107, 15, 186, 0.05);
       border-radius: 3px;
     }
+
     .pending-leave-table-wrap::-webkit-scrollbar-thumb {
       background: rgba(107, 15, 186, 0.28);
       border-radius: 3px;
@@ -338,7 +342,10 @@
       justify-content: center;
       padding: 20px;
     }
-    .tx-modal-overlay.is-open { display: flex; }
+
+    .tx-modal-overlay.is-open {
+      display: flex;
+    }
 
     .tx-modal {
       background: #fff;
@@ -364,7 +371,11 @@
       padding: 4px 6px;
       border-radius: 4px;
     }
-    .tx-modal-close:hover { background: #f0f0f0; color: #333; }
+
+    .tx-modal-close:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
 
     .tx-modal-title {
       font-size: 1.25rem;
@@ -379,13 +390,17 @@
       margin-bottom: 6px;
       font-size: 0.875rem;
     }
+
     .tx-detail-label {
       font-weight: 700;
       color: #111;
       min-width: 160px;
       flex-shrink: 0;
     }
-    .tx-detail-value { color: #555; }
+
+    .tx-detail-value {
+      color: #555;
+    }
 
     .tx-section-heading {
       font-size: 1rem;
@@ -393,6 +408,7 @@
       color: #111;
       margin: 20px 0 10px;
     }
+
     .tx-divider {
       height: 1px;
       background: #eee;
@@ -408,7 +424,10 @@
       margin-right: 6px;
       vertical-align: middle;
     }
-    .tx-status-text { vertical-align: middle; }
+
+    .tx-status-text {
+      vertical-align: middle;
+    }
 
     .tx-btn-download {
       display: inline-flex;
@@ -424,7 +443,11 @@
       cursor: pointer;
       margin-bottom: 10px;
     }
-    .tx-btn-download:hover { background: #15703C; }
+
+    .tx-btn-download:hover {
+      background: #15703C;
+    }
+
     .tx-btn-download svg {
       width: 15px;
       height: 15px;
@@ -476,6 +499,7 @@
       font-weight: 600;
       cursor: pointer;
     }
+
     .tx-modal-close-btn:hover {
       background: #f3eeff;
       border-color: #6B0FBA;
@@ -885,6 +909,7 @@
       gap: 20px;
       width: 100%;
     }
+
     .principal-dashboard-view[hidden] {
       display: none !important;
     }
@@ -1004,7 +1029,7 @@
       padding: 6px 14px;
     }
 
-    .p-dash-sc-item + .p-dash-sc-item {
+    .p-dash-sc-item+.p-dash-sc-item {
       border-left: 1.5px solid #e4dcf5;
     }
 
@@ -1097,9 +1122,17 @@
       height: 5px;
     }
 
-    .p-dash-leave-stat-card.stat-pending::after { background: #F59E0B; }
-    .p-dash-leave-stat-card.stat-approved::after { background: #16A34A; }
-    .p-dash-leave-stat-card.stat-disapproved::after { background: #EF4444; }
+    .p-dash-leave-stat-card.stat-pending::after {
+      background: #F59E0B;
+    }
+
+    .p-dash-leave-stat-card.stat-approved::after {
+      background: #16A34A;
+    }
+
+    .p-dash-leave-stat-card.stat-disapproved::after {
+      background: #EF4444;
+    }
 
     .p-dash-stat-top {
       display: flex;
@@ -1134,9 +1167,20 @@
       stroke-width: 2;
     }
 
-    .stat-pending .p-dash-stat-icon { background: #FEF3C7; color: #D97706; }
-    .stat-approved .p-dash-stat-icon { background: #DCFCE7; color: #16A34A; }
-    .stat-disapproved .p-dash-stat-icon { background: #FEE2E2; color: #DC2626; }
+    .stat-pending .p-dash-stat-icon {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+
+    .stat-approved .p-dash-stat-icon {
+      background: #DCFCE7;
+      color: #16A34A;
+    }
+
+    .stat-disapproved .p-dash-stat-icon {
+      background: #FEE2E2;
+      color: #DC2626;
+    }
 
     .p-dash-stat-num {
       font-size: 2.6rem;
@@ -1242,18 +1286,21 @@
       .p-dash-bottom-row {
         grid-template-columns: 1fr 1fr;
       }
+
       .p-dash-quick-card {
         grid-column: 1 / -1;
       }
     }
 
     @media (max-width: 768px) {
+
       .p-dash-sc-inner,
       .p-dash-bottom-row,
       .p-dash-quick-grid {
         grid-template-columns: 1fr;
       }
-      .p-dash-sc-item + .p-dash-sc-item {
+
+      .p-dash-sc-item+.p-dash-sc-item {
         border-left: none;
         border-top: 1px solid #e4dcf5;
         padding-top: 12px;
@@ -1264,6 +1311,7 @@
        RESPONSIVE
        ========================================================= */
     @media (max-width: 1200px) {
+
       .dashboard-top-row,
       .dashboard-bottom-row {
         grid-template-columns: 1fr;
@@ -1274,9 +1322,11 @@
       .page-content.admin-dashboard-page {
         padding: 18px 16px;
       }
+
       .stat-cards-grid {
         grid-template-columns: 1fr;
       }
+
       .topbar-datetime {
         display: none;
       }
@@ -1451,23 +1501,29 @@
     html[data-theme="dark"] .my-edit-reqs-section {
       border-top-color: #484052;
     }
+
     html[data-theme="dark"] .my-edit-reqs-heading {
       color: #ffffff;
     }
+
     html[data-theme="dark"] .my-edit-req-card {
       background: #26212e;
       border-color: #3a314a;
     }
+
     html[data-theme="dark"] .my-edit-req-id-cat {
       color: #F5C518;
     }
+
     html[data-theme="dark"] .my-edit-req-msg {
       color: #f3f0fa;
     }
+
     html[data-theme="dark"] .my-edit-req-note {
       background: #352b47;
       color: #e9d5ff;
     }
+
     html[data-theme="dark"] .my-edit-req-date {
       color: #d0c9db;
     }
@@ -1477,6 +1533,7 @@
   <script src="../../scripts/adminGuard.js"></script>
   <link rel="stylesheet" href="../../styles/switchAccount.css" />
 </head>
+
 <body>
 
   <!-- Mobile sidebar overlay (click to close) -->
@@ -1488,12 +1545,8 @@
     <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
 
       <!-- Admin profile block -->
-      <img
-        class="sidebar-avatar"
-        src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A"
-        alt="Admin profile photo"
-      />
-      
+      <img class="sidebar-avatar" src="https://placehold.co/72x72/6B0FBA/FFFFFF?text=A" alt="Admin profile photo" />
+
       <p class="sidebar-name" id="adminUsername">Loading...</p>
       <p class="sidebar-role" id="adminRole">Loading...</p>
 
@@ -1505,17 +1558,13 @@
 
           <!-- My Dashboard (active by default) -->
           <li>
-            <a
-              href="adminDashboard.html"
-              class="nav-item active"
-              aria-current="page"
-            >
+            <a href="adminDashboard.html" class="nav-item active" aria-current="page">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <rect x="3" y="3" width="7" height="7" rx="1"/>
-                  <rect x="14" y="3" width="7" height="7" rx="1"/>
-                  <rect x="3" y="14" width="7" height="7" rx="1"/>
-                  <rect x="14" y="14" width="7" height="7" rx="1"/>
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
               </span>
               My Dashboard
@@ -1527,8 +1576,8 @@
             <a href="adminProfile.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="8" r="4"/>
-                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                 </svg>
               </span>
               Profile
@@ -1540,10 +1589,10 @@
             <a href="adminEmployees.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="9" cy="8" r="3.5"/>
-                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
-                  <circle cx="17" cy="8" r="2.5"/>
-                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
+                  <circle cx="9" cy="8" r="3.5" />
+                  <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6" />
+                  <circle cx="17" cy="8" r="2.5" />
+                  <path d="M20 20c0-2.5-1.9-4.5-4.5-5" />
                 </svg>
               </span>
               Personnel
@@ -1555,8 +1604,8 @@
             <a href="adminServiceCredits.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="9" r="5"/>
-                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
+                  <circle cx="12" cy="9" r="5" />
+                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5" />
                 </svg>
               </span>
               Service Credits
@@ -1568,10 +1617,10 @@
             <a href="adminTransactions.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <rect x="4" y="2" width="16" height="20" rx="2"/>
-                  <line x1="8" y1="7" x2="16" y2="7"/>
-                  <line x1="8" y1="11" x2="16" y2="11"/>
-                  <line x1="8" y1="15" x2="12" y2="15"/>
+                  <rect x="4" y="2" width="16" height="20" rx="2" />
+                  <line x1="8" y1="7" x2="16" y2="7" />
+                  <line x1="8" y1="11" x2="16" y2="11" />
+                  <line x1="8" y1="15" x2="12" y2="15" />
                 </svg>
               </span>
               Leave Request
@@ -1583,9 +1632,9 @@
             <a href="adminHistory.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
-                  <polyline points="3 3 3 8 8 8"/>
-                  <polyline points="12 7 12 12 15 15"/>
+                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+                  <polyline points="3 3 3 8 8 8" />
+                  <polyline points="12 7 12 12 15 15" />
                 </svg>
               </span>
               History
@@ -1597,11 +1646,11 @@
             <a href="adminReports.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <line x1="8" y1="17" x2="8" y2="13"/>
-                  <line x1="12" y1="17" x2="12" y2="11"/>
-                  <line x1="16" y1="17" x2="16" y2="15"/>
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="8" y1="17" x2="8" y2="13" />
+                  <line x1="12" y1="17" x2="12" y2="11" />
+                  <line x1="16" y1="17" x2="16" y2="15" />
                 </svg>
               </span>
               Reports
@@ -1613,7 +1662,7 @@
             <a href="adminSettings.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="3"/>
+                  <circle cx="12" cy="12" r="3" />
                   <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83
                            2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
                            1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09
@@ -1628,7 +1677,7 @@
                            1.65 1.65 0 0 0 1.82-.33l.06-.06
                            a2 2 0 0 1 2.83 2.83l-.06.06
                            A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1
-                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                           H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
                 </svg>
               </span>
               Settings
@@ -1642,9 +1691,9 @@
       <div class="sidebar-logout-container">
         <button type="button" class="btn-logout sidebar-logout">
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
           </svg>
           <span>Logout</span>
         </button>
@@ -1672,14 +1721,8 @@
         </div>
 
         <!-- Mobile hamburger -->
-        <button
-          class="hamburger"
-          id="hamburger"
-          type="button"
-          aria-controls="sidebar"
-          aria-expanded="false"
-          aria-label="Toggle navigation menu"
-        >
+        <button class="hamburger" id="hamburger" type="button" aria-controls="sidebar" aria-expanded="false"
+          aria-label="Toggle navigation menu">
           <span></span>
           <span></span>
           <span></span>
@@ -1702,9 +1745,9 @@
               <div class="stat-card-box-header">
                 <div class="stat-card-circle-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
-                    <circle cx="10" cy="7" r="4"/>
-                    <path d="M3.5 21a7 7 0 0 1 13 0"/>
-                    <path d="M16 11l2 2 4-4" stroke-width="2"/>
+                    <circle cx="10" cy="7" r="4" />
+                    <path d="M3.5 21a7 7 0 0 1 13 0" />
+                    <path d="M16 11l2 2 4-4" stroke-width="2" />
                   </svg>
                 </div>
                 <h2 class="stat-card-box-label">Active Teaching Personnel</h2>
@@ -1717,10 +1760,10 @@
               <div class="stat-card-box-header">
                 <div class="stat-card-circle-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
-                    <circle cx="10" cy="7" r="4"/>
-                    <path d="M3.5 21a7 7 0 0 1 13 0"/>
-                    <circle cx="19" cy="14" r="2"/>
-                    <path d="M19 10v1M19 17v1M15.5 12.3l.7.7M22.5 14.7l-.7.7M15.5 16.7l.7-.7M22.5 12.3l-.7.7"/>
+                    <circle cx="10" cy="7" r="4" />
+                    <path d="M3.5 21a7 7 0 0 1 13 0" />
+                    <circle cx="19" cy="14" r="2" />
+                    <path d="M19 10v1M19 17v1M15.5 12.3l.7.7M22.5 14.7l-.7.7M15.5 16.7l.7-.7M22.5 12.3l-.7.7" />
                   </svg>
                 </div>
                 <h2 class="stat-card-box-label">Active Non-Teaching Personnel</h2>
@@ -1733,10 +1776,10 @@
               <div class="stat-card-box-header">
                 <div class="stat-card-circle-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="8" y1="13" x2="16" y2="13"/>
-                    <line x1="8" y1="17" x2="12" y2="17"/>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="8" y1="13" x2="16" y2="13" />
+                    <line x1="8" y1="17" x2="12" y2="17" />
                   </svg>
                 </div>
                 <h2 class="stat-card-box-label">Pending Leave Request</h2>
@@ -1781,22 +1824,15 @@
             <div class="recent-edit-header">
               <div class="recent-edit-title-group">
                 <h2 class="recent-edit-title" id="recentEditRequestTitle">Recent Edit Request</h2>
-                <span class="recent-edit-badge is-zero" id="editReqPendingBadge" title="Pending profile edit requests">0 Pending</span>
+                <span class="recent-edit-badge is-zero" id="editReqPendingBadge" title="Pending profile edit requests">0
+                  Pending</span>
               </div>
 
               <div class="recent-edit-toolbar">
-                <input
-                  type="search"
-                  class="recent-edit-search"
-                  id="editReqSearchInput"
-                  placeholder="Search name or ID..."
-                  aria-label="Search profile edit requests"
-                />
-                <select
-                  class="recent-edit-filter-select"
-                  id="editReqStatusFilter"
-                  aria-label="Filter edit requests by status"
-                >
+                <input type="search" class="recent-edit-search" id="editReqSearchInput"
+                  placeholder="Search name or ID..." aria-label="Search profile edit requests" />
+                <select class="recent-edit-filter-select" id="editReqStatusFilter"
+                  aria-label="Filter edit requests by status">
                   <option value="ALL">All Status</option>
                   <option value="PENDING">Pending</option>
                   <option value="RESOLVED">Resolved</option>
@@ -1810,7 +1846,8 @@
             </div>
           </section>
 
-          <section class="persys-global-calendar-card persys-calendar-large" id="calendarHolidaysCard" aria-label="Global school schedule calendar"></section>
+          <section class="persys-global-calendar-card persys-calendar-large" id="calendarHolidaysCard"
+            aria-label="Global school schedule calendar"></section>
         </div>
 
         <!-- ══════════════════════════════════════════════════════
@@ -1822,7 +1859,8 @@
           <!-- Welcome Banner -->
           <section class="p-dash-welcome-banner" aria-label="Welcome banner">
             <div class="p-dash-welcome-left">
-              <svg class="p-dash-welcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg class="p-dash-welcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="9" cy="8" r="4" />
                 <path d="M2 20c0-3.5 3.2-6.5 7-6.5s7 3 7 6.5" />
                 <circle cx="17" cy="9" r="2.8" />
@@ -1880,7 +1918,8 @@
               <div class="p-dash-sc-item">
                 <div class="p-dash-sc-icon icon-wellness" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    <path
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                   </svg>
                 </div>
                 <div class="p-dash-sc-meta">
@@ -2024,43 +2063,39 @@
           </div>
 
           <!-- Large Full-Screen Global Read-Only Calendar at Bottom on Scroll -->
-          <section
-            class="persys-global-calendar-card persys-calendar-large"
-            id="principalGlobalCalendarCard"
-            aria-label="Global school schedule calendar"
-          ></section>
+          <section class="persys-global-calendar-card persys-calendar-large" id="principalGlobalCalendarCard"
+            aria-label="Global school schedule calendar"></section>
 
         </div>
 
         <!-- Principal Request Edit Profile Modal -->
-        <div class="tx-modal-overlay" id="principalReqEditModalOverlay" role="dialog" aria-modal="true" aria-labelledby="principalReqEditModalTitle" tabindex="-1">
+        <div class="tx-modal-overlay" id="principalReqEditModalOverlay" role="dialog" aria-modal="true"
+          aria-labelledby="principalReqEditModalTitle" tabindex="-1">
           <div class="tx-modal" id="principalReqEditModal" tabindex="-1">
-            <button type="button" class="tx-modal-close" id="principalReqEditCloseBtn" aria-label="Close">&#10005;</button>
+            <button type="button" class="tx-modal-close" id="principalReqEditCloseBtn"
+              aria-label="Close">&#10005;</button>
             <h2 class="tx-modal-title" id="principalReqEditModalTitle">Request Edit Profile</h2>
             <p style="font-size:0.84rem;color:#6b7280;margin:0 0 14px;">
               Select the section you need updated and describe the exact changes for the administrator.
             </p>
             <form id="principalReqEditForm">
-              <label for="principalReqEditCategory" style="display:block;font-size:0.82rem;font-weight:700;color:#1f2937;margin-bottom:6px;">
+              <label for="principalReqEditCategory"
+                style="display:block;font-size:0.82rem;font-weight:700;color:#1f2937;margin-bottom:6px;">
                 Section to Edit
               </label>
-              <select id="principalReqEditCategory" class="recent-edit-filter-select" style="width:100%;padding:9px 12px;margin-bottom:14px;">
+              <select id="principalReqEditCategory" class="recent-edit-filter-select"
+                style="width:100%;padding:9px 12px;margin-bottom:14px;">
                 <option value="Personal Information">Personal Information</option>
                 <option value="Employee Information">Employee Information</option>
                 <option value="Both">Both (Personal &amp; Employee Information)</option>
               </select>
 
-              <label for="principalReqEditMessage" style="display:block;font-size:0.82rem;font-weight:700;color:#1f2937;margin-bottom:6px;">
+              <label for="principalReqEditMessage"
+                style="display:block;font-size:0.82rem;font-weight:700;color:#1f2937;margin-bottom:6px;">
                 Requested Changes / Message
               </label>
-              <textarea
-                id="principalReqEditMessage"
-                class="edit-req-note-textarea"
-                minlength="5"
-                maxlength="1000"
-                required
-                placeholder="Describe the exact fields to change and the updated values..."
-              ></textarea>
+              <textarea id="principalReqEditMessage" class="edit-req-note-textarea" minlength="5" maxlength="1000"
+                required placeholder="Describe the exact fields to change and the updated values..."></textarea>
 
               <div class="edit-req-feedback" id="principalReqEditFeedback" role="alert"></div>
 
@@ -2091,14 +2126,8 @@
   <!-- ══════════════════════════════════════════════════════
        READ-ONLY REQUEST DETAILS MODAL
   ══════════════════════════════════════════════════════ -->
-  <div
-    class="tx-modal-overlay"
-    id="dashRequestModalOverlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="dashRequestModalTitle"
-    tabindex="-1"
-  >
+  <div class="tx-modal-overlay" id="dashRequestModalOverlay" role="dialog" aria-modal="true"
+    aria-labelledby="dashRequestModalTitle" tabindex="-1">
     <div class="tx-modal" id="dashRequestModal" tabindex="-1">
       <input type="hidden" id="dashModalRequestId" value="" />
 
@@ -2157,12 +2186,9 @@
       </div>
 
       <!-- Leave Overlap Warning Notice (Admin Review) -->
-      <div
-        id="dashOverlapWarningBanner"
+      <div id="dashOverlapWarningBanner"
         style="display:none;margin:10px 0 14px;padding:10px 14px;border-radius:8px;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;font-size:0.81rem;line-height:1.45;"
-        role="status"
-        aria-live="polite"
-      ></div>
+        role="status" aria-live="polite"></div>
 
       <h3 class="tx-section-heading">Service Credit Information</h3>
       <div class="tx-detail-row">
@@ -2173,10 +2199,10 @@
       <h3 class="tx-section-heading">Submitted Document</h3>
       <button type="button" class="tx-btn-download" id="dashModalForm6">
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <line x1="8" y1="13" x2="16" y2="13"/>
-          <line x1="8" y1="17" x2="12" y2="17"/>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="8" y1="13" x2="16" y2="13" />
+          <line x1="8" y1="17" x2="12" y2="17" />
         </svg>
         Generate / Print Form 6
       </button>
@@ -2198,14 +2224,8 @@
   <!-- ══════════════════════════════════════════════════════
        ADMIN PROFILE EDIT REQUEST REVIEW MODAL
   ══════════════════════════════════════════════════════ -->
-  <div
-    class="tx-modal-overlay"
-    id="adminEditReqModalOverlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="adminEditReqModalTitle"
-    tabindex="-1"
-  >
+  <div class="tx-modal-overlay" id="adminEditReqModalOverlay" role="dialog" aria-modal="true"
+    aria-labelledby="adminEditReqModalTitle" tabindex="-1">
     <div class="tx-modal" id="adminEditReqModal" tabindex="-1">
       <input type="hidden" id="adminEditReqId" value="" />
 
@@ -2245,20 +2265,16 @@
 
       <a href="adminEmployees.html" class="edit-req-jump-link" id="adminEditReqJumpLink">
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-          <polyline points="15 3 21 3 21 9"/>
-          <line x1="10" y1="14" x2="21" y2="3"/>
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+          <polyline points="15 3 21 3 21 9" />
+          <line x1="10" y1="14" x2="21" y2="3" />
         </svg>
         Open Employees Page to Edit Record
       </a>
 
       <h3 class="tx-section-heading" style="margin-top: 4px;">Admin Note (Optional)</h3>
-      <textarea
-        class="edit-req-note-textarea"
-        id="adminEditReqNoteInput"
-        maxlength="500"
-        placeholder="Add an optional note for the employee (e.g., Updated your contact number and civil status as requested)..."
-      ></textarea>
+      <textarea class="edit-req-note-textarea" id="adminEditReqNoteInput" maxlength="500"
+        placeholder="Add an optional note for the employee (e.g., Updated your contact number and civil status as requested)..."></textarea>
 
       <div class="edit-req-feedback" id="adminEditReqFeedback" role="alert"></div>
 
@@ -2280,14 +2296,8 @@
   </div>
 
   <!-- Global Logout Confirmation Modal -->
-  <div
-    class="modal-overlay"
-    id="logoutModal"
-    style="display: none;"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="logoutModalTitle"
-  >
+  <div class="modal-overlay" id="logoutModal" style="display: none;" role="dialog" aria-modal="true"
+    aria-labelledby="logoutModalTitle">
     <div class="modal-box">
       <div class="modal-header">
         <h2 id="logoutModalTitle">Log Out</h2>
@@ -2316,4 +2326,5 @@
   <script src="../../scripts/settings.js"></script>
   <script src="../../scripts/switchAccount.js"></script>
 </body>
+
 </html>

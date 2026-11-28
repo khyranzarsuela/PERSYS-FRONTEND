@@ -1260,3 +1260,232 @@ html[data-theme="dark"] .sys-meta-pill {
   color: #F5C518;
   border-color: #584b6a;
 }
+
+/* ============================================================
+   ACCOUNT SECURITY SECTION (ALL ROLES — SETTINGS TAB)
+   ============================================================ */
+
+.account-security-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.account-security-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.security-subcard {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 22px;
+  border-radius: 14px;
+  background: #faf8ff;
+  border: 1.5px solid #e4dbf7;
+}
+
+.security-subcard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ece5fa;
+}
+
+.security-subcard-title {
+  margin: 0 0 3px;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #1a0a2e;
+}
+
+.security-subcard-desc {
+  margin: 0;
+  font-size: 0.79rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.security-current-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: #f3e8ff;
+  border: 1px solid #d8b4fe;
+  color: #4A0E8F;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.security-current-badge strong {
+  font-weight: 800;
+}
+
+.security-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.security-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1a0a2e;
+}
+
+.security-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 13px;
+  border-radius: 9px;
+  border: 1.5px solid #d4c6f0;
+  background: #ffffff;
+  color: #1a0a2e;
+  font: inherit;
+  font-size: 0.88rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.security-input:focus {
+  outline: none;
+  border-color: #6B0FBA;
+  box-shadow: 0 0 0 3px rgba(107, 15, 186, 0.12);
+}
+
+.security-pw-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.security-pw-wrap .security-input {
+  padding-right: 64px;
+}
+
+.security-pw-toggle {
+  position: absolute;
+  right: 8px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #e2d9f3;
+  background: #f5f0ff;
+  color: #6B0FBA;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.security-pw-toggle:hover {
+  background: #ede9fe;
+}
+
+.security-feedback {
+  padding: 10px 13px;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.security-feedback[hidden] {
+  display: none !important;
+}
+
+.security-feedback.is-success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.security-feedback.is-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.security-form-actions {
+  margin-top: auto;
+  padding-top: 4px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-security-submit {
+  padding: 10px 18px;
+  border-radius: 9px;
+  border: none;
+  background: #6B0FBA;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-security-submit:hover:not(:disabled) {
+  background: #530994;
+}
+
+.btn-security-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Dark Mode Overrides for Account Security */
+html[data-theme="dark"] .security-subcard {
+  background: #262030;
+  border-color: #443956;
+}
+
+html[data-theme="dark"] .security-subcard-header {
+  border-bottom-color: #3a304a;
+}
+
+html[data-theme="dark"] .security-subcard-title,
+html[data-theme="dark"] .security-label {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .security-subcard-desc {
+  color: #c4b5fd;
+}
+
+html[data-theme="dark"] .security-current-badge {
+  background: #36294d;
+  border-color: #584b6a;
+  color: #F5C518;
+}
+
+html[data-theme="dark"] .security-input {
+  background: #1e1926;
+  border-color: #443956;
+  color: #f3e8ff;
+}
+
+html[data-theme="dark"] .security-input:focus {
+  border-color: #F5C518;
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.18);
+}
+
+html[data-theme="dark"] .security-pw-toggle {
+  background: #36294d;
+  border-color: #584b6a;
+  color: #F5C518;
+}
+
+@media (max-width: 900px) {
+  .account-security-grid {
+    grid-template-columns: 1fr;
+  }
+}
