@@ -49,246 +49,376 @@
     .page-content.service-credits-content {
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      padding: 28px 32px;
+      align-items: stretch;
+      gap: 22px;
+      padding: 26px 30px;
       background: #f0eef8;
       width: 100%;
       min-height: calc(100vh - var(--topbar-height));
       box-sizing: border-box;
     }
 
-    .main-wrapper { flex: 1; min-width: 0; display: flex; flex-direction: column; width: 100%; }
-
-    /* =========================================================
-       SERVICE CREDITS — NEW UI
-       ========================================================= */
-
-    /* ── Page heading ─────────────────────────────────────── */
-    .sc-page-title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: var(--clr-text-dark);
-    }
-
-    /* ── 2-column grid (left=Local, right=National) ────────── */
-    .sc-two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    /* ── Column wrapper: balance card on top, history below ── */
-    .sc-col { display: flex; flex-direction: column; gap: 20px; }
-
-    /* ── Balance card ─────────────────────────────────────── */
-    .sc-balance-card {
-      background: #fff;
-      border-radius: 14px;
-      border: 1px solid #e5dff5;
-      padding: 26px 28px;
-      box-shadow: 0 2px 8px rgba(107,15,186,0.07);
-    }
-
-    .sc-balance-card-heading {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #1a0a2e;
-      margin-bottom: 14px;
-    }
-
-    .sc-balance-current-label {
-      font-size: 0.78rem;
-      color: #9ca3af;
-      font-weight: 500;
-      margin-bottom: 2px;
-    }
-
-    .sc-balance-current-number {
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: var(--clr-purple-topbar);
-      line-height: 1.1;
-      margin-bottom: 16px;
-    }
-
-    .sc-balance-stats {
-      display: flex;
-      gap: 0;
-      border-top: 1px solid #f0ebfc;
-      padding-top: 14px;
-    }
-
-    .sc-balance-stat {
+    .main-wrapper {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      width: 100%;
     }
 
-    .sc-balance-stat + .sc-balance-stat {
-      border-left: 1px solid #f0ebfc;
-      padding-left: 20px;
+    /* ── Topbar extras (bell + datetime) ──────────────────── */
+    .topbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 18px;
     }
 
-    .sc-balance-stat-label {
+    .topbar-datetime {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.3;
+    }
+    .topbar-datetime-date {
       font-size: 0.75rem;
-      color: #9ca3af;
-      font-weight: 500;
-    }
-
-    .sc-balance-stat-value {
-      font-size: 1.05rem;
       font-weight: 700;
-      color: #1a0a2e;
+      color: #fff;
+    }
+    .topbar-datetime-time {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.85);
     }
 
-    /* ── History card ─────────────────────────────────────── */
-    .sc-history-card {
-      background: #fff;
-      border-radius: 14px;
+    /* =========================================================
+       3-CARD SERVICE CREDITS BALANCES + UNIFIED HISTORY CARD
+       ========================================================= */
+    .u-sc-balances-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+    }
+
+    .u-sc-bal-card {
+      background: #ffffff;
+      border-radius: 16px;
       border: 1px solid #e5dff5;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(107,15,186,0.07);
+      padding: 24px 26px;
+      box-shadow: 0 3px 12px rgba(107, 15, 186, 0.07);
     }
 
-    .sc-history-heading {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #1a0a2e;
-      padding: 18px 20px 16px;
-      border-bottom: 1px solid #f0ebfc;
+    .u-sc-bal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      margin: 0 0 14px;
     }
 
-    /* Table inside history card */
-    .sc-history-card .sc-hist-table {
+    .u-sc-bal-sublabel {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #6b7280;
+      margin: 0 0 2px;
+    }
+
+    .u-sc-bal-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #6B0FBA;
+      line-height: 1.1;
+      margin: 0 0 16px;
+    }
+
+    .u-sc-bal-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid #f0ebfc;
+      padding-top: 14px;
+      gap: 12px;
+    }
+
+    .u-sc-bal-stat + .u-sc-bal-stat {
+      border-left: 1px solid #f0ebfc;
+      padding-left: 16px;
+    }
+
+    .u-sc-bal-stat-lbl {
+      font-size: 0.76rem;
+      color: #6b7280;
+      display: block;
+    }
+
+    .u-sc-bal-stat-val {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #1A1A2E;
+    }
+
+    .u-sc-history-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e5dff5;
+      padding: 22px 26px;
+      box-shadow: 0 3px 12px rgba(107, 15, 186, 0.07);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .u-sc-history-toolbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .u-sc-history-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      margin: 0;
+    }
+
+    .u-sc-filters-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .u-sc-search-box {
+      position: relative;
+      flex: 1;
+      max-width: 340px;
+      min-width: 200px;
+    }
+
+    .u-sc-search-box input {
+      width: 100%;
+      padding: 9px 36px 9px 16px;
+      border-radius: 999px;
+      border: 1.5px solid #dfd7f3;
+      font: inherit;
+      font-size: 0.84rem;
+      box-sizing: border-box;
+      color: #1A1A2E;
+      background: #ffffff;
+    }
+
+    .u-sc-search-box input:focus {
+      outline: none;
+      border-color: #6B0FBA;
+    }
+
+    .u-sc-search-icon {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      stroke: #6b7280;
+      fill: none;
+      stroke-width: 2;
+      pointer-events: none;
+    }
+
+    .u-sc-filter-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .u-sc-filter-col label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #1A1A2E;
+    }
+
+    .u-sc-filter-col select {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1.5px solid #374151;
+      background: #ffffff;
+      color: #1A1A2E;
+      font: inherit;
+      font-size: 0.83rem;
+      font-weight: 600;
+      min-width: 135px;
+      cursor: pointer;
+    }
+
+    .u-sc-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .u-sc-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8125rem;
+      font-size: 0.86rem;
     }
 
-    .sc-history-card .sc-hist-table th {
-      background: #f8f5ff;
-      color: #374151;
-      font-size: 0.775rem;
-      font-weight: 700;
-      padding: 10px 14px;
+    .u-sc-table thead th {
+      background: #ede9f5;
+      color: #1A1A2E;
+      font-weight: 800;
+      padding: 12px 16px;
       text-align: left;
-      border-bottom: 1px solid #ede8f8;
       white-space: nowrap;
     }
 
-    .sc-history-card .sc-hist-table td {
-      padding: 10px 14px;
-      color: #4b5563;
-      border-bottom: 1px solid #f5f2fc;
+    .u-sc-table tbody td {
+      padding: 13px 16px;
+      color: #1f2937;
+      border-bottom: 1px solid #f0ebfc;
       vertical-align: middle;
     }
 
-    .sc-history-card .sc-hist-table tr:last-child td { border-bottom: none; }
-    .sc-history-card .sc-hist-table tr:hover td { background: #faf7ff; }
-
-    .sc-history-card .sc-hist-table .empty-row td {
-      text-align: center;
-      color: #9ca3af;
-      font-style: italic;
-      padding: 28px 14px;
+    .u-sc-table tbody tr:last-child td {
+      border-bottom: none;
     }
 
-    /* Status badges — compact pill style */
+    .u-sc-table tbody tr:hover td {
+      background: #faf8ff;
+    }
+
     .sc-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 3px 10px;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      white-space: nowrap;
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
       letter-spacing: 0.02em;
     }
     .sc-badge--earned   { background: #DCFCE7; color: #15803D; }
     .sc-badge--deducted { background: #FEE2E2; color: #B91C1C; }
 
-    /* ── Pagination inside each history card ──────────────── */
-    .sc-pagination {
+    /* Pagination footer */
+    .u-sc-pagination {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 8px;
-      padding: 10px 14px;
+      gap: 12px;
+      padding-top: 12px;
       border-top: 1px solid #f0ebfc;
-      background: #fff;
     }
 
-    .sc-pagination-info {
-      font-size: 0.75rem;
-      color: #9ca3af;
+    .u-sc-pag-info {
+      font-size: 0.83rem;
+      color: #374151;
     }
 
-    .sc-pagination-btns {
+    .u-sc-pag-controls {
       display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
-    .sc-page-btn {
-      min-width: 30px;
-      height: 30px;
-      padding: 0 8px;
-      border: 1.5px solid #e5dff5;
-      border-radius: 6px;
-      background: #fff;
-      color: #6b7280;
+    .u-sc-pag-controls label {
+      font-size: 0.82rem;
+      color: #374151;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 4px;
+    }
+
+    .u-sc-pag-select {
+      padding: 5px 10px;
+      border: 1.5px solid #d4c6f0;
+      border-radius: 8px;
+      background: #ffffff;
       font: inherit;
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: 0.82rem;
+      color: #1A1A2E;
+      cursor: pointer;
+    }
+
+    .sc-page-btn {
+      min-width: 32px;
+      height: 32px;
+      padding: 0 9px;
+      border: 1.5px solid #e5dff5;
+      border-radius: 7px;
+      background: #ffffff;
+      color: #374151;
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s, color 0.15s;
-      white-space: nowrap;
     }
+
     .sc-page-btn:hover:not(:disabled) {
-      background: #f0eaf8;
-      border-color: var(--clr-purple-topbar);
-      color: var(--clr-purple-topbar);
+      border-color: #6B0FBA;
+      color: #6B0FBA;
     }
+
     .sc-page-btn--active {
-      background: var(--clr-purple-topbar);
-      border-color: var(--clr-purple-topbar);
-      color: #fff;
+      background: #6B0FBA;
+      border-color: #6B0FBA;
+      color: #ffffff;
       cursor: default;
     }
-    .sc-page-btn--active:hover { background: var(--clr-purple-topbar); color: #fff; }
-    .sc-page-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
-    .sc-page-ellipsis {
-      display: inline-flex; align-items: center; justify-content: center;
-      min-width: 30px; height: 30px;
-      font-size: 0.8rem; color: #9ca3af;
-      user-select: none;
+    .sc-page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
-    /* ── Responsive ───────────────────────────────────────── */
-    @media (max-width: 1000px) {
-      .sc-two-col { grid-template-columns: 1fr; }
+    @media (max-width: 960px) {
+      .u-sc-balances-grid {
+        grid-template-columns: 1fr;
+      }
     }
+
     @media (max-width: 768px) {
-      .page-content.service-credits-content { padding: 14px 16px; }
+      .page-content.service-credits-content {
+        padding: 16px;
+      }
+      .topbar-datetime {
+        display: none;
+      }
     }
 
-    /* ── Dark theme ───────────────────────────────────────── */
-    html[data-theme="dark"] .sc-balance-card,
-    html[data-theme="dark"] .sc-history-card {
+    /* Dark theme */
+    html[data-theme="dark"] .u-sc-bal-card,
+    html[data-theme="dark"] .u-sc-history-card {
       background: var(--clr-card-bg);
       border-color: var(--clr-border-light);
     }
-    html[data-theme="dark"] .sc-balance-card-heading,
-    html[data-theme="dark"] .sc-history-heading { color: var(--clr-text-dark); }
-    html[data-theme="dark"] .sc-history-card .sc-hist-table th { background: #2a2438; color: var(--clr-text-mid); }
-    html[data-theme="dark"] .sc-history-card .sc-hist-table td { color: var(--clr-text-mid); border-color: #362d4a; }
-    html[data-theme="dark"] .sc-page-btn { background: var(--clr-card-bg); border-color: var(--clr-border-light); color: var(--clr-text-mid); }
-    html[data-theme="dark"] .sc-pagination { background: var(--clr-card-bg); border-color: var(--clr-border-light); }
+    html[data-theme="dark"] .u-sc-bal-title,
+    html[data-theme="dark"] .u-sc-bal-stat-val,
+    html[data-theme="dark"] .u-sc-history-title,
+    html[data-theme="dark"] .u-sc-filter-col label {
+      color: var(--clr-text-dark);
+    }
+    html[data-theme="dark"] .u-sc-table thead th {
+      background: #2a2438;
+      color: #F5C518;
+    }
+    html[data-theme="dark"] .u-sc-table tbody td {
+      color: var(--clr-text-mid);
+      border-bottom-color: #362d4a;
+    }
+    html[data-theme="dark"] .u-sc-search-box input,
+    html[data-theme="dark"] .u-sc-filter-col select,
+    html[data-theme="dark"] .u-sc-pag-select,
+    html[data-theme="dark"] .sc-page-btn {
+      background: #26212e;
+      border-color: #3a314a;
+      color: #ffffff;
+    }
   </style>
 
   <script src="../../scripts/apiConfig.js"></script>
@@ -355,7 +485,6 @@
             </a>
           </li>
 
-          <!-- Request — TODO: update to userRequest.html once migrated -->
           <li>
             <a href="userRequest.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
@@ -370,7 +499,6 @@
             </a>
           </li>
 
-          <!-- Settings -->
           <li>
             <a href="userSettings.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
@@ -417,136 +545,158 @@
 
       <!-- TOPBAR -->
       <header class="topbar" role="banner">
-        <span class="topbar-svg-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-          </svg>
-        </span>
+        <div class="topbar-icon" aria-hidden="true">
+          <span></span><span></span>
+          <span></span><span></span>
+        </div>
         <h1 class="topbar-title">Service Credits</h1>
 
-        <button
-          class="hamburger"
-          id="hamburger"
-          type="button"
-          aria-controls="sidebar"
-          aria-expanded="false"
-          aria-label="Toggle navigation menu"
-        >
-          <span></span><span></span><span></span>
-        </button>
+        <div class="topbar-right">
+          <div class="topbar-datetime" aria-live="off">
+            <span class="topbar-datetime-date" id="topbarDate">—</span>
+            <span class="topbar-datetime-time" id="topbarTime">—</span>
+          </div>
+
+          <button
+            class="hamburger"
+            id="hamburger"
+            type="button"
+            aria-controls="sidebar"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </header>
 
       <!-- PAGE CONTENT -->
       <main class="page-content service-credits-content" id="mainContent">
 
-        <!-- TWO-COLUMN LAYOUT ────────────────────────────── -->
-        <div class="sc-two-col">
+        <!-- TOP 3 BALANCE CARDS: NATIONAL | WELLNESS | LOCAL -->
+        <div class="u-sc-balances-grid">
 
-          <!-- ── LEFT COLUMN: LOCAL ─────────────────────── -->
-          <div class="sc-col">
-
-            <!-- Local Balance Card -->
-            <div class="sc-balance-card">
-              <div class="sc-balance-card-heading">Local Service Credits</div>
-              <div class="sc-balance-current-label">Current Balance</div>
-              <div class="sc-balance-current-number" id="scLocalBalance"><span class="skel skel-number" style="width:110px;height:40px" aria-hidden="true"></span></div>
-              <div class="sc-balance-stats">
-                <div class="sc-balance-stat">
-                  <span class="sc-balance-stat-label">Overall Earned</span>
-                  <span class="sc-balance-stat-value" id="scLocalEarned"><span class="skel skel-line-sm" aria-hidden="true"></span></span>
-                </div>
-                <div class="sc-balance-stat">
-                  <span class="sc-balance-stat-label">Total Used</span>
-                  <span class="sc-balance-stat-value" id="scLocalUsed"><span class="skel skel-line-sm" aria-hidden="true"></span></span>
-                </div>
+          <!-- National Service Credits -->
+          <article class="u-sc-bal-card">
+            <h2 class="u-sc-bal-title">National Service Credits</h2>
+            <p class="u-sc-bal-sublabel">Current Balance</p>
+            <p class="u-sc-bal-number" id="scNationalBalance">0.00</p>
+            <div class="u-sc-bal-footer">
+              <div class="u-sc-bal-stat">
+                <span class="u-sc-bal-stat-lbl">Overall Earned</span>
+                <span class="u-sc-bal-stat-val" id="scNationalEarned">0.00</span>
+              </div>
+              <div class="u-sc-bal-stat">
+                <span class="u-sc-bal-stat-lbl">Total Used</span>
+                <span class="u-sc-bal-stat-val" id="scNationalUsed">0.00</span>
               </div>
             </div>
+          </article>
 
-            <!-- Local Credit History -->
-            <div class="sc-history-card">
-              <div class="sc-history-heading">Local Credit History</div>
-              <table class="sc-hist-table" aria-label="Local service credit history">
-                <thead>
-                  <tr>
-                    <th>Request Date</th>
-                    <th>Credit Type</th>
-                    <th>Service Activity</th>
-                    <th>Status</th>
-                    <th>Points</th>
-                  </tr>
-                </thead>
-                <tbody id="scLocalBody">
-                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
-                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:80%"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
-                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:60%"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
-                </tbody>
-              </table>
-              <div
-                class="sc-pagination"
-                id="scLocalPagination"
-                role="navigation"
-                aria-label="Local history pagination"
-                hidden
-              ></div>
-            </div>
-
-          </div>
-          <!-- END LEFT COLUMN ─────────────────────────── -->
-
-          <!-- ── RIGHT COLUMN: NATIONAL ────────────────── -->
-          <div class="sc-col">
-
-            <!-- National Balance Card -->
-            <div class="sc-balance-card">
-              <div class="sc-balance-card-heading">National Service Credits</div>
-              <div class="sc-balance-current-label">Current Balance</div>
-              <div class="sc-balance-current-number" id="scNationalBalance"><span class="skel skel-number" style="width:110px;height:40px" aria-hidden="true"></span></div>
-              <div class="sc-balance-stats">
-                <div class="sc-balance-stat">
-                  <span class="sc-balance-stat-label">Overall Earned</span>
-                  <span class="sc-balance-stat-value" id="scNationalEarned"><span class="skel skel-line-sm" aria-hidden="true"></span></span>
-                </div>
-                <div class="sc-balance-stat">
-                  <span class="sc-balance-stat-label">Total Used</span>
-                  <span class="sc-balance-stat-value" id="scNationalUsed"><span class="skel skel-line-sm" aria-hidden="true"></span></span>
-                </div>
+          <!-- Wellness Service Credits -->
+          <article class="u-sc-bal-card">
+            <h2 class="u-sc-bal-title">Wellness Service Credits</h2>
+            <p class="u-sc-bal-sublabel">Current Balance</p>
+            <p class="u-sc-bal-number" id="scWellnessBalance">0.00</p>
+            <div class="u-sc-bal-footer">
+              <div class="u-sc-bal-stat">
+                <span class="u-sc-bal-stat-lbl">Overall Earned</span>
+                <span class="u-sc-bal-stat-val" id="scWellnessEarned">0.00</span>
+              </div>
+              <div class="u-sc-bal-stat">
+                <span class="u-sc-bal-stat-lbl">Total Used</span>
+                <span class="u-sc-bal-stat-val" id="scWellnessUsed">0.00</span>
               </div>
             </div>
+          </article>
 
-            <!-- National Credit History -->
-            <div class="sc-history-card">
-              <div class="sc-history-heading">National Credit History</div>
-              <table class="sc-hist-table" aria-label="National service credit history">
-                <thead>
-                  <tr>
-                    <th>Request Date</th>
-                    <th>Credit Type</th>
-                    <th>Service Activity</th>
-                    <th>Status</th>
-                    <th>Points</th>
-                  </tr>
-                </thead>
-                <tbody id="scNationalBody">
-                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
-                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:75%"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
-                  <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:55%"></span></td><td><span class="skel skel-cell" style="width:65%"></span></td><td><span class="skel skel-cell" style="width:45%"></span></td></tr>
-                </tbody>
-              </table>
-              <div
-                class="sc-pagination"
-                id="scNationalPagination"
-                role="navigation"
-                aria-label="National history pagination"
-                hidden
-              ></div>
+          <!-- Local Service Credits -->
+          <article class="u-sc-bal-card">
+            <h2 class="u-sc-bal-title">Local Service Credits</h2>
+            <p class="u-sc-bal-sublabel">Current Balance</p>
+            <p class="u-sc-bal-number" id="scLocalBalance">0.00</p>
+            <div class="u-sc-bal-footer">
+              <div class="u-sc-bal-stat">
+                <span class="u-sc-bal-stat-lbl">Overall Earned</span>
+                <span class="u-sc-bal-stat-val" id="scLocalEarned">0.00</span>
+              </div>
+              <div class="u-sc-bal-stat">
+                <span class="u-sc-bal-stat-lbl">Total Used</span>
+                <span class="u-sc-bal-stat-val" id="scLocalUsed">0.00</span>
+              </div>
             </div>
-
-          </div>
-          <!-- END RIGHT COLUMN ─────────────────────────── -->
+          </article>
 
         </div>
-        <!-- END TWO-COLUMN LAYOUT ─────────────────────── -->
+
+        <!-- UNIFIED HISTORY CARD -->
+        <section class="u-sc-history-card" aria-labelledby="uScHistoryHeading">
+          <div class="u-sc-history-toolbar">
+            <h2 class="u-sc-history-title" id="uScHistoryHeading">History</h2>
+
+            <div class="u-sc-filters-group">
+              <div class="u-sc-search-box">
+                <input
+                  type="search"
+                  id="scHistorySearch"
+                  placeholder="Search by activity, date..."
+                  aria-label="Search service credit history"
+                  autocomplete="off"
+                />
+                <svg class="u-sc-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+                </svg>
+              </div>
+
+              <div class="u-sc-filter-col">
+                <label for="scHistoryTypeFilter">Credit Type</label>
+                <select id="scHistoryTypeFilter">
+                  <option value="all">All</option>
+                  <option value="national">National</option>
+                  <option value="local">Local</option>
+                  <option value="wellness">Wellness</option>
+                </select>
+              </div>
+
+              <div class="u-sc-filter-col">
+                <label for="scHistoryStatusFilter">Status</label>
+                <select id="scHistoryStatusFilter">
+                  <option value="all">All</option>
+                  <option value="earned">Earned</option>
+                  <option value="deducted">Deducted</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="u-sc-table-wrap">
+            <table class="u-sc-table" aria-label="Service credit history">
+              <thead>
+                <tr>
+                  <th>Request Date</th>
+                  <th>Credit Type</th>
+                  <th>Service Activity</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Service Credits</th>
+                </tr>
+              </thead>
+              <tbody id="scHistoryTableBody">
+                <tr>
+                  <td colspan="5" style="text-align:center;padding:24px;color:#9ca3af;">Loading service credit history...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            class="u-sc-pagination"
+            id="scHistoryPagination"
+            role="navigation"
+            aria-label="Service credit history pagination"
+            hidden
+          ></div>
+        </section>
 
       </main>
     </div>
@@ -579,6 +729,27 @@
   <script src="../../scripts/apiErrorHandler.js"></script>
   <script src="../../scripts/userServiceCredits.js"></script>
   <script src="../../scripts/settings.js"></script>
+  <script>
+    (function () {
+      const dateEl = document.getElementById("topbarDate");
+      const timeEl = document.getElementById("topbarTime");
+      function pad(n) { return String(n).padStart(2, "0"); }
+      function tick() {
+        const now = new Date();
+        const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+        const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        let h = now.getHours();
+        const m = pad(now.getMinutes());
+        const s = pad(now.getSeconds());
+        const ampm = h >= 12 ? "PM" : "AM";
+        h = h % 12 || 12;
+        if (dateEl) dateEl.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+        if (timeEl) timeEl.textContent = `${h}:${m}:${s} ${ampm}`;
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
   <script src="../../scripts/switchAccount.js"></script>
 </body>
 </html>

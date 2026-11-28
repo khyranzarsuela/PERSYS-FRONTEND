@@ -1448,6 +1448,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!["LOCAL", "NATIONAL", "WELLNESS"].includes(nature)) {
                     rowErrors.push(`Row ${rowNum}: Please select a Credit Type (Local, National, or Wellness).`);
                     markInvalid("nature_of_service_credits");
+                } else {
+                    const matchedEmp = employeesList.find(
+                        e => String(e.employee_number || "") === String(row.employee_number || "")
+                    );
+                    const empRole = String(matchedEmp?.personnel_type || "").trim().toLowerCase();
+                    if (nature === "NATIONAL" && (empRole === "non-teaching" || empRole === "non teaching")) {
+                        rowErrors.push(`Row ${rowNum}: Non-Teaching personnel cannot receive National service credits.`);
+                        markInvalid("nature_of_service_credits");
+                    }
+                    if (nature === "WELLNESS" && Number.isFinite(credits) && credits > 5) {
+                        rowErrors.push(`Row ${rowNum}: Wellness service credits cannot exceed 5.00 credits per year.`);
+                        markInvalid("number_of_service_credits");
+                    }
                 }
             });
 
@@ -1503,7 +1516,162 @@ document.addEventListener("DOMContentLoaded", () => {
     // 12. INITIAL PAGE LOAD
     // --------------------------------------------------
 
-    renderManualUploadRows();
-    wireActivitiesModal();
-    loadSummary();
+    window.PERSYSAdminGuard?.ready?.then(authorized => {
+        if (!authorized) return;
+
+        const pFlags = window.PERSYSAdminGuard.getPrincipalFeatures?.() || {};
+        if (pFlags.is_principal && pFlags.can_upload_service_credits === false) {
+            activatePrincipalServiceCreditsMode();
+            return;
+        }
+
+        renderManualUploadRows();
+        wireActivitiesModal();
+        loadSummary();
+    });
+
+    async function activatePrincipalServiceCreditsMode() {
+        const topbarTitle = document.querySelector(".topbar-title");
+        if (topbarTitle) topbarTitle.textContent = "Service Credits";
+
+        document.querySelectorAll(".sc-top-overview-grid, .sc-preview-card, .sc-manual-card, #personnelRecordsSection").forEach(el => {
+            el.style.display = "none";
+        });
+
+        const principalView = document.getElementById("principalServiceCreditsView");
+        if (principalView) {
+            principalView.hidden = false;
+            principalView.style.display = "flex";
+        }
+
+        const USER_SC_API = `${API_BASE}/user/serviceCredits.php`;
+        let allTx = [];
+        let filteredTx = [];
+        let pPage = 1;
+        let pPerPage = 5;
+
+        const searchEl = document.getElementById("pScSearchInput");
+        const typeEl = document.getElementById("pScCreditTypeFilter");
+        const statusEl = document.getElementById("pScStatusFilter");
+
+        searchEl?.addEventListener("input", applyPrincipalScFilters);
+        typeEl?.addEventListener("change", applyPrincipalScFilters);
+        statusEl?.addEventListener("change", applyPrincipalScFilters);
+
+        try {
+            const result = await fetchJson(USER_SC_API, { method: "GET" });
+            const data = result.data || {};
+            allTx = Array.isArray(data.transactions) ? data.transactions : [];
+
+            let natEarned = 0, natUsed = 0;
+            let welEarned = 0, welUsed = 0;
+            let locEarned = 0, locUsed = 0;
+
+            allTx.forEach(t => {
+                const amt = Number(t.credit_amount ?? 0) || 0;
+                const isEarned = String(t.transaction_type || "").toUpperCase() === "EARNED";
+                const cName = String(t.credit_type_name || "").toUpperCase();
+                const cId = Number(t.credit_type_id || 0);
+
+                if (cName === "NATIONAL" || cId === 2) {
+                    if (isEarned) natEarned += amt; else natUsed += amt;
+                } else if (cName === "WELLNESS" || cId === 3) {
+                    if (isEarned) welEarned += amt; else welUsed += amt;
+                } else if (cName === "LOCAL" || cId === 1) {
+                    if (isEarned) locEarned += amt; else locUsed += amt;
+                }
+            });
+
+            const setTxt = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = Number(val || 0).toFixed(2);
+            };
+
+            setTxt("pScNationalBal", data.total_national_credits ?? (natEarned - natUsed));
+            setTxt("pScNationalEarned", natEarned);
+            setTxt("pScNationalUsed", natUsed);
+
+            setTxt("pScWellnessBal", data.total_wellness_credits ?? (welEarned - welUsed));
+            setTxt("pScWellnessEarned", welEarned);
+            setTxt("pScWellnessUsed", welUsed);
+
+            setTxt("pScLocalBal", data.total_local_credits ?? (locEarned - locUsed));
+            setTxt("pScLocalEarned", locEarned);
+            setTxt("pScLocalUsed", locUsed);
+
+            applyPrincipalScFilters();
+        } catch (err) {
+            console.error("Principal service credits load error:", err);
+        }
+
+        function applyPrincipalScFilters() {
+            const q = (searchEl?.value || "").trim().toLowerCase();
+            const typeVal = (typeEl?.value || "all").toLowerCase();
+            const statusVal = (statusEl?.value || "all").toLowerCase();
+
+            filteredTx = allTx.filter(t => {
+                const cType = String(t.credit_type_name || "").toLowerCase();
+                const st = String(t.transaction_type || "").toLowerCase();
+                const act = String(t.activity_name || "").toLowerCase();
+                const dt = String(t.activity_start_date || t.created_at || "").toLowerCase();
+
+                if (typeVal !== "all" && cType !== typeVal) return false;
+                if (statusVal !== "all" && st !== statusVal) return false;
+                if (q && !act.includes(q) && !cType.includes(q) && !dt.includes(q) && !st.includes(q)) return false;
+                return true;
+            });
+
+            pPage = 1;
+            renderPrincipalScTable();
+        }
+
+        function renderPrincipalScTable() {
+            const tbody = document.getElementById("pScHistoryTableBody");
+            const pagEl = document.getElementById("pScHistoryPagination");
+            if (!tbody) return;
+
+            tbody.replaceChildren();
+            const total = filteredTx.length;
+            const totalPages = Math.max(1, Math.ceil(total / pPerPage));
+            pPage = Math.min(Math.max(1, pPage), totalPages);
+
+            if (total === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:#9ca3af;font-style:italic;">No service credit history records found.</td></tr>`;
+                if (pagEl) pagEl.innerHTML = "";
+                return;
+            }
+
+            const start = (pPage - 1) * pPerPage;
+            const slice = filteredTx.slice(start, start + pPerPage);
+
+            slice.forEach(t => {
+                const tr = document.createElement("tr");
+                const rawDate = String(t.activity_start_date || t.created_at || "").slice(0, 10);
+                const parts = rawDate.split("-");
+                const fmtDate = parts.length === 3 ? `${parts[1]}/${parts[2]}/${parts[0]}` : rawDate;
+
+                const isEarned = String(t.transaction_type || "").toUpperCase() === "EARNED";
+                const badgeClass = isEarned ? "p-sc-badge is-earned" : "p-sc-badge is-deducted";
+                const badgeText = isEarned ? "EARNED" : "DEDUCTED";
+
+                tr.innerHTML = `
+                    <td>${escapeHtml(fmtDate)}</td>
+                    <td>${escapeHtml(t.credit_type_name || "—")}</td>
+                    <td>${escapeHtml(t.activity_name || "—")}</td>
+                    <td><span class="${badgeClass}">${badgeText}</span></td>
+                    <td style="text-align:right;font-weight:700;">${Number(t.credit_amount ?? 0).toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            renderPerPagePagination({
+                container: pagEl,
+                totalItems: total,
+                currentPage: pPage,
+                perPage: pPerPage,
+                onPageChange: nextP => { pPage = nextP; renderPrincipalScTable(); },
+                onPerPageChange: nextSize => { pPerPage = nextSize; pPage = 1; renderPrincipalScTable(); }
+            });
+        }
+    }
 });

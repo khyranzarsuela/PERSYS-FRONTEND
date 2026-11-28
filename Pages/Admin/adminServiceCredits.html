@@ -72,7 +72,7 @@
                                     <path d="M20 20c0-2.5-1.9-4.5-4.5-5" />
                                 </svg>
                             </span>
-                            Employees
+                            Personnel
                         </a>
                     </li>
 
@@ -479,6 +479,263 @@
 
                 </section>
                 <!-- END PERSONNEL SERVICE CREDITS RECORDS -->
+
+                <!-- ══════════════════════════════════════════════════════
+                     PRINCIPAL ("SUPER ADMIN") PERSONAL SERVICE CREDITS VIEW
+                     (Shown when PRINCIPAL_CAN_UPLOAD_SERVICE_CREDITS=false in .env)
+                ══════════════════════════════════════════════════════ -->
+                <div id="principalServiceCreditsView" hidden style="display:none;flex-direction:column;gap:22px;width:100%;">
+                    <style>
+                        .p-sc-balances-grid {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 20px;
+                            width: 100%;
+                        }
+                        .p-sc-bal-card {
+                            background: #ffffff;
+                            border-radius: 16px;
+                            border: 1px solid #e5dff5;
+                            padding: 24px 26px;
+                            box-shadow: 0 3px 12px rgba(107, 15, 186, 0.07);
+                        }
+                        .p-sc-bal-title {
+                            font-size: 1.15rem;
+                            font-weight: 800;
+                            color: #1A1A2E;
+                            margin: 0 0 14px;
+                        }
+                        .p-sc-bal-sublabel {
+                            font-size: 0.78rem;
+                            font-weight: 600;
+                            color: #6b7280;
+                            margin: 0 0 2px;
+                        }
+                        .p-sc-bal-number {
+                            font-size: 2.5rem;
+                            font-weight: 800;
+                            color: #6B0FBA;
+                            line-height: 1.1;
+                            margin: 0 0 16px;
+                        }
+                        .p-sc-bal-footer {
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            border-top: 1px solid #f0ebfc;
+                            padding-top: 14px;
+                            gap: 12px;
+                        }
+                        .p-sc-bal-stat + .p-sc-bal-stat {
+                            border-left: 1px solid #f0ebfc;
+                            padding-left: 16px;
+                        }
+                        .p-sc-bal-stat-lbl {
+                            font-size: 0.76rem;
+                            color: #6b7280;
+                            display: block;
+                        }
+                        .p-sc-bal-stat-val {
+                            font-size: 0.98rem;
+                            font-weight: 800;
+                            color: #1A1A2E;
+                        }
+                        .p-sc-history-card {
+                            background: #ffffff;
+                            border-radius: 16px;
+                            border: 1px solid #e5dff5;
+                            padding: 22px 26px;
+                            box-shadow: 0 3px 12px rgba(107, 15, 186, 0.07);
+                            display: flex;
+                            flex-direction: column;
+                            gap: 16px;
+                        }
+                        .p-sc-history-toolbar {
+                            display: flex;
+                            align-items: flex-end;
+                            justify-content: space-between;
+                            gap: 16px;
+                            flex-wrap: wrap;
+                        }
+                        .p-sc-history-title {
+                            font-size: 1.25rem;
+                            font-weight: 800;
+                            color: #1A1A2E;
+                            margin: 0;
+                        }
+                        .p-sc-filters-group {
+                            display: flex;
+                            align-items: flex-end;
+                            gap: 14px;
+                            flex-wrap: wrap;
+                            flex: 1;
+                            justify-content: flex-end;
+                        }
+                        .p-sc-search-box {
+                            position: relative;
+                            flex: 1;
+                            max-width: 340px;
+                            min-width: 200px;
+                        }
+                        .p-sc-search-box input {
+                            width: 100%;
+                            padding: 9px 36px 9px 16px;
+                            border-radius: 999px;
+                            border: 1.5px solid #dfd7f3;
+                            font: inherit;
+                            font-size: 0.84rem;
+                            box-sizing: border-box;
+                        }
+                        .p-sc-filter-col {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 4px;
+                        }
+                        .p-sc-filter-col label {
+                            font-size: 0.75rem;
+                            font-weight: 800;
+                            color: #1A1A2E;
+                        }
+                        .p-sc-filter-col select {
+                            padding: 8px 14px;
+                            border-radius: 999px;
+                            border: 1.5px solid #374151;
+                            background: #ffffff;
+                            font: inherit;
+                            font-size: 0.83rem;
+                            font-weight: 600;
+                            min-width: 130px;
+                            cursor: pointer;
+                        }
+                        .p-sc-badge {
+                            display: inline-block;
+                            padding: 4px 12px;
+                            border-radius: 6px;
+                            font-size: 0.74rem;
+                            font-weight: 800;
+                            text-transform: uppercase;
+                        }
+                        .p-sc-badge.is-earned {
+                            background: #DCFCE7;
+                            color: #15803D;
+                        }
+                        .p-sc-badge.is-deducted {
+                            background: #FEE2E2;
+                            color: #B91C1C;
+                        }
+                        @media (max-width: 960px) {
+                            .p-sc-balances-grid {
+                                grid-template-columns: 1fr;
+                            }
+                        }
+                    </style>
+
+                    <!-- Top 3 Balance Cards -->
+                    <div class="p-sc-balances-grid">
+                        <!-- National -->
+                        <article class="p-sc-bal-card">
+                            <h2 class="p-sc-bal-title">National Service Credits</h2>
+                            <p class="p-sc-bal-sublabel">Current Balance</p>
+                            <p class="p-sc-bal-number" id="pScNationalBal">0.00</p>
+                            <div class="p-sc-bal-footer">
+                                <div class="p-sc-bal-stat">
+                                    <span class="p-sc-bal-stat-lbl">Overall Earned</span>
+                                    <span class="p-sc-bal-stat-val" id="pScNationalEarned">0.00</span>
+                                </div>
+                                <div class="p-sc-bal-stat">
+                                    <span class="p-sc-bal-stat-lbl">Total Used</span>
+                                    <span class="p-sc-bal-stat-val" id="pScNationalUsed">0.00</span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Wellness -->
+                        <article class="p-sc-bal-card">
+                            <h2 class="p-sc-bal-title">Wellness Service Credits</h2>
+                            <p class="p-sc-bal-sublabel">Current Balance</p>
+                            <p class="p-sc-bal-number" id="pScWellnessBal">0.00</p>
+                            <div class="p-sc-bal-footer">
+                                <div class="p-sc-bal-stat">
+                                    <span class="p-sc-bal-stat-lbl">Overall Earned</span>
+                                    <span class="p-sc-bal-stat-val" id="pScWellnessEarned">0.00</span>
+                                </div>
+                                <div class="p-sc-bal-stat">
+                                    <span class="p-sc-bal-stat-lbl">Total Used</span>
+                                    <span class="p-sc-bal-stat-val" id="pScWellnessUsed">0.00</span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Local -->
+                        <article class="p-sc-bal-card">
+                            <h2 class="p-sc-bal-title">Local Service Credits</h2>
+                            <p class="p-sc-bal-sublabel">Current Balance</p>
+                            <p class="p-sc-bal-number" id="pScLocalBal">0.00</p>
+                            <div class="p-sc-bal-footer">
+                                <div class="p-sc-bal-stat">
+                                    <span class="p-sc-bal-stat-lbl">Overall Earned</span>
+                                    <span class="p-sc-bal-stat-val" id="pScLocalEarned">0.00</span>
+                                </div>
+                                <div class="p-sc-bal-stat">
+                                    <span class="p-sc-bal-stat-lbl">Total Used</span>
+                                    <span class="p-sc-bal-stat-val" id="pScLocalUsed">0.00</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- History Table Card -->
+                    <section class="p-sc-history-card" aria-labelledby="pScHistoryHeading">
+                        <div class="p-sc-history-toolbar">
+                            <h2 class="p-sc-history-title" id="pScHistoryHeading">History</h2>
+
+                            <div class="p-sc-filters-group">
+                                <div class="p-sc-search-box">
+                                    <input type="search" id="pScSearchInput" placeholder="Search by activity, date..." aria-label="Search service credit history" />
+                                </div>
+
+                                <div class="p-sc-filter-col">
+                                    <label for="pScCreditTypeFilter">Credit Type</label>
+                                    <select id="pScCreditTypeFilter">
+                                        <option value="all">All</option>
+                                        <option value="national">National</option>
+                                        <option value="local">Local</option>
+                                        <option value="wellness">Wellness</option>
+                                    </select>
+                                </div>
+
+                                <div class="p-sc-filter-col">
+                                    <label for="pScStatusFilter">Status</label>
+                                    <select id="pScStatusFilter">
+                                        <option value="all">All</option>
+                                        <option value="earned">Earned</option>
+                                        <option value="deducted">Deducted</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sc-table-wrap">
+                            <table class="sc-table" aria-label="Personal service credits history">
+                                <thead>
+                                    <tr>
+                                        <th>Request Date</th>
+                                        <th>Credit Type</th>
+                                        <th>Service Activity</th>
+                                        <th>Status</th>
+                                        <th style="text-align:right;">Service Credits</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pScHistoryTableBody">
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;padding:24px;color:#9ca3af;">Loading service credit history...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="employee-pagination sc-personnel-pagination" id="pScHistoryPagination" role="navigation" aria-label="Service credit history pagination"></div>
+                    </section>
+                </div>
 
                 <!-- Logout modal -->
                 <div class="modal-overlay" id="logoutModal" style="display:none;" role="dialog" aria-modal="true"

@@ -50,6 +50,7 @@
     .page-content.request-content {
       display: flex;
       flex-direction: column;
+      align-items: stretch;
       gap: var(--gap-lg);
       padding: 28px 32px;
       background: #f0eef8;
@@ -99,13 +100,532 @@
     html[data-theme="dark"] .page-content.request-content {
       background: var(--clr-cream-bg);
     }
-    html[data-theme="dark"] .request-card {
+    html[data-theme="dark"] .request-card,
+    html[data-theme="dark"] .u-lr-stat-card,
+    html[data-theme="dark"] .u-lr-file-card,
+    html[data-theme="dark"] .u-lr-table-card {
       background: var(--clr-card-bg);
       border-color: var(--clr-border-light);
     }
     html[data-theme="dark"] .my-request-table {
       background: var(--clr-card-bg);
       border-color: var(--clr-border-light);
+    }
+    html[data-theme="dark"] .u-lr-stat-title,
+    html[data-theme="dark"] .u-lr-stat-num,
+    html[data-theme="dark"] .u-lr-file-title,
+    html[data-theme="dark"] .u-lr-card-heading,
+    html[data-theme="dark"] .u-lr-status-col label {
+      color: var(--clr-text-dark);
+    }
+    html[data-theme="dark"] .u-lr-table thead th {
+      background: #2a2438;
+      color: #F5C518;
+    }
+    html[data-theme="dark"] .u-lr-table tbody td {
+      color: var(--clr-text-mid);
+      border-bottom-color: #362d4a;
+    }
+    html[data-theme="dark"] .u-lr-search-box input,
+    html[data-theme="dark"] .u-lr-status-col select,
+    html[data-theme="dark"] .u-lr-page-btn {
+      background: #26212e;
+      border-color: #3a314a;
+      color: #ffffff;
+    }
+
+    /* =========================================================
+       NEW LEAVE REQUESTS UI (4 Top Cards + My Requests Table)
+       ========================================================= */
+    .topbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .topbar-datetime {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.3;
+    }
+    .topbar-datetime-date {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .topbar-datetime-time {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .u-lr-top-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) 1.55fr;
+      gap: 18px;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .u-lr-stat-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px 20px 22px;
+      box-shadow: 0 4px 14px rgba(60, 20, 100, 0.07);
+      border: 1px solid rgba(107, 15, 186, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      min-height: 175px;
+    }
+
+    .u-lr-stat-card::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 5px;
+    }
+    .u-lr-stat-card.stat-pending::after { background: #F59E0B; }
+    .u-lr-stat-card.stat-approved::after { background: #16A34A; }
+    .u-lr-stat-card.stat-disapproved::after { background: #EF4444; }
+
+    .u-lr-stat-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .u-lr-stat-title {
+      font-size: 0.94rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .u-lr-stat-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .u-lr-stat-icon svg {
+      width: 18px; height: 18px;
+      stroke: currentColor; fill: none; stroke-width: 2;
+    }
+    .stat-pending .u-lr-stat-icon { background: #FEF3C7; color: #D97706; }
+    .stat-approved .u-lr-stat-icon { background: #DCFCE7; color: #16A34A; }
+    .stat-disapproved .u-lr-stat-icon { background: #FEE2E2; color: #DC2626; }
+
+    .u-lr-stat-num {
+      font-size: 2.55rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      text-align: center;
+      margin: 8px 0 4px;
+      line-height: 1;
+    }
+
+    .u-lr-stat-sub {
+      font-size: 0.78rem;
+      color: #6b7280;
+      text-align: center;
+      margin: 0;
+    }
+
+    .u-lr-file-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 22px 24px;
+      box-shadow: 0 4px 14px rgba(60, 20, 100, 0.07);
+      border: 1px solid rgba(107, 15, 186, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .u-lr-file-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      margin: 0;
+    }
+    .u-lr-file-title svg {
+      width: 24px; height: 24px;
+      stroke: currentColor; fill: none; stroke-width: 2;
+    }
+
+    .u-lr-file-sub {
+      font-size: 0.86rem;
+      color: #4b5563;
+      font-style: italic;
+      margin: 8px 0 0;
+    }
+
+    .u-lr-file-btn-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+
+    .btn-u-leave-application {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 999px;
+      border: none;
+      background: #1B8A4B;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+    .btn-u-leave-application:hover {
+      background: #15703C;
+    }
+    .btn-u-leave-application svg {
+      width: 17px; height: 17px;
+      stroke: currentColor; fill: none; stroke-width: 2;
+    }
+
+    .u-lr-table-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 22px 26px;
+      box-shadow: 0 4px 14px rgba(60, 20, 100, 0.07);
+      border: 1px solid rgba(107, 15, 186, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .u-lr-toolbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .u-lr-card-heading {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      margin: 0;
+    }
+
+    .u-lr-filters-right {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .u-lr-search-box {
+      position: relative;
+      flex: 1;
+      max-width: 360px;
+      min-width: 200px;
+    }
+    .u-lr-search-box input {
+      width: 100%;
+      padding: 9px 36px 9px 16px;
+      border-radius: 999px;
+      border: 1.5px solid #dfd7f3;
+      font: inherit;
+      font-size: 0.84rem;
+      box-sizing: border-box;
+      color: #1A1A2E;
+      background: #ffffff;
+    }
+    .u-lr-search-box input:focus {
+      outline: none;
+      border-color: #6B0FBA;
+    }
+    .u-lr-search-icon {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      stroke: #6b7280;
+      fill: none;
+      stroke-width: 2;
+      pointer-events: none;
+    }
+
+    .u-lr-status-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .u-lr-status-col label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #1A1A2E;
+    }
+    .u-lr-status-col select {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1.5px solid #374151;
+      background: #ffffff;
+      color: #1A1A2E;
+      font: inherit;
+      font-size: 0.83rem;
+      font-weight: 600;
+      min-width: 140px;
+      cursor: pointer;
+    }
+
+    .u-lr-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .u-lr-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+    .u-lr-table thead th {
+      background: #ede9f5;
+      color: #1A1A2E;
+      font-weight: 800;
+      padding: 12px 16px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .u-lr-table tbody td {
+      padding: 13px 16px;
+      color: #1f2937;
+      border-bottom: 1px solid #f0ebfc;
+      vertical-align: middle;
+    }
+    .u-lr-table tbody tr {
+      cursor: pointer;
+    }
+    .u-lr-table tbody tr:hover td {
+      background: #faf8ff;
+    }
+
+    .u-lr-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .u-lr-status-pill.is-pending { background: #FFF8E1; color: #92400E; }
+    .u-lr-status-pill.is-approved { background: #DCFCE7; color: #15803D; }
+    .u-lr-status-pill.is-disapproved { background: #FEE2E2; color: #B91C1C; }
+
+    .u-lr-status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .is-pending .u-lr-status-dot { background: #F59E0B; }
+    .is-approved .u-lr-status-dot { background: #16A34A; }
+    .is-disapproved .u-lr-status-dot { background: #DC2626; }
+
+    .u-lr-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #f0ebfc;
+    }
+    .u-lr-pag-info {
+      font-size: 0.83rem;
+      color: #374151;
+    }
+    .u-lr-pag-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .u-lr-page-btn {
+      min-width: 32px;
+      height: 32px;
+      padding: 0 9px;
+      border: 1.5px solid #e5dff5;
+      border-radius: 7px;
+      background: #ffffff;
+      color: #374151;
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .u-lr-page-btn.is-active {
+      background: #6B0FBA;
+      border-color: #6B0FBA;
+      color: #ffffff;
+    }
+    .u-lr-page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* =========================================================
+       FILE A LEAVE REQUEST MODAL (Principal UI Style)
+       ========================================================= */
+    .u-lr-modal-box {
+      background: #ffffff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px 36px 28px;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+      box-sizing: border-box;
+    }
+    .u-lr-modal-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: #666666;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+      line-height: 1;
+      transition: background 0.15s, color 0.15s;
+    }
+    .u-lr-modal-close:hover {
+      background: #f0f0f0;
+      color: #333333;
+    }
+    .u-lr-modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #111111;
+      margin: 0 0 18px;
+    }
+    .u-lr-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .u-lr-form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .u-lr-form-field.full-span {
+      grid-column: 1 / -1;
+    }
+    .u-lr-form-field label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    .u-lr-form-field input,
+    .u-lr-form-field select,
+    .u-lr-form-field textarea {
+      padding: 9px 12px;
+      border: 1.5px solid #d4c6f0;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.85rem;
+      color: #1f2937;
+      background: #ffffff;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .u-lr-form-field input:focus,
+    .u-lr-form-field select:focus,
+    .u-lr-form-field textarea:focus {
+      outline: none;
+      border-color: #6B0FBA;
+    }
+    .u-lr-form-field textarea {
+      resize: vertical;
+      min-height: 76px;
+    }
+    .u-lr-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #eeeeee;
+    }
+    .u-lr-modal-cancel-btn {
+      padding: 9px 24px;
+      background: transparent;
+      border: 1.5px solid #d0c8e8;
+      border-radius: 8px;
+      color: #6b7280;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .u-lr-modal-cancel-btn:hover {
+      background: #f3eeff;
+      border-color: #6B0FBA;
+      color: #6B0FBA;
+    }
+
+    html[data-theme="dark"] .u-lr-modal-box {
+      background: var(--clr-card-bg);
+      border: 1px solid var(--clr-border-light);
+    }
+    html[data-theme="dark"] .u-lr-modal-title,
+    html[data-theme="dark"] .u-lr-form-field label {
+      color: var(--clr-text-dark);
+    }
+    html[data-theme="dark"] .u-lr-form-field input,
+    html[data-theme="dark"] .u-lr-form-field select,
+    html[data-theme="dark"] .u-lr-form-field textarea {
+      background: #2b2436;
+      border-color: #484052;
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .u-lr-modal-footer {
+      border-top-color: #3a314a;
+    }
+
+    @media (max-width: 1050px) {
+      .u-lr-top-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .u-lr-top-grid,
+      .u-lr-form-grid {
+        grid-template-columns: 1fr;
+      }
+      .topbar-datetime {
+        display: none;
+      }
     }
   </style>
 
@@ -242,83 +762,168 @@
             <line x1="8"  y1="15" x2="12" y2="15"/>
           </svg>
         </span>
-        <h1 class="topbar-title">Request</h1>
-        <button
-          class="hamburger"
-          id="hamburger"
-          type="button"
-          aria-controls="sidebar"
-          aria-expanded="false"
-          aria-label="Toggle navigation menu"
-        >
-          <span></span><span></span><span></span>
-        </button>
+        <h1 class="topbar-title">Leave Requests</h1>
+        <div class="topbar-right">
+          <div class="topbar-datetime" aria-live="off">
+            <span class="topbar-datetime-date" id="topbarDate">—</span>
+            <span class="topbar-datetime-time" id="topbarTime">—</span>
+          </div>
+          <button
+            class="hamburger"
+            id="hamburger"
+            type="button"
+            aria-controls="sidebar"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </header>
 
       <!-- PAGE CONTENT -->
       <main class="page-content request-content" id="mainContent">
 
-        <!-- Section A: Heading -->
-        <div>
-          <h2 class="request-page-heading">Request a Leave</h2>
-          <p class="request-page-sub">File a leave request using the digital leave form.</p>
+        <!-- TOP 4 CARDS: 3 LEAVE COUNTS + FILE A LEAVE REQUEST -->
+        <div class="u-lr-top-grid">
+
+          <!-- Pending Leave Requests -->
+          <article class="u-lr-stat-card stat-pending">
+            <div class="u-lr-stat-top">
+              <h2 class="u-lr-stat-title">Pending Leave<br>Requests</h2>
+              <div class="u-lr-stat-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9"/>
+                  <polyline points="12 7 12 12 15 14"/>
+                </svg>
+              </div>
+            </div>
+            <p class="u-lr-stat-num" id="uLrPendingCount">0</p>
+            <p class="u-lr-stat-sub" id="uLrPendingSub">No pending requests</p>
+          </article>
+
+          <!-- Approved Leave Requests -->
+          <article class="u-lr-stat-card stat-approved">
+            <div class="u-lr-stat-top">
+              <h2 class="u-lr-stat-title">Approved Leave<br>Requests</h2>
+              <div class="u-lr-stat-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9"/>
+                  <polyline points="9 12 11 14 15 10"/>
+                </svg>
+              </div>
+            </div>
+            <p class="u-lr-stat-num" id="uLrApprovedCount">0</p>
+            <p class="u-lr-stat-sub" id="uLrApprovedSub">No approved requests</p>
+          </article>
+
+          <!-- Disapproved Leave Requests -->
+          <article class="u-lr-stat-card stat-disapproved">
+            <div class="u-lr-stat-top">
+              <h2 class="u-lr-stat-title">Disapproved<br>Leave Requests</h2>
+              <div class="u-lr-stat-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9"/>
+                  <line x1="15" y1="9" x2="9" y2="15"/>
+                  <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+              </div>
+            </div>
+            <p class="u-lr-stat-num" id="uLrDisapprovedCount">0</p>
+            <p class="u-lr-stat-sub" id="uLrDisapprovedSub">No disapproved requests</p>
+          </article>
+
+          <!-- File a Leave Request Card -->
+          <article class="u-lr-file-card">
+            <div>
+              <h2 class="u-lr-file-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="12" y1="18" x2="12" y2="12"/>
+                  <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>
+                File a Leave Request
+              </h2>
+              <p class="u-lr-file-sub">
+                Your request will be reviewed by an administrator
+              </p>
+            </div>
+
+            <div class="u-lr-file-btn-wrap">
+              <button type="button" id="openLeaveFormBtn" class="btn-u-leave-application">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Leave Application
+              </button>
+            </div>
+          </article>
+
         </div>
 
-        <!-- Section B: Request card -->
-        <div class="request-card">
-          <div class="request-card-title">File a leave request</div>
-          <p class="request-card-sub">
-            Click the button below to open the leave request form.
-            Your request will be reviewed by an administrator.
-          </p>
-          <div>
-            <button type="button" id="openLeaveFormBtn" class="btn-yellow">
-              &#128206; Request a Leave
-            </button>
-          </div>
-        </div>
+        <!-- BOTTOM CARD: My Requests Table -->
+        <section class="u-lr-table-card" aria-labelledby="uLrMyRequestsHeading">
+          <div class="u-lr-toolbar">
+            <h2 class="u-lr-card-heading" id="uLrMyRequestsHeading">My Requests</h2>
 
-        <!-- Section C: My Requests table -->
-        <div class="my-request-table">
-          <div class="table-header-bar">
-            <h3>My Requests</h3>
+            <div class="u-lr-filters-right">
+              <div class="u-lr-search-box">
+                <input
+                  type="search"
+                  id="uLrSearchInput"
+                  placeholder="Search requests..."
+                  aria-label="Search my leave requests"
+                  autocomplete="off"
+                />
+                <svg class="u-lr-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+                </svg>
+              </div>
+
+              <div class="u-lr-status-col">
+                <label for="uLrStatusFilter">Status</label>
+                <select id="uLrStatusFilter">
+                  <option value="all">All</option>
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="disapproved">Disapproved</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <table class="data-table" aria-label="My leave requests">
-            <thead>
-              <tr>
-                <th>Request Number</th>
-                <th>Date Filed</th>
-                <th>Leave Dates</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <!-- Populated by userRequest.js — skeleton while loading -->
-            <tbody id="requestTableBody">
-              <tr class="skel-row" aria-hidden="true">
-                <td><span class="skel skel-cell"></span></td>
-                <td><span class="skel skel-cell" style="width:65%"></span></td>
-                <td><span class="skel skel-cell"></span></td>
-                <td><span class="skel skel-cell" style="width:60%"></span></td>
-                <td><span class="skel skel-cell" style="width:45%"></span></td>
-              </tr>
-              <tr class="skel-row" aria-hidden="true">
-                <td><span class="skel skel-cell"></span></td>
-                <td><span class="skel skel-cell" style="width:65%"></span></td>
-                <td><span class="skel skel-cell" style="width:80%"></span></td>
-                <td><span class="skel skel-cell" style="width:60%"></span></td>
-                <td><span class="skel skel-cell" style="width:45%"></span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+
+          <div class="u-lr-table-wrap">
+            <table class="u-lr-table" aria-label="My leave requests">
+              <thead>
+                <tr>
+                  <th>Request No.</th>
+                  <th>Date Filed</th>
+                  <th>Leave Type</th>
+                  <th>Leave Dates</th>
+                  <th>Total Days</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="requestTableBody">
+                <tr>
+                  <td colspan="6" style="text-align:center;padding:24px;color:#9ca3af;">Loading your leave requests...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="u-lr-pagination" id="uLrPagination" role="navigation" aria-label="My leave requests pagination" hidden></div>
+        </section>
 
       </main>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════
-       MODAL 1 — Leave Form
+       MODAL 1 — File a Leave Request (Principal UI Style)
   ══════════════════════════════════════════════════════ -->
   <div
     class="modal-overlay"
@@ -328,62 +933,63 @@
     aria-modal="true"
     aria-labelledby="leaveFormTitle"
   >
-    <div class="modal-box">
-      <div class="modal-header">
-        <h2 id="leaveFormTitle">Request a Leave</h2>
-      </div>
+    <div class="u-lr-modal-box">
+      <button type="button" class="u-lr-modal-close" id="closeLeaveFormBtn" aria-label="Close">&#10005;</button>
+      <h2 class="u-lr-modal-title" id="leaveFormTitle">File a Leave Request</h2>
 
-      <div class="modal-body">
-
-        <div class="form-group">
+      <div class="u-lr-form-grid">
+        <div class="u-lr-form-field full-span">
           <label for="leaveTypeSelect">Leave Type</label>
           <select id="leaveTypeSelect" name="leave_type_id" required>
-            <option value="">-- Select Leave Type --</option>
+            <option value="">Select Leave Type</option>
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="u-lr-form-field">
           <label for="leaveStartDate">Start Date</label>
           <input type="date" id="leaveStartDate" name="start_date" required />
         </div>
 
-        <div class="form-group">
+        <div class="u-lr-form-field">
           <label for="leaveEndDate">End Date</label>
           <input type="date" id="leaveEndDate" name="end_date" required />
         </div>
 
-        <div class="form-group">
-          <label for="totalLeaveDays">Total Leave Days (Weekdays)</label>
+        <div class="u-lr-form-field full-span">
+          <label for="totalLeaveDays">Total Leave Days</label>
           <input
             type="number"
             id="totalLeaveDays"
             name="total_leave_days"
+            min="1"
+            step="0.5"
+            value="1"
             readonly
             aria-readonly="true"
           />
         </div>
 
-        <div class="form-group">
+        <div class="u-lr-form-field full-span">
           <label for="leaveReason">
             Reason / Details
             <span id="leaveReasonRequiredBadge" style="display:none;color:#DC2626;font-size:0.78rem;margin-left:4px;">*required</span>
-            <span id="leaveReasonOptionalHint" style="color:#9ca3af;font-size:0.78rem;font-weight:400;margin-left:4px;">(optional)</span>
+            <span id="leaveReasonOptionalHint">(Optional)</span>
           </label>
           <textarea
             id="leaveReason"
             name="reason_details"
-            placeholder="Briefly describe your reason..."
+            rows="3"
+            placeholder="Provide additional details for your leave request..."
           ></textarea>
         </div>
-
       </div>
 
-      <div class="modal-footer">
-        <button type="button" id="cancelLeaveFormBtn" class="btn-secondary">
+      <div class="u-lr-modal-footer">
+        <button type="button" id="cancelLeaveFormBtn" class="u-lr-modal-cancel-btn">
           Cancel
         </button>
-        <button type="button" id="reviewLeaveBtn" class="btn-yellow">
-          Review &#8594;
+        <button type="button" id="reviewLeaveBtn" class="btn-u-leave-application" style="padding:9px 22px;font-size:0.86rem;">
+          Submit Application
         </button>
       </div>
     </div>
@@ -597,6 +1203,27 @@
   <script src="../../scripts/apiErrorHandler.js"></script>
   <script src="../../scripts/userRequest.js"></script>
   <script src="../../scripts/settings.js"></script>
+  <script>
+    (function () {
+      const dateEl = document.getElementById("topbarDate");
+      const timeEl = document.getElementById("topbarTime");
+      function pad(n) { return String(n).padStart(2, "0"); }
+      function tick() {
+        const now = new Date();
+        const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+        const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        let h = now.getHours();
+        const m = pad(now.getMinutes());
+        const s = pad(now.getSeconds());
+        const ampm = h >= 12 ? "PM" : "AM";
+        h = h % 12 || 12;
+        if (dateEl) dateEl.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+        if (timeEl) timeEl.textContent = `${h}:${m}:${s} ${ampm}`;
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
   <script src="../../scripts/switchAccount.js"></script>
 </body>
 </html>

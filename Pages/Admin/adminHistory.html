@@ -372,6 +372,29 @@
       cursor: not-allowed;
     }
 
+    .tx-archived-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: #F3E8FF;
+      color: #6B0FBA;
+      border: 1px solid #D8B4FE;
+      vertical-align: middle;
+    }
+
+    html[data-theme="dark"] .tx-archived-badge {
+      background: #36294d;
+      color: #F5C518;
+      border-color: #584b6a;
+    }
+
     /* =========================================================
        MODALS (Leave Request Details & Service Credit Upload Details)
        ========================================================= */
@@ -637,7 +660,7 @@
                   <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
                 </svg>
               </span>
-              Employees
+              Personnel
             </a>
           </li>
 
@@ -806,6 +829,12 @@
               class="history-date-input"
               aria-label="Filter by upload date"
             />
+
+            <select id="scArchiveFilter" class="history-select" aria-label="Filter service credit upload records by archive status">
+              <option value="active">Records: Active</option>
+              <option value="archived">Records: Archived</option>
+              <option value="all">Records: All</option>
+            </select>
           </div>
 
           <!-- Table -->
@@ -888,6 +917,12 @@
               <option value="all">Status: All</option>
               <option value="approved">Approved</option>
               <option value="disapproved">Disapproved</option>
+            </select>
+
+            <select id="leaveArchiveFilter" class="history-select" aria-label="Filter leave history by archive status">
+              <option value="active">Records: Active</option>
+              <option value="archived">Records: Archived</option>
+              <option value="all">Records: All</option>
             </select>
           </div>
 

@@ -11,6 +11,12 @@ const FORM6_BASE =
   `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/generateForm6.php`;
 const ADMIN_PROFILE_EDIT_REQ_API =
   `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/profileEditRequests.php`;
+const USER_DASHBOARD_API =
+  `${window.PERSYS_CONFIG.API_BASE_URL}/api/user/dashboard.php`;
+const USER_PROFILE_EDIT_REQ_API =
+  `${window.PERSYS_CONFIG.API_BASE_URL}/api/user/profileEditRequests.php`;
+const CALENDAR_OVERLAPS_API =
+  `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/calendarOverlaps.php`;
 
 let dashboardPendingRequests = [];
 let adminProfileEditRequests = [];
@@ -25,13 +31,169 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  const pFlags = window.PERSYSAdminGuard.getPrincipalFeatures?.() || {};
+  if (pFlags.is_principal && pFlags.use_personal_dashboard) {
+    activatePrincipalDashboardMode();
+    return;
+  }
+
   wireDashboardRequestModal();
   wireAdminEditRequestSection();
+  window.PERSYSGlobalCalendar?.mount("calendarHolidaysCard", { large: true });
   await Promise.all([
     loadDashboard(),
     loadRecentEditRequests()
   ]);
 });
+
+/* ═══════════════════════════════════════════════════════════════
+   PRINCIPAL ("SUPER ADMIN") PERSONAL DASHBOARD MODE
+═══════════════════════════════════════════════════════════════ */
+
+async function activatePrincipalDashboardMode() {
+  const topRow = document.querySelector(".dashboard-top-row");
+  const bottomRow = document.querySelector(".dashboard-bottom-row");
+  const principalView = document.getElementById("principalDashboardView");
+
+  if (topRow) topRow.style.display = "none";
+  if (bottomRow) bottomRow.style.display = "none";
+  if (principalView) {
+    principalView.hidden = false;
+    principalView.style.display = "flex";
+  }
+
+  wirePrincipalRequestEditModal();
+  window.PERSYSGlobalCalendar?.mount("principalGlobalCalendarCard", { large: true });
+
+  try {
+    const response = await fetch(USER_DASHBOARD_API, {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store",
+      headers: { Accept: "application/json" }
+    });
+
+    const checked = await window.PERSYSApiErrors.handleResponse(response);
+    if (!checked) return;
+
+    const result = await checked.json();
+    if (!result || !result.success || !result.data) return;
+
+    const data = result.data;
+    const username = data.user?.username || "Principal";
+    const roleName = data.user?.role_name || "Principal";
+
+    setText("adminUsername", username);
+    setText("adminRole", roleName);
+    setText("principalWelcomeName", username);
+
+    const sc = data.service_credits || {};
+    setText("pDashNationalBal", Number(sc.national ?? 0).toFixed(2));
+    setText("pDashWellnessBal", Number(sc.wellness ?? 0).toFixed(2));
+    setText("pDashLocalBal", Number(sc.local ?? 0).toFixed(2));
+
+    const st = data.stats || {};
+    const pending = Number(st.pending ?? 0);
+    const approved = Number(st.approved ?? 0);
+    const disapproved = Number(st.rejected ?? 0);
+
+    setText("pDashPendingCount", String(pending));
+    setText("pDashPendingSub", pending > 0 ? `${pending} pending` : "No pending requests");
+
+    setText("pDashApprovedCount", String(approved));
+    setText("pDashApprovedSub", approved > 0 ? `${approved} approved` : "No approved requests");
+
+    setText("pDashDisapprovedCount", String(disapproved));
+    setText("pDashDisapprovedSub", disapproved > 0 ? `${disapproved} disapproved` : "No disapproved requests");
+  } catch (err) {
+    console.error("Principal personal dashboard load error:", err);
+  }
+}
+
+function wirePrincipalRequestEditModal() {
+  const openBtn = document.getElementById("btnPrincipalRequestEditProfile");
+  const overlay = document.getElementById("principalReqEditModalOverlay");
+  const closeBtn = document.getElementById("principalReqEditCloseBtn");
+  const cancelBtn = document.getElementById("principalReqEditCancelBtn");
+  const form = document.getElementById("principalReqEditForm");
+  const catEl = document.getElementById("principalReqEditCategory");
+  const msgEl = document.getElementById("principalReqEditMessage");
+  const fbEl = document.getElementById("principalReqEditFeedback");
+  const submitBtn = document.getElementById("principalReqEditSubmitBtn");
+
+  function close() {
+    overlay?.classList.remove("is-open");
+    document.body.style.overflow = "";
+  }
+
+  openBtn?.addEventListener("click", () => {
+    if (fbEl) {
+      fbEl.textContent = "";
+      fbEl.className = "edit-req-feedback";
+    }
+    overlay?.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    msgEl?.focus();
+  });
+
+  closeBtn?.addEventListener("click", close);
+  cancelBtn?.addEventListener("click", close);
+  overlay?.addEventListener("click", (e) => {
+    if (e.target === overlay) close();
+  });
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const category = (catEl?.value || "Personal Information").trim();
+    const message = (msgEl?.value || "").trim();
+
+    if (message.length < 5) {
+      if (fbEl) {
+        fbEl.textContent = "Please enter at least 5 characters describing the requested changes.";
+        fbEl.className = "edit-req-feedback is-error";
+      }
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+    }
+
+    try {
+      const res = await fetch(USER_PROFILE_EDIT_REQ_API, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({ category, message })
+      });
+      const result = await res.json().catch(() => null);
+      if (!res.ok || !result || !result.success) {
+        throw new Error(result?.message || "Unable to submit profile edit request.");
+      }
+
+      if (msgEl) msgEl.value = "";
+      if (fbEl) {
+        fbEl.textContent = result.message || "Your profile edit request has been sent.";
+        fbEl.className = "edit-req-feedback is-success";
+      }
+      setTimeout(close, 850);
+    } catch (err) {
+      if (fbEl) {
+        fbEl.textContent = err.message || "Unable to submit profile edit request.";
+        fbEl.className = "edit-req-feedback is-error";
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send Request";
+      }
+    }
+  });
+}
 
 /* ═══════════════════════════════════════════════════════════════
    LIVE TOPBAR DATE & CLOCK
@@ -239,9 +401,53 @@ function openDashboardRequestModal(req) {
     statusBadge.textContent = `Status: ${req.status || "Pending"}`;
   }
 
+  checkDashboardLeaveOverlaps(req);
+
   overlay.classList.add("is-open");
   document.body.style.overflow = "hidden";
   modal.focus();
+}
+
+async function checkDashboardLeaveOverlaps(req) {
+  const banner = document.getElementById("dashOverlapWarningBanner");
+  if (!banner) return;
+  banner.style.display = "none";
+  banner.textContent = "";
+
+  const startYmd = String(req.start_datetime || "").slice(0, 10);
+  const endYmd   = String(req.end_datetime || startYmd).slice(0, 10);
+  const leaveId  = req.leave_request_id || "";
+  if (!startYmd) return;
+
+  try {
+    const params = new URLSearchParams({
+      start: startYmd,
+      end: endYmd || startYmd,
+      leave_id: String(leaveId)
+    });
+    const res = await fetch(`${CALENDAR_OVERLAPS_API}?${params.toString()}`, {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store",
+      headers: { Accept: "application/json" }
+    });
+    const result = await res.json().catch(() => null);
+    if (!res.ok || !result || !result.success || !result.data) return;
+
+    const overlaps = Array.isArray(result.data.overlaps) ? result.data.overlaps : [];
+    if (overlaps.length === 0) return;
+
+    const itemsText = overlaps
+      .slice(0, 4)
+      .map((o) => `${o.employee_name} (${o.leave_type_name}, ${o.start_date} to ${o.end_date})`)
+      .join("; ");
+    const extra = overlaps.length > 4 ? ` and ${overlaps.length - 4} more` : "";
+
+    banner.style.display = "block";
+    banner.textContent = `Schedule Overlap Notice: ${overlaps.length} other personnel already on approved leave during these dates — ${itemsText}${extra}.`;
+  } catch {
+    // Non-blocking warning check
+  }
 }
 
 function closeDashboardRequestModal() {

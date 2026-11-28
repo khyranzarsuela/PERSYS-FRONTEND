@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   wireRequestEditProfileModal();
+  window.PERSYSGlobalCalendar?.mount("userGlobalCalendarCard", { large: true });
   await loadDashboard();
 });
 
@@ -96,22 +97,29 @@ async function loadDashboard() {
       rejectedSub.innerHTML = "";
       rejectedSub.textContent =
         data.stats.rejected === 0
-          ? "No rejected requests"
-          : `${data.stats.rejected} rejected`;
+          ? "No disapproved requests"
+          : `${data.stats.rejected} disapproved`;
     }
 
     const scLocalEl = document.getElementById("scLocal");
     const scNationalEl = document.getElementById("scNational");
+    const scWellnessEl = document.getElementById("scWellness");
     if (scLocalEl) {
       scLocalEl.innerHTML = "";
-      scLocalEl.textContent = formatCredits(data.service_credits.local);
+      scLocalEl.textContent = formatCredits(data.service_credits.local ?? 0);
     }
     if (scNationalEl) {
       scNationalEl.innerHTML = "";
-      scNationalEl.textContent = formatCredits(data.service_credits.national);
+      scNationalEl.textContent = formatCredits(data.service_credits.national ?? 0);
+    }
+    if (scWellnessEl) {
+      scWellnessEl.innerHTML = "";
+      scWellnessEl.textContent = formatCredits(data.service_credits.wellness ?? 0);
     }
 
-    renderRecentLeaves(data.recent_leave_requests, tableBody);
+    if (tableBody) {
+      renderRecentLeaves(data.recent_leave_requests, tableBody);
+    }
   } catch (error) {
     console.error("User dashboard loading error:", error);
 

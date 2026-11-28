@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="../../styles/user.css" />
   <link rel="stylesheet" href="../../styles/skeleton.css" />
+  <link rel="stylesheet" href="../../styles/globalCalendar.css" />
 
   <style>
     /* =========================================================
@@ -77,6 +78,7 @@
     .page-content.dashboard-content {
       display: flex;
       flex-direction: column;
+      align-items: stretch;
       gap: 20px;
       padding: 24px 28px;
       background: #f0eef8;
@@ -298,12 +300,88 @@
     .stat-accent--green  { background: #16A34A; }
     .stat-accent--red    { background: #DC2626; }
 
-    /* ── Bottom row: SC Balance + Quick Actions ───────────── */
-    .dashboard-mid-row {
+    /* ── Bottom row: 3 Leave Count Cards + Quick Actions ──── */
+    .user-dash-bottom-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      grid-template-columns: repeat(3, 1fr) 1.85fr;
+      gap: 18px;
       align-items: stretch;
+      width: 100%;
+    }
+
+    .stat-card-new {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px 20px 22px;
+      box-shadow: 0 4px 14px rgba(60, 20, 100, 0.07);
+      border: 1px solid rgba(107, 15, 186, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+    }
+
+    .stat-card-new .sc-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .stat-card-new .sc-label {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      line-height: 1.3;
+    }
+
+    .stat-icon-new {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon-new svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sc-icon-wellness {
+      background: #FCE7F3;
+    }
+    .sc-icon-wellness svg {
+      stroke: #DB2777;
+    }
+
+    @media (max-width: 1100px) {
+      .user-dash-bottom-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      .user-dash-bottom-row .quick-actions-card {
+        grid-column: 1 / -1;
+      }
+    }
+    @media (max-width: 768px) {
+      .user-dash-bottom-row {
+        grid-template-columns: 1fr;
+      }
+      .sc-balance-cols {
+        flex-direction: column;
+      }
+      .sc-balance-col + .sc-balance-col {
+        border-left: none;
+        border-top: 1px solid #ddd5f5;
+      }
     }
 
     /* Service Credit Balance card */
@@ -316,6 +394,8 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .sc-balance-card-title {
@@ -1181,133 +1261,123 @@
 
         </div>
 
-        <!-- STAT CARDS ─────────────────────────────────────── -->
-        <div class="stat-cards-row">
+        <!-- 1. SERVICE CREDIT BALANCE CARD (Full Width, 3 Pools: National | Wellness | Local) ── -->
+        <div class="sc-balance-card-new">
+          <div class="sc-balance-card-title">
+            <div class="sc-balance-card-title-left">
+              Service Credit Balance
+            </div>
+            <a href="userServiceCredits.html" class="sc-view-btn">
+              View Details &nbsp;&rarr;
+            </a>
+          </div>
+
+          <div class="sc-balance-cols">
+
+            <!-- National -->
+            <div class="sc-balance-col" style="justify-content:center;">
+              <div class="sc-balance-col-icon sc-icon-national">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 22h18M3 10h18M12 2L2 7h20L12 2Z"/>
+                  <rect x="5" y="10" width="3" height="9" rx="0.5"/>
+                  <rect x="10.5" y="10" width="3" height="9" rx="0.5"/>
+                  <rect x="16" y="10" width="3" height="9" rx="0.5"/>
+                </svg>
+              </div>
+              <div class="sc-balance-col-info">
+                <span class="sc-balance-col-type" style="color:#1A1A2E;font-weight:700;font-size:0.85rem;">National</span>
+                <span class="sc-balance-col-number" id="scNational" style="font-size:2.1rem;">0.00</span>
+                <span class="sc-balance-col-unit">credits</span>
+              </div>
+            </div>
+
+            <!-- Wellness -->
+            <div class="sc-balance-col" style="justify-content:center;">
+              <div class="sc-balance-col-icon sc-icon-wellness">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </div>
+              <div class="sc-balance-col-info">
+                <span class="sc-balance-col-type" style="color:#1A1A2E;font-weight:700;font-size:0.85rem;">Wellness</span>
+                <span class="sc-balance-col-number" id="scWellness" style="font-size:2.1rem;">0.00</span>
+                <span class="sc-balance-col-unit">credits</span>
+              </div>
+            </div>
+
+            <!-- Local -->
+            <div class="sc-balance-col" style="justify-content:center;">
+              <div class="sc-balance-col-icon sc-icon-local">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Z"/>
+                  <circle cx="12" cy="9" r="2.5"/>
+                </svg>
+              </div>
+              <div class="sc-balance-col-info">
+                <span class="sc-balance-col-type" style="color:#1A1A2E;font-weight:700;font-size:0.85rem;">Local</span>
+                <span class="sc-balance-col-number" id="scLocal" style="font-size:2.1rem;">0.00</span>
+                <span class="sc-balance-col-unit">credits</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2. BOTTOM ROW: 3 LEAVE COUNT CARDS + QUICK ACTIONS ─────────────── -->
+        <div class="user-dash-bottom-row">
 
           <!-- Pending -->
           <div class="stat-card-new" id="cardPending">
             <div class="sc-top">
+              <span class="sc-label">Pending Leave<br>Requests</span>
               <div class="stat-icon-new stat-icon-pending">
                 <svg viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="12 6 12 12 16 14"/>
                 </svg>
               </div>
-              <span class="sc-label">Pending Leave Request</span>
             </div>
-            <div class="sc-number" data-stat="pending">
-              <span class="skel skel-number" aria-hidden="true"></span>
-            </div>
-            <div class="sc-sub" id="pendingSub">
-              <span class="skel skel-line-sm" aria-hidden="true"></span>
-            </div>
+            <div class="sc-number" data-stat="pending">0</div>
+            <div class="sc-sub" id="pendingSub">No pending requests</div>
             <div class="sc-accent-bar stat-accent--yellow"></div>
           </div>
 
           <!-- Approved -->
           <div class="stat-card-new" id="cardApproved">
             <div class="sc-top">
+              <span class="sc-label">Approved Leave<br>Requests</span>
               <div class="stat-icon-new stat-icon-approved">
                 <svg viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="9 12 11 14 15 10"/>
                 </svg>
               </div>
-              <span class="sc-label">Approved Leave Request</span>
             </div>
-            <div class="sc-number" data-stat="approved">
-              <span class="skel skel-number" aria-hidden="true"></span>
-            </div>
-            <div class="sc-sub" id="approvedSub">
-              <span class="skel skel-line-sm" aria-hidden="true"></span>
-            </div>
+            <div class="sc-number" data-stat="approved">0</div>
+            <div class="sc-sub" id="approvedSub">No approved requests</div>
             <div class="sc-accent-bar stat-accent--green"></div>
           </div>
 
-          <!-- Rejected -->
+          <!-- Disapproved -->
           <div class="stat-card-new" id="cardRejected">
             <div class="sc-top">
+              <span class="sc-label">Disapproved<br>Leave Requests</span>
               <div class="stat-icon-new stat-icon-rejected">
                 <svg viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10"/>
-                  <line x1="15" y1="9" x2="9"  y2="15"/>
-                  <line x1="9"  y1="9" x2="15" y2="15"/>
+                  <line x1="15" y1="9" x2="9" y2="15"/>
+                  <line x1="9" y1="9" x2="15" y2="15"/>
                 </svg>
               </div>
-              <span class="sc-label">Rejected Leave Request</span>
             </div>
-            <div class="sc-number" data-stat="rejected">
-              <span class="skel skel-number" aria-hidden="true"></span>
-            </div>
-            <div class="sc-sub" id="rejectedSub">
-              <span class="skel skel-line-sm" aria-hidden="true"></span>
-            </div>
+            <div class="sc-number" data-stat="rejected">0</div>
+            <div class="sc-sub" id="rejectedSub">No disapproved requests</div>
             <div class="sc-accent-bar stat-accent--red"></div>
-          </div>
-
-        </div>
-
-        <!-- SC BALANCE + QUICK ACTIONS ─────────────────────── -->
-        <div class="dashboard-mid-row">
-
-          <!-- Service Credit Balance -->
-          <div class="sc-balance-card-new">
-            <div class="sc-balance-card-title">
-              <div class="sc-balance-card-title-left">
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="9" r="5"/>
-                  <path d="M7.5 14.5L5 21l7-2.5L19 21l-2.5-6.5"/>
-                </svg>
-                Service Credit Balance
-              </div>
-              <a href="userServiceCredits.html" class="sc-view-btn">
-                View Details &nbsp;→
-              </a>
-            </div>
-
-            <div class="sc-balance-cols">
-
-              <!-- Local -->
-              <div class="sc-balance-col">
-                <div class="sc-balance-col-icon sc-icon-local">
-                  <!-- Location pin icon -->
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Z"/>
-                    <circle cx="12" cy="9" r="2.5"/>
-                  </svg>
-                </div>
-                <div class="sc-balance-col-info">
-                  <span class="sc-balance-col-type">Local</span>
-                  <span class="sc-balance-col-number" id="scLocal"><span class="skel skel-number" style="width:90px;height:36px" aria-hidden="true"></span></span>
-                  <span class="sc-balance-col-unit">credits</span>
-                </div>
-              </div>
-
-              <!-- National -->
-              <div class="sc-balance-col">
-                <div class="sc-balance-col-icon sc-icon-national">
-                  <!-- Bank / institution icon -->
-                  <svg viewBox="0 0 24 24">
-                    <path d="M3 22h18M3 10h18M12 2L2 7h20L12 2Z"/>
-                    <rect x="5"  y="10" width="3" height="9" rx="0.5"/>
-                    <rect x="10.5" y="10" width="3" height="9" rx="0.5"/>
-                    <rect x="16" y="10" width="3" height="9" rx="0.5"/>
-                  </svg>
-                </div>
-                <div class="sc-balance-col-info">
-                  <span class="sc-balance-col-type">National</span>
-                  <span class="sc-balance-col-number" id="scNational"><span class="skel skel-number" style="width:90px;height:36px" aria-hidden="true"></span></span>
-                  <span class="sc-balance-col-unit">credits</span>
-                </div>
-              </div>
-
-            </div>
           </div>
 
           <!-- Quick Actions -->
           <div class="quick-actions-card">
             <div class="quick-actions-title">
-              <!-- Lightning bolt -->
               <svg viewBox="0 0 24 24">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
               </svg>
@@ -1320,10 +1390,9 @@
               <a href="userRequest.html" class="quick-action-btn">
                 <div class="quick-action-btn-left">
                   <div class="quick-action-btn-icon">
-                    <!-- Document icon -->
                     <svg viewBox="0 0 24 24">
                       <rect x="4" y="2" width="16" height="20" rx="2"/>
-                      <line x1="8" y1="7"  x2="16" y2="7"/>
+                      <line x1="8" y1="7" x2="16" y2="7"/>
                       <line x1="8" y1="11" x2="16" y2="11"/>
                       <line x1="8" y1="15" x2="12" y2="15"/>
                     </svg>
@@ -1339,7 +1408,6 @@
               <a href="userServiceCredits.html" class="quick-action-btn">
                 <div class="quick-action-btn-left">
                   <div class="quick-action-btn-icon">
-                    <!-- Stack / database icon -->
                     <svg viewBox="0 0 24 24">
                       <ellipse cx="12" cy="5" rx="9" ry="3"/>
                       <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
@@ -1369,7 +1437,7 @@
                 </svg>
               </button>
 
-              <!-- Request Account Reset (UI button placeholder for future implementation) -->
+              <!-- Request Account Reset -->
               <button type="button" class="quick-action-btn" id="btnQuickRequestAccountReset">
                 <div class="quick-action-btn-left">
                   <div class="quick-action-btn-icon">
@@ -1390,43 +1458,14 @@
 
         </div>
 
-        <!-- RECENT LEAVE REQUESTS TABLE ────────────────────── -->
-        <div class="recent-leave-card">
-
-          <div class="recent-leave-header">
-            <div class="recent-leave-header-left">
-              <!-- Clock icon -->
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-              My Recent Leave Requests
-            </div>
-            <!-- View All → links to the request page -->
-            <a href="userRequest.html" class="recent-leave-view-all">
-              View All &nbsp;→
-            </a>
-          </div>
-
-          <table class="data-table" aria-label="Recent leave requests">
-            <thead>
-              <tr>
-                <th>Leave Request #</th>
-                <th>Date Filed</th>
-                <th>Total Days</th>
-                <th>Status</th>
-                <th>View</th>
-              </tr>
-            </thead>
-            <tbody id="recentLeaveTableBody">
-              <!-- Skeleton rows shown while data loads -->
-              <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:50%"></span></td><td><span class="skel skel-cell" style="width:60%"></span></td><td><span class="skel skel-cell" style="width:40%"></span></td></tr>
-              <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:70%"></span></td><td><span class="skel skel-cell" style="width:60%"></span></td><td><span class="skel skel-cell" style="width:40%"></span></td></tr>
-              <tr class="skel-row" aria-hidden="true"><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell"></span></td><td><span class="skel skel-cell" style="width:55%"></span></td><td><span class="skel skel-cell" style="width:60%"></span></td><td><span class="skel skel-cell" style="width:40%"></span></td></tr>
-            </tbody>
-          </table>
-
-        </div>
+        <!-- ══════════════════════════════════════════════════════
+             ROW 4: LARGE FULL-SCREEN GLOBAL READ-ONLY CALENDAR
+        ══════════════════════════════════════════════════════ -->
+        <section
+          class="persys-global-calendar-card persys-calendar-large"
+          id="userGlobalCalendarCard"
+          aria-label="Global school schedule calendar"
+        ></section>
 
       </main>
     </div>
@@ -1531,6 +1570,7 @@
 
   <script src="../../scripts/user.js"></script>
   <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/globalCalendar.js"></script>
   <script src="../../scripts/userDashboard.js"></script>
   <script src="../../scripts/settings.js"></script>
 

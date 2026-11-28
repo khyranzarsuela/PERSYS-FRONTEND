@@ -770,3 +770,493 @@ html[data-theme="dark"] .cookie-info-note svg {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   SYSTEM JOBS & LOGS SECTION (ADMIN SETTINGS)
+   ============================================================ */
+
+.system-jobs-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.system-jobs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.system-jobs-title-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.system-jobs-meta-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sys-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #f3e8ff;
+  color: #4A0E8F;
+  border: 1px solid #d8b4fe;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* ── Archive Retention Config Bar ── */
+.retention-config-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: #faf8ff;
+  border: 1.5px solid #e4dbf7;
+}
+
+.retention-config-info {
+  flex: 1;
+  min-width: 240px;
+}
+
+.retention-config-title {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #1a0a2e;
+  margin-bottom: 4px;
+}
+
+.retention-config-desc {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.retention-config-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.retention-days-input {
+  width: 90px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #d4c6f0;
+  background: #ffffff;
+  color: #1a0a2e;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.retention-days-input:focus {
+  outline: none;
+  border-color: #6B0FBA;
+  box-shadow: 0 0 0 3px rgba(107, 15, 186, 0.12);
+}
+
+.retention-unit-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.btn-save-retention {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #6B0FBA;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-save-retention:hover:not(:disabled) {
+  background: #530994;
+}
+
+.btn-save-retention:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Feedback Banner ── */
+.job-run-feedback {
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.job-run-feedback.is-success {
+  background: #F0FDF4;
+  color: #166534;
+  border: 1px solid #BBF7D0;
+}
+
+.job-run-feedback.is-error {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+/* ── Subblocks & Tables ── */
+.jobs-subblock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jobs-subblock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.jobs-subblock-title {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: #1a0a2e;
+  margin: 0;
+}
+
+.jobs-subblock-hint {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.jobs-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5dff5;
+  border-radius: 12px;
+}
+
+.jobs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  text-align: left;
+}
+
+.jobs-table thead th {
+  background: #e3ddf2;
+  color: #1f1633;
+  font-weight: 800;
+  padding: 11px 14px;
+  white-space: nowrap;
+  border-bottom: 1px solid #d5cae9;
+}
+
+.jobs-table tbody tr {
+  border-bottom: 1px solid #f0ebfc;
+  transition: background 0.12s ease;
+}
+
+.jobs-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.jobs-table tbody tr:hover {
+  background: #faf8ff;
+}
+
+.jobs-table tbody td {
+  padding: 12px 14px;
+  color: #1f2937;
+  vertical-align: middle;
+}
+
+.job-name-primary {
+  font-weight: 800;
+  color: #1a0a2e;
+  display: block;
+}
+
+.job-name-desc {
+  font-size: 0.76rem;
+  color: #6b7280;
+  display: block;
+  margin-top: 2px;
+  max-width: 390px;
+}
+
+.job-schedule-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f5f3ff;
+  color: #5b21b6;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.job-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.job-status-pill.status-success {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.job-status-pill.status-failed {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.job-status-pill.status-running {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.job-status-pill.status-never {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+
+.job-trigger-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.job-trigger-badge.trigger-manual {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.btn-run-job-now {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #1B8A4B;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-run-job-now:hover:not(:disabled) {
+  background: #15703C;
+}
+
+.btn-run-job-now:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.jobs-empty-cell {
+  text-align: center;
+  padding: 24px !important;
+  color: #9ca3af !important;
+  font-style: italic;
+}
+
+/* ── Job Execution Logs Toolbar & Pagination ── */
+.job-logs-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.job-logs-select {
+  padding: 7px 11px;
+  border-radius: 8px;
+  border: 1.5px solid #dfd7f3;
+  background: #ffffff;
+  color: #1f2937;
+  font: inherit;
+  font-size: 0.79rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.job-logs-select:focus {
+  outline: none;
+  border-color: #6B0FBA;
+}
+
+.btn-refresh-logs {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #d4c6f0;
+  background: #faf8ff;
+  color: #6B0FBA;
+  font: inherit;
+  font-size: 0.79rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-refresh-logs:hover {
+  background: #ede9fe;
+}
+
+.job-log-msg-cell {
+  max-width: 440px;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.job-log-err-detail {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #B91C1C;
+  font-family: monospace;
+}
+
+.job-logs-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+}
+
+.job-logs-page-info {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.job-logs-page-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.job-logs-page-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.job-page-btn {
+  padding: 5px 12px;
+  border-radius: 7px;
+  border: 1.5px solid #dfd7f3;
+  background: #ffffff;
+  color: #374151;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.job-page-btn:hover:not(:disabled) {
+  border-color: #6B0FBA;
+  color: #6B0FBA;
+}
+
+.job-page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Dark Mode Overrides for System Jobs & Logs ── */
+html[data-theme="dark"] .retention-config-bar {
+  background: #262030;
+  border-color: #443956;
+}
+
+html[data-theme="dark"] .retention-config-title,
+html[data-theme="dark"] .jobs-subblock-title,
+html[data-theme="dark"] .job-name-primary {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .retention-config-desc,
+html[data-theme="dark"] .jobs-subblock-hint,
+html[data-theme="dark"] .job-name-desc,
+html[data-theme="dark"] .retention-unit-label,
+html[data-theme="dark"] .job-logs-page-info {
+  color: #c4b5fd;
+}
+
+html[data-theme="dark"] .retention-days-input,
+html[data-theme="dark"] .job-logs-select,
+html[data-theme="dark"] .job-page-btn {
+  background: #1e1926;
+  border-color: #443956;
+  color: #f3e8ff;
+}
+
+html[data-theme="dark"] .jobs-table-wrap {
+  border-color: #443956;
+}
+
+html[data-theme="dark"] .jobs-table thead th {
+  background: #2b2436;
+  color: #F5C518;
+  border-bottom-color: #443956;
+}
+
+html[data-theme="dark"] .jobs-table tbody tr {
+  border-bottom-color: #362d44;
+}
+
+html[data-theme="dark"] .jobs-table tbody tr:hover {
+  background: #282233;
+}
+
+html[data-theme="dark"] .jobs-table tbody td,
+html[data-theme="dark"] .job-logs-page-num {
+  color: #e9e0f5;
+}
+
+html[data-theme="dark"] .job-schedule-pill,
+html[data-theme="dark"] .sys-meta-pill {
+  background: #36294d;
+  color: #F5C518;
+  border-color: #584b6a;
+}

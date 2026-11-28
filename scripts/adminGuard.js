@@ -69,6 +69,7 @@
       }
 
       sessionData = data;
+      applyPrincipalGlobalRules(data);
       document.documentElement.style.visibility = "visible";
       return true;
 
@@ -79,10 +80,107 @@
     }
   }
 
+  /**
+   * Apply global Principal ("Super Admin") sidebar & feature rules driven by .env:
+   * - Sidebar role label under username -> "Principal" (or configured label)
+   * - Hide History tab when can_view_history_tab is false (and redirect if on adminHistory.html)
+   * - Hide Accounts sub-tab and disable employee write buttons on adminEmployees.html when configured
+   */
+  function applyPrincipalGlobalRules(data) {
+    const flags = (data && data.principal_features) || {};
+    const isPrincipal = Boolean(data && data.is_principal);
+    const displayRole = data.display_role_name || data.role_name || "Admin";
+
+    // Redirect away from adminHistory.html if History tab is turned off for Principal
+    if (isPrincipal && flags.can_view_history_tab === false) {
+      if (/adminHistory\.html/i.test(window.location.pathname)) {
+        window.location.replace(`${BASE}/Pages/Admin/adminDashboard.html`);
+        return;
+      }
+    }
+
+    function enforceDomRules() {
+      // 1. Set and lock sidebar role label (e.g. "Principal")
+      const roleEls = document.querySelectorAll("#adminRole, #profileSidebarRole, .sidebar-role");
+      roleEls.forEach((el) => {
+        if (el.textContent !== displayRole) {
+          el.textContent = displayRole;
+        }
+      });
+
+      const nameEl = document.querySelector("#adminUsername, #profileSidebarName, .sidebar-name");
+      if (nameEl && data.username && (nameEl.textContent === "Loading..." || !nameEl.textContent.trim())) {
+        nameEl.textContent = data.username;
+      }
+
+      if (!isPrincipal) return;
+
+      // 2. Hide History tab in sidebar if can_view_history_tab === false
+      if (flags.can_view_history_tab === false) {
+        document.querySelectorAll('.sidebar-nav a[href*="adminHistory.html"]').forEach((link) => {
+          const li = link.closest("li");
+          if (li) li.style.display = "none";
+          else link.style.display = "none";
+        });
+      }
+
+      // 3. Employees page: Hide Accounts sub-tab if can_view_accounts_subtab === false
+      if (flags.can_view_accounts_subtab === false) {
+        const btnAccounts = document.getElementById("btnAccounts");
+        if (btnAccounts) {
+          const li = btnAccounts.closest("li");
+          if (li) li.style.display = "none";
+          else btnAccounts.style.display = "none";
+        }
+        const panelAccounts = document.getElementById("panel-accounts");
+        if (panelAccounts) {
+          panelAccounts.style.display = "none";
+        }
+      }
+
+      // 4. Employees page: Disable Add Employee, Master File Upload, and Edit buttons if can_edit_employees === false
+      if (flags.can_edit_employees === false) {
+        document.querySelectorAll(".btn-add-employee, #openBtn").forEach((btn) => {
+          btn.disabled = true;
+          btn.style.opacity = "0.48";
+          btn.style.cursor = "not-allowed";
+          btn.style.pointerEvents = "none";
+          btn.title = "Disabled for Principal view";
+        });
+
+        document.querySelectorAll(".emp-table button, .btn-edit-employee").forEach((btn) => {
+          if (/edit/i.test(btn.textContent || "")) {
+            btn.disabled = true;
+            btn.style.opacity = "0.48";
+            btn.style.cursor = "not-allowed";
+            btn.style.pointerEvents = "none";
+            btn.title = "Disabled for Principal view";
+          }
+        });
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => {
+        enforceDomRules();
+        const obs = new MutationObserver(enforceDomRules);
+        obs.observe(document.body, { childList: true, subtree: true });
+      });
+    } else {
+      enforceDomRules();
+      const obs = new MutationObserver(enforceDomRules);
+      obs.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
   const ready = verifyAdminSession();
 
   // Other Admin scripts can wait for this verification.
-  window.PERSYSAdminGuard = { ready };
+  window.PERSYSAdminGuard = {
+    ready,
+    getSession: () => sessionData,
+    getPrincipalFeatures: () => (sessionData && sessionData.principal_features) || {}
+  };
 
   // Shared session info (used by switchAccount.js).
   window.PERSYSSession = {

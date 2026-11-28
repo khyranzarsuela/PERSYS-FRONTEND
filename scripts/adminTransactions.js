@@ -6,6 +6,8 @@
 const TX_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/transactions.php`;
 const PROCESS_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/processTransaction.php`;
 const FORM6_BASE = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/generateForm6.php`;
+const USER_REQUEST_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/user/request.php`;
+const CALENDAR_OVERLAPS_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/calendarOverlaps.php`;
 
 let rowsPerPage = 5;
 
@@ -29,10 +31,310 @@ document.addEventListener('DOMContentLoaded', async () => {
   const authorized = await window.PERSYSAdminGuard.ready;
   if (!authorized) return;
 
+  const pFlags = window.PERSYSAdminGuard.getPrincipalFeatures?.() || {};
+  if (pFlags.is_principal && pFlags.personal_leave_request_mode) {
+    await activatePrincipalLeaveRequestMode();
+    return;
+  }
+
   await loadTransactions();
   wireFilters();
   wireModal();
 });
+
+/* ═══════════════════════════════════════════════════════════════
+   PRINCIPAL ("SUPER ADMIN") PERSONAL LEAVE REQUESTS MODE
+═══════════════════════════════════════════════════════════════ */
+
+async function activatePrincipalLeaveRequestMode() {
+  document.querySelectorAll('.tx-card, .tx-reports-card').forEach(el => {
+    el.style.display = 'none';
+  });
+
+  const pView = document.getElementById('principalLeaveRequestsView');
+  if (pView) {
+    pView.hidden = false;
+    pView.style.display = 'flex';
+  }
+
+  let myRequests = [];
+  let filteredMyReqs = [];
+  let pLrPage = 1;
+  const pLrPerPage = 5;
+
+  const searchInput = document.getElementById('pLrSearchInput');
+  const statusSelect = document.getElementById('pLrStatusFilter');
+  const openModalBtn = document.getElementById('btnOpenPrincipalLeaveModal');
+  const modalOverlay = document.getElementById('principalLeaveAppModalOverlay');
+  const closeModalBtn = document.getElementById('pLeaveAppCloseBtn');
+  const cancelModalBtn = document.getElementById('pLeaveAppCancelBtn');
+  const form = document.getElementById('principalLeaveAppForm');
+  const typeSelect = document.getElementById('pLeaveTypeSelect');
+  const startInput = document.getElementById('pLeaveStartDate');
+  const endInput = document.getElementById('pLeaveEndDate');
+  const daysInput = document.getElementById('pLeaveTotalDays');
+  const reasonInput = document.getElementById('pLeaveReason');
+  const feedbackEl = document.getElementById('pLeaveAppFeedback');
+  const submitBtn = document.getElementById('pLeaveAppSubmitBtn');
+
+  searchInput?.addEventListener('input', applyPrincipalLeaveFilters);
+  statusSelect?.addEventListener('change', applyPrincipalLeaveFilters);
+
+  function syncTotalDays() {
+    if (!startInput?.value || !endInput?.value) return;
+    const s = parseLocalDateYMD(startInput.value);
+    const e = parseLocalDateYMD(endInput.value);
+    if (s && e && e >= s) {
+      let weekdays = 0;
+      const cur = new Date(s.getFullYear(), s.getMonth(), s.getDate());
+      const end = new Date(e.getFullYear(), e.getMonth(), e.getDate());
+      while (cur <= end) {
+        const day = cur.getDay();
+        if (day !== 0 && day !== 6) weekdays++;
+        cur.setDate(cur.getDate() + 1);
+      }
+      if (daysInput) daysInput.value = String(weekdays);
+    }
+  }
+
+  startInput?.addEventListener('change', () => {
+    if (endInput && (!endInput.value || endInput.value < startInput.value)) {
+      endInput.value = startInput.value;
+    }
+    syncTotalDays();
+  });
+  endInput?.addEventListener('change', syncTotalDays);
+
+  function openLeaveModal() {
+    if (feedbackEl) {
+      feedbackEl.style.display = 'none';
+      feedbackEl.textContent = '';
+    }
+    modalOverlay?.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLeaveModal() {
+    modalOverlay?.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  openModalBtn?.addEventListener('click', openLeaveModal);
+  closeModalBtn?.addEventListener('click', closeLeaveModal);
+  cancelModalBtn?.addEventListener('click', closeLeaveModal);
+  modalOverlay?.addEventListener('click', e => {
+    if (e.target === modalOverlay) closeLeaveModal();
+  });
+
+  form?.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!typeSelect?.value || !startInput?.value || !endInput?.value) return;
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+    }
+
+    try {
+      const res = await fetch(USER_REQUEST_API, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          leave_type_id: Number(typeSelect.value),
+          start_date: startInput.value,
+          end_date: endInput.value,
+          total_leave_days: Number(daysInput?.value || 1),
+          reason_details: (reasonInput?.value || '').trim()
+        })
+      });
+
+      const result = await res.json().catch(() => null);
+      if (!res.ok || !result || !result.success) {
+        throw new Error(result?.message || 'Unable to submit leave request.');
+      }
+
+      if (feedbackEl) {
+        feedbackEl.style.display = 'block';
+        feedbackEl.style.background = '#F0FDF4';
+        feedbackEl.style.color = '#166534';
+        feedbackEl.style.border = '1px solid #BBF7D0';
+        feedbackEl.textContent = result.message || 'Leave request submitted successfully.';
+      }
+
+      form.reset();
+      await fetchPrincipalLeaveData();
+      setTimeout(closeLeaveModal, 800);
+    } catch (err) {
+      if (feedbackEl) {
+        feedbackEl.style.display = 'block';
+        feedbackEl.style.background = '#FEF2F2';
+        feedbackEl.style.color = '#991B1B';
+        feedbackEl.style.border = '1px solid #FECACA';
+        feedbackEl.textContent = err.message || 'Unable to submit leave request.';
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Application';
+      }
+    }
+  });
+
+  async function fetchPrincipalLeaveData() {
+    try {
+      const res = await fetch(USER_REQUEST_API, {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' }
+      });
+      const result = await res.json();
+      if (!res.ok || !result || !result.success) return;
+
+      const data = result.data || {};
+      if (data.user) {
+        setText('adminUsername', data.user.username);
+        setText('adminRole', data.user.role_name);
+      }
+
+      const leaveTypes = Array.isArray(data.leave_types) ? data.leave_types : [];
+      if (typeSelect && typeSelect.options.length <= 1) {
+        leaveTypes.forEach(lt => {
+          const opt = document.createElement('option');
+          opt.value = String(lt.leave_type_id);
+          opt.textContent = lt.leave_type_name;
+          typeSelect.appendChild(opt);
+        });
+      }
+
+      myRequests = Array.isArray(data.requests) ? data.requests : [];
+
+      let pending = 0, approved = 0, disapproved = 0;
+      myRequests.forEach(r => {
+        const st = String(r.status || '').toLowerCase();
+        if (st === 'pending') pending++;
+        else if (st === 'approved') approved++;
+        else if (st === 'rejected' || st === 'disapproved') disapproved++;
+      });
+
+      setText('pLrPendingCount', String(pending));
+      setText('pLrPendingSub', pending > 0 ? `${pending} pending` : 'No pending requests');
+
+      setText('pLrApprovedCount', String(approved));
+      setText('pLrApprovedSub', approved > 0 ? `${approved} approved` : 'No approved requests');
+
+      setText('pLrDisapprovedCount', String(disapproved));
+      setText('pLrDisapprovedSub', disapproved > 0 ? `${disapproved} disapproved` : 'No disapproved requests');
+
+      applyPrincipalLeaveFilters();
+    } catch (err) {
+      console.error('Principal leave requests load error:', err);
+    }
+  }
+
+  function applyPrincipalLeaveFilters() {
+    const q = (searchInput?.value || '').trim().toLowerCase();
+    const stVal = (statusSelect?.value || 'all').toLowerCase();
+
+    filteredMyReqs = myRequests.filter(r => {
+      const rawSt = String(r.status || '').toLowerCase();
+      const dispSt = rawSt === 'rejected' ? 'disapproved' : rawSt;
+      const reqNo = String(r.request_number || '').toLowerCase();
+      const lType = String(r.leave_type_name || '').toLowerCase();
+
+      if (stVal !== 'all' && dispSt !== stVal) return false;
+      if (q && !reqNo.includes(q) && !lType.includes(q) && !dispSt.includes(q)) return false;
+      return true;
+    });
+
+    pLrPage = 1;
+    renderPrincipalLeaveTable();
+  }
+
+  function formatSlashYMD(val) {
+    const ymd = String(val || '').slice(0, 10);
+    const parts = ymd.split('-');
+    return parts.length === 3 ? `${parts[1]}/${parts[2]}/${parts[0]}` : ymd;
+  }
+
+  function renderPrincipalLeaveTable() {
+    const tbody = document.getElementById('pLrTableBody');
+    const pagEl = document.getElementById('pLrPagination');
+    if (!tbody) return;
+
+    tbody.replaceChildren();
+    const total = filteredMyReqs.length;
+    const totalPages = Math.max(1, Math.ceil(total / pLrPerPage));
+    pLrPage = Math.min(Math.max(1, pLrPage), totalPages);
+
+    if (total === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:26px;color:#9ca3af;font-style:italic;">No leave requests found.</td></tr>`;
+      if (pagEl) pagEl.hidden = true;
+      return;
+    }
+
+    const start = (pLrPage - 1) * pLrPerPage;
+    const slice = filteredMyReqs.slice(start, start + pLrPerPage);
+
+    slice.forEach(r => {
+      const tr = document.createElement('tr');
+      const rawSt = String(r.status || 'Pending').toLowerCase();
+      const isApproved = rawSt === 'approved';
+      const isPending = rawSt === 'pending';
+      const badgeClass = isPending ? 'tx-status-pending' : (isApproved ? 'tx-status-approved' : 'tx-status-rejected');
+      const badgeText = isPending ? 'Pending' : (isApproved ? 'Approved' : 'Disapproved');
+
+      const startFmt = formatSlashYMD(r.start_datetime);
+      const endFmt = formatSlashYMD(r.end_datetime);
+      const datesText = startFmt === endFmt ? startFmt : `${startFmt} - ${endFmt}`;
+
+      const tdNo = document.createElement('td');
+      tdNo.textContent = r.request_number || `#${r.leave_request_id}`;
+
+      const tdFiled = document.createElement('td');
+      tdFiled.textContent = formatSlashYMD(r.date_filed);
+
+      const tdType = document.createElement('td');
+      tdType.textContent = r.leave_type_name || '—';
+
+      const tdDates = document.createElement('td');
+      tdDates.textContent = datesText;
+
+      const tdDays = document.createElement('td');
+      tdDays.textContent = Number(r.total_leave_days ?? 0).toFixed(2);
+
+      const tdStatus = document.createElement('td');
+      tdStatus.innerHTML = `<span class="tx-status-badge ${badgeClass}"><span class="tx-status-dot-inline"></span>${badgeText}</span>`;
+
+      tr.append(tdNo, tdFiled, tdType, tdDates, tdDays, tdStatus);
+      tbody.appendChild(tr);
+    });
+
+    if (pagEl) {
+      pagEl.hidden = false;
+      pagEl.replaceChildren();
+      const info = document.createElement('div');
+      info.className = 'pagination-info';
+      info.textContent = `Showing ${start + 1}–${Math.min(start + pLrPerPage, total)} of ${total} record(s)`;
+      const controls = document.createElement('div');
+      controls.className = 'pagination-controls';
+      for (let i = 1; i <= totalPages; i++) {
+        controls.appendChild(makePagBtn(String(i), false, () => { pLrPage = i; renderPrincipalLeaveTable(); }, i === pLrPage));
+      }
+      pagEl.append(info, controls);
+    }
+  }
+
+  await fetchPrincipalLeaveData();
+
+  if (new URLSearchParams(window.location.search).get('openLeaveModal') === '1') {
+    openLeaveModal();
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    DATA LOADING
@@ -212,15 +514,22 @@ function buildRow(r) {
     sel.dataset.requestId = rid;
     sel.setAttribute('aria-label', 'Select credit pool');
 
+    const isNonTeaching =
+      String(r.personnel_type || '').trim().toLowerCase() === 'non-teaching' ||
+      String(r.personnel_type || '').trim().toLowerCase() === 'non teaching';
+
     [
       ['', 'Credit Types'],
       ['1', 'Local'],
-      ['2', 'National'],
+      ['2', isNonTeaching ? 'National (N/A for Non-Teaching)' : 'National'],
       ['3', 'Wellness'],
     ].forEach(([val, label]) => {
       const opt = document.createElement('option');
       opt.value = val;
       opt.textContent = label;
+      if (val === '2' && isNonTeaching) {
+        opt.disabled = true;
+      }
       sel.appendChild(opt);
     });
 
@@ -611,9 +920,53 @@ function openModal(r) {
     form6Btn.style.display = statusLow === 'rejected' ? 'none' : 'inline-flex';
   }
 
+  checkLeaveOverlapsForModal(r);
+
   overlay.classList.add('is-open');
   document.body.style.overflow = 'hidden';
   modal.focus();
+}
+
+async function checkLeaveOverlapsForModal(r) {
+  const banner = document.getElementById('txOverlapWarningBanner');
+  if (!banner) return;
+  banner.style.display = 'none';
+  banner.textContent = '';
+
+  const startYmd = String(r.start_datetime || '').slice(0, 10);
+  const endYmd   = String(r.end_datetime || startYmd).slice(0, 10);
+  const leaveId  = r.leave_request_id || '';
+  if (!startYmd) return;
+
+  try {
+    const params = new URLSearchParams({
+      start: startYmd,
+      end: endYmd || startYmd,
+      leave_id: String(leaveId)
+    });
+    const res = await fetch(`${CALENDAR_OVERLAPS_API}?${params.toString()}`, {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { Accept: 'application/json' }
+    });
+    const result = await res.json().catch(() => null);
+    if (!res.ok || !result || !result.success || !result.data) return;
+
+    const overlaps = Array.isArray(result.data.overlaps) ? result.data.overlaps : [];
+    if (overlaps.length === 0) return;
+
+    const itemsText = overlaps
+      .slice(0, 4)
+      .map(o => `${o.employee_name} (${o.leave_type_name}, ${o.start_date} to ${o.end_date})`)
+      .join('; ');
+    const extra = overlaps.length > 4 ? ` and ${overlaps.length - 4} more` : '';
+
+    banner.style.display = 'block';
+    banner.textContent = `Schedule Overlap Notice: ${overlaps.length} other personnel already on approved leave during these dates — ${itemsText}${extra}.`;
+  } catch {
+    // Non-blocking overlap check
+  }
 }
 
 function closeModal() {

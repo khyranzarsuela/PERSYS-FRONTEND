@@ -227,9 +227,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         setVal("ep_new_password", "");
         setVal("ep_confirm_password", "");
 
+        // If Principal has PRINCIPAL_PROFILE_MEDIA_ONLY=true, only Profile Picture & Banner uploads are active
+        const flags = window.PERSYSAdminGuard?.getPrincipalFeatures?.() || {};
+        const isMediaOnly = Boolean(flags.is_principal && flags.profile_media_only);
+        const nonMediaIds = [
+            "ep_last_name", "ep_first_name", "ep_middle_name",
+            "ep_employee_number", "ep_personnel_type", "ep_plantilla",
+            "ep_position", "ep_salary_grade", "ep_step_increment",
+            "ep_date_orig", "ep_date_promo",
+            "ep_username", "ep_deped_email", "ep_new_password", "ep_confirm_password"
+        ];
+        nonMediaIds.forEach((id) => {
+            const el = byId(id);
+            if (el) {
+                el.disabled = isMediaOnly;
+                el.style.opacity = isMediaOnly ? "0.6" : "";
+                el.style.cursor = isMediaOnly ? "not-allowed" : "";
+            }
+        });
+        if (isMediaOnly) {
+            showModalNotice(
+                "success",
+                "Principal Mode: Profile Picture and Banner uploads are active. For personal or employee record changes, please use 'Request Edit Profile' on your Dashboard."
+            );
+        }
+
         modalOverlay.hidden = false;
         document.body.style.overflow = "hidden";
-        byId("ep_last_name")?.focus();
+        if (!isMediaOnly) {
+            byId("ep_last_name")?.focus();
+        }
     }
 
     function closeEditProfileModal() {
@@ -257,6 +284,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     editForm?.addEventListener("submit", async (e) => {
         e.preventDefault();
         clearModalNotice();
+
+        const flags = window.PERSYSAdminGuard?.getPrincipalFeatures?.() || {};
+        if (flags.is_principal && flags.profile_media_only) {
+            showModalNotice(
+                "success",
+                "Profile Picture & Banner selections saved (media storage integration is reserved for future update)."
+            );
+            setTimeout(() => closeEditProfileModal(), 900);
+            return;
+        }
 
         if (!editForm.reportValidity()) {
             return;

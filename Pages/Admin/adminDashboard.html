@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="../../styles/admin.css" />
   <link rel="stylesheet" href="../../styles/skeleton.css" />
+  <link rel="stylesheet" href="../../styles/globalCalendar.css" />
   <style>
     /* =========================================================
        GLOBAL SIDEBAR LOGOUT BUTTON
@@ -119,8 +120,8 @@
     }
 
     .dashboard-bottom-row {
-      display: grid;
-      grid-template-columns: 1.25fr 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 24px;
       align-items: stretch;
       width: 100%;
@@ -494,6 +495,8 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .recent-edit-header {
@@ -874,6 +877,390 @@
     }
 
     /* =========================================================
+       PRINCIPAL ("SUPER ADMIN") PERSONAL DASHBOARD VIEW
+       ========================================================= */
+    .principal-dashboard-view {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+    .principal-dashboard-view[hidden] {
+      display: none !important;
+    }
+
+    .p-dash-welcome-banner {
+      position: relative;
+      background: #e6dff5;
+      border-radius: 16px;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      border: 1px solid rgba(107, 15, 186, 0.1);
+    }
+
+    .p-dash-welcome-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      z-index: 1;
+    }
+
+    .p-dash-welcome-icon {
+      width: 48px;
+      height: 48px;
+      color: #6B0FBA;
+      flex-shrink: 0;
+    }
+
+    .p-dash-welcome-title {
+      font-size: 1.38rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      margin: 0 0 3px;
+    }
+
+    .p-dash-welcome-title span {
+      color: #6B0FBA;
+    }
+
+    .p-dash-welcome-sub {
+      font-size: 0.88rem;
+      color: #4b5563;
+      margin: 0;
+    }
+
+    .p-dash-welcome-watermark {
+      position: absolute;
+      right: 36px;
+      bottom: -8px;
+      width: 110px;
+      height: 110px;
+      color: rgba(107, 15, 186, 0.12);
+      pointer-events: none;
+    }
+
+    .p-dash-sc-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 22px 26px;
+      box-shadow: 0 4px 16px rgba(60, 20, 100, 0.07);
+      border: 1px solid rgba(107, 15, 186, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .p-dash-sc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .p-dash-sc-title {
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      margin: 0;
+    }
+
+    .p-dash-view-details-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1.5px solid #2D0057;
+      background: #ffffff;
+      color: #2D0057;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .p-dash-view-details-btn:hover {
+      background: #2D0057;
+      color: #ffffff;
+    }
+
+    .p-dash-sc-inner {
+      background: #f6f3fc;
+      border-radius: 14px;
+      padding: 22px 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .p-dash-sc-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 6px 14px;
+    }
+
+    .p-dash-sc-item + .p-dash-sc-item {
+      border-left: 1.5px solid #e4dcf5;
+    }
+
+    .p-dash-sc-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .p-dash-sc-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .p-dash-sc-icon.icon-national {
+      background: #DCFCE7;
+      color: #16A34A;
+    }
+
+    .p-dash-sc-icon.icon-wellness {
+      background: #FCE7F3;
+      color: #DB2777;
+    }
+
+    .p-dash-sc-icon.icon-local {
+      background: #DBEAFE;
+      color: #2563EB;
+    }
+
+    .p-dash-sc-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .p-dash-sc-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1A1A2E;
+    }
+
+    .p-dash-sc-val {
+      font-size: 2.15rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      line-height: 1.1;
+      margin: 2px 0;
+    }
+
+    .p-dash-sc-unit {
+      font-size: 0.78rem;
+      color: #6b7280;
+    }
+
+    .p-dash-bottom-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) 1.85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .p-dash-leave-stat-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px 20px 22px;
+      box-shadow: 0 4px 14px rgba(60, 20, 100, 0.07);
+      border: 1px solid rgba(107, 15, 186, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+    }
+
+    .p-dash-leave-stat-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 5px;
+    }
+
+    .p-dash-leave-stat-card.stat-pending::after { background: #F59E0B; }
+    .p-dash-leave-stat-card.stat-approved::after { background: #16A34A; }
+    .p-dash-leave-stat-card.stat-disapproved::after { background: #EF4444; }
+
+    .p-dash-stat-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .p-dash-stat-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .p-dash-stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .p-dash-stat-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .stat-pending .p-dash-stat-icon { background: #FEF3C7; color: #D97706; }
+    .stat-approved .p-dash-stat-icon { background: #DCFCE7; color: #16A34A; }
+    .stat-disapproved .p-dash-stat-icon { background: #FEE2E2; color: #DC2626; }
+
+    .p-dash-stat-num {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #1A1A2E;
+      text-align: center;
+      margin: 10px 0 6px;
+      line-height: 1;
+    }
+
+    .p-dash-stat-sub {
+      font-size: 0.78rem;
+      color: #6b7280;
+      text-align: center;
+      margin: 0;
+    }
+
+    .p-dash-quick-card {
+      background: linear-gradient(135deg, #5B0EA6 0%, #6B0FBA 60%, #7C22CE 100%);
+      border-radius: 18px;
+      padding: 22px 24px;
+      color: #ffffff;
+      box-shadow: 0 6px 20px rgba(91, 14, 166, 0.22);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .p-dash-quick-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin: 0;
+      color: #ffffff;
+    }
+
+    .p-dash-quick-title svg {
+      width: 18px;
+      height: 18px;
+      stroke: #F5C518;
+      fill: none;
+      stroke-width: 2.2;
+    }
+
+    .p-dash-quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .p-dash-quick-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .p-dash-quick-btn:hover {
+      background: rgba(255, 255, 255, 0.24);
+      transform: translateY(-1px);
+    }
+
+    .p-dash-quick-btn-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .p-dash-quick-btn-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .p-dash-quick-btn-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: #ffffff;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    @media (max-width: 1100px) {
+      .p-dash-bottom-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      .p-dash-quick-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .p-dash-sc-inner,
+      .p-dash-bottom-row,
+      .p-dash-quick-grid {
+        grid-template-columns: 1fr;
+      }
+      .p-dash-sc-item + .p-dash-sc-item {
+        border-left: none;
+        border-top: 1px solid #e4dcf5;
+        padding-top: 12px;
+      }
+    }
+
+    /* =========================================================
        RESPONSIVE
        ========================================================= */
     @media (max-width: 1200px) {
@@ -1023,7 +1410,7 @@
             </a>
           </li>
 
-          <!-- Employees -->
+          <!-- Personnel -->
           <li>
             <a href="adminEmployees.html" class="nav-item">
               <span class="nav-icon" aria-hidden="true">
@@ -1034,7 +1421,7 @@
                   <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
                 </svg>
               </span>
-              Employees
+              Personnel
             </a>
           </li>
 
@@ -1298,7 +1685,266 @@
             </div>
           </section>
 
-          <section class="dashboard-empty-card" id="calendarHolidaysCard" aria-label="Calendar and Philippine holidays section"></section>
+          <section class="persys-global-calendar-card persys-calendar-large" id="calendarHolidaysCard" aria-label="Global school schedule calendar"></section>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             PRINCIPAL ("SUPER ADMIN") PERSONAL DASHBOARD VIEW
+             (Shown when PRINCIPAL_USE_PERSONAL_DASHBOARD=true in .env)
+        ══════════════════════════════════════════════════════ -->
+        <div class="principal-dashboard-view" id="principalDashboardView" hidden>
+
+          <!-- Welcome Banner -->
+          <section class="p-dash-welcome-banner" aria-label="Welcome banner">
+            <div class="p-dash-welcome-left">
+              <svg class="p-dash-welcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="8" r="4" />
+                <path d="M2 20c0-3.5 3.2-6.5 7-6.5s7 3 7 6.5" />
+                <circle cx="17" cy="9" r="2.8" />
+                <path d="M22 20c0-2.6-2-4.8-4.8-5.3" />
+              </svg>
+              <div>
+                <h2 class="p-dash-welcome-title">
+                  Welcome back, <span id="principalWelcomeName">Principal</span>!
+                </h2>
+                <p class="p-dash-welcome-sub">Here's an overview of your dashboard.</p>
+              </div>
+            </div>
+
+            <svg class="p-dash-welcome-watermark" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+              <polygon points="32,6 6,20 58,20" />
+              <rect x="10" y="22" width="44" height="4" />
+              <rect x="14" y="28" width="6" height="24" />
+              <rect x="24" y="28" width="6" height="24" />
+              <rect x="34" y="28" width="6" height="24" />
+              <rect x="44" y="28" width="6" height="24" />
+              <rect x="8" y="54" width="48" height="5" />
+            </svg>
+          </section>
+
+          <!-- Service Credit Balance Card -->
+          <section class="p-dash-sc-card" aria-labelledby="pDashScTitle">
+            <div class="p-dash-sc-header">
+              <h3 class="p-dash-sc-title" id="pDashScTitle">Service Credit Balance</h3>
+              <a href="adminServiceCredits.html" class="p-dash-view-details-btn">
+                View Details &rarr;
+              </a>
+            </div>
+
+            <div class="p-dash-sc-inner">
+              <!-- National -->
+              <div class="p-dash-sc-item">
+                <div class="p-dash-sc-icon icon-national" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 3 7 21 7 12 2" />
+                    <line x1="6" y1="7" x2="6" y2="17" />
+                    <line x1="10" y1="7" x2="10" y2="17" />
+                    <line x1="14" y1="7" x2="14" y2="17" />
+                    <line x1="18" y1="7" x2="18" y2="17" />
+                    <line x1="3" y1="20" x2="21" y2="20" />
+                  </svg>
+                </div>
+                <div class="p-dash-sc-meta">
+                  <span class="p-dash-sc-label">National</span>
+                  <span class="p-dash-sc-val" id="pDashNationalBal">0.00</span>
+                  <span class="p-dash-sc-unit">credits</span>
+                </div>
+              </div>
+
+              <!-- Wellness -->
+              <div class="p-dash-sc-item">
+                <div class="p-dash-sc-icon icon-wellness" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+                </div>
+                <div class="p-dash-sc-meta">
+                  <span class="p-dash-sc-label">Wellness</span>
+                  <span class="p-dash-sc-val" id="pDashWellnessBal">0.00</span>
+                  <span class="p-dash-sc-unit">credits</span>
+                </div>
+              </div>
+
+              <!-- Local -->
+              <div class="p-dash-sc-item">
+                <div class="p-dash-sc-icon icon-local" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+                <div class="p-dash-sc-meta">
+                  <span class="p-dash-sc-label">Local</span>
+                  <span class="p-dash-sc-val" id="pDashLocalBal">0.00</span>
+                  <span class="p-dash-sc-unit">credits</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Bottom Row: 3 Leave Count Cards + Quick Actions -->
+          <div class="p-dash-bottom-row">
+            <!-- Pending Leave Requests -->
+            <article class="p-dash-leave-stat-card stat-pending">
+              <div class="p-dash-stat-top">
+                <h3 class="p-dash-stat-title">Pending Leave<br>Requests</h3>
+                <div class="p-dash-stat-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <polyline points="12 7 12 12 15 14" />
+                  </svg>
+                </div>
+              </div>
+              <p class="p-dash-stat-num" id="pDashPendingCount">0</p>
+              <p class="p-dash-stat-sub" id="pDashPendingSub">No pending requests</p>
+            </article>
+
+            <!-- Approved Leave Requests -->
+            <article class="p-dash-leave-stat-card stat-approved">
+              <div class="p-dash-stat-top">
+                <h3 class="p-dash-stat-title">Approved Leave<br>Requests</h3>
+                <div class="p-dash-stat-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <polyline points="9 12 11 14 15 10" />
+                  </svg>
+                </div>
+              </div>
+              <p class="p-dash-stat-num" id="pDashApprovedCount">0</p>
+              <p class="p-dash-stat-sub" id="pDashApprovedSub">No approved requests</p>
+            </article>
+
+            <!-- Disapproved Leave Requests -->
+            <article class="p-dash-leave-stat-card stat-disapproved">
+              <div class="p-dash-stat-top">
+                <h3 class="p-dash-stat-title">Disapproved<br>Leave Requests</h3>
+                <div class="p-dash-stat-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
+                  </svg>
+                </div>
+              </div>
+              <p class="p-dash-stat-num" id="pDashDisapprovedCount">0</p>
+              <p class="p-dash-stat-sub" id="pDashDisapprovedSub">No disapproved requests</p>
+            </article>
+
+            <!-- Quick Actions Card -->
+            <section class="p-dash-quick-card" aria-label="Quick actions">
+              <h3 class="p-dash-quick-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                Quick Actions
+              </h3>
+
+              <div class="p-dash-quick-grid">
+                <a href="adminTransactions.html?openLeaveModal=1" class="p-dash-quick-btn">
+                  <span class="p-dash-quick-btn-left">
+                    <span class="p-dash-quick-btn-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <rect x="4" y="2" width="16" height="20" rx="2" />
+                        <line x1="8" y1="7" x2="16" y2="7" />
+                        <line x1="8" y1="11" x2="16" y2="11" />
+                        <line x1="8" y1="15" x2="12" y2="15" />
+                      </svg>
+                    </span>
+                    <span>Request a Leave</span>
+                  </span>
+                  <span aria-hidden="true">&rsaquo;</span>
+                </a>
+
+                <a href="adminServiceCredits.html" class="p-dash-quick-btn">
+                  <span class="p-dash-quick-btn-left">
+                    <span class="p-dash-quick-btn-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <ellipse cx="12" cy="5" rx="9" ry="3" />
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                      </svg>
+                    </span>
+                    <span>View Service Credits</span>
+                  </span>
+                  <span aria-hidden="true">&rsaquo;</span>
+                </a>
+
+                <button type="button" class="p-dash-quick-btn" id="btnPrincipalRequestEditProfile">
+                  <span class="p-dash-quick-btn-left">
+                    <span class="p-dash-quick-btn-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                      </svg>
+                    </span>
+                    <span>Request Edit Profile</span>
+                  </span>
+                  <span aria-hidden="true">&rsaquo;</span>
+                </button>
+
+                <button type="button" class="p-dash-quick-btn" id="btnPrincipalRequestAccountReset">
+                  <span class="p-dash-quick-btn-left">
+                    <span class="p-dash-quick-btn-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                    </span>
+                    <span>Request Account Reset</span>
+                  </span>
+                  <span aria-hidden="true">&rsaquo;</span>
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <!-- Large Full-Screen Global Read-Only Calendar at Bottom on Scroll -->
+          <section
+            class="persys-global-calendar-card persys-calendar-large"
+            id="principalGlobalCalendarCard"
+            aria-label="Global school schedule calendar"
+          ></section>
+
+        </div>
+
+        <!-- Principal Request Edit Profile Modal -->
+        <div class="tx-modal-overlay" id="principalReqEditModalOverlay" role="dialog" aria-modal="true" aria-labelledby="principalReqEditModalTitle" tabindex="-1">
+          <div class="tx-modal" id="principalReqEditModal" tabindex="-1">
+            <button type="button" class="tx-modal-close" id="principalReqEditCloseBtn" aria-label="Close">&#10005;</button>
+            <h2 class="tx-modal-title" id="principalReqEditModalTitle">Request Edit Profile</h2>
+            <p style="font-size:0.84rem;color:#6b7280;margin:0 0 14px;">
+              Select the section you need updated and describe the exact changes for the administrator.
+            </p>
+            <form id="principalReqEditForm">
+              <label for="principalReqEditCategory" style="display:block;font-size:0.82rem;font-weight:700;color:#1f2937;margin-bottom:6px;">
+                Section to Edit
+              </label>
+              <select id="principalReqEditCategory" class="recent-edit-filter-select" style="width:100%;padding:9px 12px;margin-bottom:14px;">
+                <option value="Personal Information">Personal Information</option>
+                <option value="Employee Information">Employee Information</option>
+                <option value="Both">Both (Personal &amp; Employee Information)</option>
+              </select>
+
+              <label for="principalReqEditMessage" style="display:block;font-size:0.82rem;font-weight:700;color:#1f2937;margin-bottom:6px;">
+                Requested Changes / Message
+              </label>
+              <textarea
+                id="principalReqEditMessage"
+                class="edit-req-note-textarea"
+                minlength="5"
+                maxlength="1000"
+                required
+                placeholder="Describe the exact fields to change and the updated values..."
+              ></textarea>
+
+              <div class="edit-req-feedback" id="principalReqEditFeedback" role="alert"></div>
+
+              <div class="tx-modal-footer">
+                <button type="button" class="tx-modal-close-btn" id="principalReqEditCancelBtn">Cancel</button>
+                <button type="submit" class="btn-edit-req-resolve" id="principalReqEditSubmitBtn">Send Request</button>
+              </div>
+            </form>
+          </div>
         </div>
 
       </main>
@@ -1374,6 +2020,14 @@
         <span class="tx-detail-label">Total Days</span>
         <span class="tx-detail-value" id="dashTotalDays">—</span>
       </div>
+
+      <!-- Leave Overlap Warning Notice (Admin Review) -->
+      <div
+        id="dashOverlapWarningBanner"
+        style="display:none;margin:10px 0 14px;padding:10px 14px;border-radius:8px;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;font-size:0.81rem;line-height:1.45;"
+        role="status"
+        aria-live="polite"
+      ></div>
 
       <h3 class="tx-section-heading">Service Credit Information</h3>
       <div class="tx-detail-row">
@@ -1522,6 +2176,7 @@
 
   <script src="../../scripts/admin.js"></script>
   <script src="../../scripts/apiErrorHandler.js"></script>
+  <script src="../../scripts/globalCalendar.js"></script>
   <script src="../../scripts/adminDashboard.js"></script>
   <script src="../../scripts/settings.js"></script>
   <script src="../../scripts/switchAccount.js"></script>

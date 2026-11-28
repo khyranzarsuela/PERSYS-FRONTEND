@@ -314,10 +314,493 @@
     document.addEventListener('DOMContentLoaded', function () {
       syncSettingsPageControls();
       populateSettingsSidebarProfile();
+      initAdminSystemJobsAndScheduler();
     });
   } else {
     syncSettingsPageControls();
     populateSettingsSidebarProfile();
+    initAdminSystemJobsAndScheduler();
+  }
+
+  /* =====================================================================
+     ADMIN SYSTEM JOBS & LOGS + BACKGROUND SCHEDULER HEARTBEAT
+     ===================================================================== */
+
+  var jobsCurrentPage = 1;
+
+  function initAdminSystemJobsAndScheduler() {
+    if (!window.PERSYS_CONFIG || !window.PERSYSAdminGuard) {
+      return;
+    }
+
+    var jobsApiUrl = window.PERSYS_CONFIG.API_BASE_URL + '/api/admin/jobs.php';
+
+    window.PERSYSAdminGuard.ready.then(function (authorized) {
+      if (!authorized) return;
+
+      // Run lightweight background scheduler tick on Admin pages (every 60s)
+      triggerBackgroundSchedulerTick(jobsApiUrl);
+      setInterval(function () {
+        triggerBackgroundSchedulerTick(jobsApiUrl);
+      }, 60000);
+
+      // If on Admin Settings page (#systemJobsSection exists), wire System Jobs & Logs UI
+      var section = document.getElementById('systemJobsSection');
+      if (section) {
+        wireSystemJobsSection(jobsApiUrl);
+        loadSystemJobsOverview(jobsApiUrl);
+      }
+    }).catch(function () {
+      // Ignore if not on an admin page
+    });
+  }
+
+  function triggerBackgroundSchedulerTick(jobsApiUrl) {
+    fetch(jobsApiUrl, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({ action: 'tick' })
+    }).then(function (res) {
+      return res.json().catch(function () { return null; });
+    }).then(function (result) {
+      if (result && result.success && result.data && Number(result.data.executed_count) > 0) {
+        if (document.getElementById('systemJobsSection')) {
+          loadSystemJobsOverview(jobsApiUrl);
+        }
+      }
+    }).catch(function () {
+      // Silent background tick
+    });
+  }
+
+  function wireSystemJobsSection(jobsApiUrl) {
+    var saveRetentionBtn = document.getElementById('saveRetentionDaysBtn');
+    var retentionInput   = document.getElementById('archiveRetentionDaysInput');
+    var filterJobEl      = document.getElementById('jobLogsFilterJob');
+    var filterStatusEl   = document.getElementById('jobLogsFilterStatus');
+    var perPageEl        = document.getElementById('jobLogsPerPage');
+    var refreshBtn       = document.getElementById('refreshJobLogsBtn');
+    var prevBtn          = document.getElementById('jobLogsPrevBtn');
+    var nextBtn          = document.getElementById('jobLogsNextBtn');
+    var syncCalNowBtn    = document.getElementById('btnSyncGoogleCalendarNow');
+
+    if (syncCalNowBtn) {
+      syncCalNowBtn.addEventListener('click', function () {
+        var calSyncUrl = window.PERSYS_CONFIG.API_BASE_URL + '/api/admin/calendarSync.php';
+        syncCalNowBtn.disabled = true;
+        syncCalNowBtn.textContent = 'Syncing...';
+
+        fetch(calSyncUrl, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          }
+        })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            var isErr = !result || !result.success;
+            var msg = (result && result.message) || 'Google Calendar sync finished.';
+            showJobFeedback('[Google Calendar Sync] ' + msg, isErr);
+            jobsCurrentPage = 1;
+            loadSystemJobsOverview(jobsApiUrl);
+          })
+          .catch(function (err) {
+            showJobFeedback('[Google Calendar Sync] Failed: ' + (err.message || 'Network error'), true);
+          })
+          .finally(function () {
+            syncCalNowBtn.disabled = false;
+            syncCalNowBtn.textContent = 'Sync Calendar Now';
+          });
+      });
+    }
+
+    if (saveRetentionBtn && retentionInput) {
+      saveRetentionBtn.addEventListener('click', function () {
+        var rawDays = Number(retentionInput.value);
+        if (!Number.isFinite(rawDays) || rawDays < 0 || rawDays > 3650) {
+          showJobFeedback('Please enter a valid retention window between 0 and 3,650 days.', true);
+          return;
+        }
+
+        saveRetentionBtn.disabled = true;
+        saveRetentionBtn.textContent = 'Saving...';
+
+        fetch(jobsApiUrl, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
+          body: JSON.stringify({
+            action: 'update_settings',
+            archive_retention_days: Math.floor(rawDays)
+          })
+        })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            if (!result || !result.success) {
+              throw new Error((result && result.message) || 'Unable to save archive retention setting.');
+            }
+            retentionInput.value = String(result.data.archive_retention_days);
+            showJobFeedback(result.message || 'Archive retention window updated.', false);
+          })
+          .catch(function (err) {
+            showJobFeedback(err.message || 'Unable to save archive retention setting.', true);
+          })
+          .finally(function () {
+            saveRetentionBtn.disabled = false;
+            saveRetentionBtn.textContent = 'Save Retention';
+          });
+      });
+    }
+
+    if (filterJobEl) {
+      filterJobEl.addEventListener('change', function () {
+        jobsCurrentPage = 1;
+        loadSystemJobsOverview(jobsApiUrl);
+      });
+    }
+
+    if (filterStatusEl) {
+      filterStatusEl.addEventListener('change', function () {
+        jobsCurrentPage = 1;
+        loadSystemJobsOverview(jobsApiUrl);
+      });
+    }
+
+    if (perPageEl) {
+      perPageEl.addEventListener('change', function () {
+        jobsCurrentPage = 1;
+        loadSystemJobsOverview(jobsApiUrl);
+      });
+    }
+
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', function () {
+        loadSystemJobsOverview(jobsApiUrl);
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function () {
+        if (jobsCurrentPage > 1) {
+          jobsCurrentPage--;
+          loadSystemJobsOverview(jobsApiUrl);
+        }
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function () {
+        jobsCurrentPage++;
+        loadSystemJobsOverview(jobsApiUrl);
+      });
+    }
+  }
+
+  function showJobFeedback(message, isError) {
+    var banner = document.getElementById('jobRunFeedbackBanner');
+    if (!banner) return;
+    banner.hidden = false;
+    banner.textContent = message;
+    banner.className = 'job-run-feedback ' + (isError ? 'is-error' : 'is-success');
+  }
+
+  function loadSystemJobsOverview(jobsApiUrl) {
+    var jobFilter = (document.getElementById('jobLogsFilterJob') || {}).value || 'all';
+    var statusFilter = (document.getElementById('jobLogsFilterStatus') || {}).value || 'all';
+    var perPage = Number((document.getElementById('jobLogsPerPage') || {}).value) || 10;
+
+    var params = new URLSearchParams({
+      page: String(jobsCurrentPage),
+      per_page: String(perPage),
+      job_name: jobFilter,
+      status: statusFilter
+    });
+
+    fetch(jobsApiUrl + '?' + params.toString(), {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { Accept: 'application/json' }
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (result) {
+        if (!result || !result.success || !result.data) {
+          throw new Error((result && result.message) || 'Unable to load system jobs.');
+        }
+
+        var data = result.data;
+        var retentionInput = document.getElementById('archiveRetentionDaysInput');
+        if (retentionInput && document.activeElement !== retentionInput) {
+          retentionInput.value = String(data.archive_retention_days ?? 90);
+        }
+
+        var eqPill = document.getElementById('emailQueueSummaryPill');
+        if (eqPill && data.email_queue_stats) {
+          var q = data.email_queue_stats;
+          eqPill.textContent =
+            'Email Queue: ' + (q.pending || 0) + ' Pending • ' + (q.sent || 0) + ' Sent • ' + (q.failed || 0) + ' Failed';
+        }
+
+        var bkPill = document.getElementById('dbBackupsSummaryPill');
+        if (bkPill) {
+          bkPill.textContent = 'SQL Backups: ' + (data.backup_files_count ?? 0) + ' / 30';
+        }
+
+        var gcalPill = document.getElementById('gcalQueueSummaryPill');
+        var gcalDetail = document.getElementById('gcalSyncDetailText');
+        if (data.calendar_sync_status) {
+          var cs = data.calendar_sync_status;
+          var pnd = Number(cs.pending_count || 0);
+          var fld = Number(cs.failed_count || 0);
+          var snc = Number(cs.synced_count || 0);
+          var stateLbl = !cs.enabled
+            ? 'Disabled'
+            : (pnd > 0 ? (pnd + ' Pending') : 'Synced');
+
+          if (gcalPill) {
+            gcalPill.textContent =
+              'Google Calendar: ' + stateLbl + ' • ' + pnd + ' Pending • ' + snc + ' Synced';
+          }
+          if (gcalDetail) {
+            var lastSyncFmt = cs.last_synced_at ? formatJobDateTime(cs.last_synced_at) : 'No sync recorded yet';
+            gcalDetail.textContent =
+              'Status: ' + (cs.configured ? 'Connected (Service Account)' : (cs.enabled ? 'Offline Fallback (Key Missing)' : 'Disabled in .env')) +
+              ' • Pending Queue: ' + pnd +
+              ' • Failed: ' + fld +
+              ' • Total Synced: ' + snc +
+              ' • Last Synced: ' + lastSyncFmt;
+          }
+        }
+
+        renderScheduledJobsTable(data.jobs || [], jobsApiUrl);
+        renderJobExecutionLogsTable(data.logs || {});
+      })
+      .catch(function (err) {
+        console.error('System jobs load error:', err);
+      });
+  }
+
+  function renderScheduledJobsTable(jobs, jobsApiUrl) {
+    var tbody = document.getElementById('scheduledJobsTableBody');
+    if (!tbody) return;
+    tbody.replaceChildren();
+
+    if (!jobs.length) {
+      var trEmpty = document.createElement('tr');
+      var tdEmpty = document.createElement('td');
+      tdEmpty.colSpan = 6;
+      tdEmpty.className = 'jobs-empty-cell';
+      tdEmpty.textContent = 'No scheduled jobs registered.';
+      trEmpty.appendChild(tdEmpty);
+      tbody.appendChild(trEmpty);
+      return;
+    }
+
+    jobs.forEach(function (job) {
+      var tr = document.createElement('tr');
+
+      // Col 1: Job Name & Description
+      var tdName = document.createElement('td');
+      var titleSpan = document.createElement('span');
+      titleSpan.className = 'job-name-primary';
+      titleSpan.textContent = job.display_name || job.job_name;
+      var descSpan = document.createElement('span');
+      descSpan.className = 'job-name-desc';
+      descSpan.textContent = job.description || '';
+      tdName.append(titleSpan, descSpan);
+
+      // Col 2: Schedule
+      var tdSched = document.createElement('td');
+      var schedPill = document.createElement('span');
+      schedPill.className = 'job-schedule-pill';
+      schedPill.textContent = job.schedule || '—';
+      tdSched.appendChild(schedPill);
+
+      // Col 3: Last Run Time
+      var tdLastRun = document.createElement('td');
+      tdLastRun.textContent = job.last_run_time ? formatJobDateTime(job.last_run_time) : 'Never run';
+
+      // Col 4: Last Status
+      var tdStatus = document.createElement('td');
+      var stLow = String(job.last_status || 'never').toLowerCase();
+      var stPill = document.createElement('span');
+      stPill.className = 'job-status-pill status-' + stLow;
+      stPill.textContent = job.last_status ? job.last_status.toUpperCase() : 'NEVER';
+      tdStatus.appendChild(stPill);
+
+      // Col 5: Records Processed
+      var tdRecs = document.createElement('td');
+      tdRecs.style.fontWeight = '700';
+      tdRecs.textContent = job.records_processed !== null && job.records_processed !== undefined
+        ? String(job.records_processed)
+        : '—';
+
+      // Col 6: Manual "Run Now" Button
+      var tdAction = document.createElement('td');
+      var runBtn = document.createElement('button');
+      runBtn.type = 'button';
+      runBtn.className = 'btn-run-job-now';
+      runBtn.textContent = '▶ Run Now';
+      runBtn.addEventListener('click', function () {
+        executeManualJobRun(job.job_name, job.display_name || job.job_name, runBtn, jobsApiUrl);
+      });
+      tdAction.appendChild(runBtn);
+
+      tr.append(tdName, tdSched, tdLastRun, tdStatus, tdRecs, tdAction);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function executeManualJobRun(jobName, displayName, triggerBtn, jobsApiUrl) {
+    if (triggerBtn) {
+      triggerBtn.disabled = true;
+      triggerBtn.textContent = 'Running...';
+    }
+
+    fetch(jobsApiUrl, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'run_now',
+        job_name: jobName
+      })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (result) {
+        var runRes = (result && result.data && result.data.run_result) || null;
+        var isErr = !result || !result.success || (runRes && runRes.status === 'failed');
+        var msg = (runRes && runRes.message) || (result && result.message) || ('Executed ' + displayName);
+        showJobFeedback('[' + displayName + '] ' + msg, isErr);
+        jobsCurrentPage = 1;
+        loadSystemJobsOverview(jobsApiUrl);
+      })
+      .catch(function (err) {
+        showJobFeedback('[' + displayName + '] Failed to run job: ' + (err.message || 'Network error'), true);
+      })
+      .finally(function () {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          triggerBtn.textContent = '▶ Run Now';
+        }
+      });
+  }
+
+  function renderJobExecutionLogsTable(logsData) {
+    var tbody = document.getElementById('jobLogsTableBody');
+    var pagBar = document.getElementById('jobLogsPaginationBar');
+    var pageInfo = document.getElementById('jobLogsPageInfo');
+    var pageNum = document.getElementById('jobLogsPageNum');
+    var prevBtn = document.getElementById('jobLogsPrevBtn');
+    var nextBtn = document.getElementById('jobLogsNextBtn');
+
+    if (!tbody) return;
+    tbody.replaceChildren();
+
+    var items = Array.isArray(logsData.items) ? logsData.items : [];
+    var total = Number(logsData.total || 0);
+    var page = Number(logsData.page || 1);
+    var perPage = Number(logsData.per_page || 10);
+    var totalPages = Number(logsData.total_pages || 1);
+    jobsCurrentPage = page;
+
+    if (!items.length) {
+      var trEmpty = document.createElement('tr');
+      var tdEmpty = document.createElement('td');
+      tdEmpty.colSpan = 6;
+      tdEmpty.className = 'jobs-empty-cell';
+      tdEmpty.textContent = 'No job execution logs found. Click "Run Now" on any job above to test and generate a log entry.';
+      trEmpty.appendChild(tdEmpty);
+      tbody.appendChild(trEmpty);
+      if (pagBar) pagBar.hidden = true;
+      return;
+    }
+
+    items.forEach(function (log) {
+      var tr = document.createElement('tr');
+
+      // Col 1: Timestamp
+      var tdTime = document.createElement('td');
+      tdTime.style.whiteSpace = 'nowrap';
+      tdTime.textContent = formatJobDateTime(log.finished_at || log.started_at);
+
+      // Col 2: Job Name
+      var tdName = document.createElement('td');
+      tdName.style.fontWeight = '700';
+      tdName.textContent = log.display_name || log.job_name;
+
+      // Col 3: Trigger Type
+      var tdTrig = document.createElement('td');
+      var trigBadge = document.createElement('span');
+      var trigLow = String(log.trigger_type || 'scheduled').toLowerCase();
+      trigBadge.className = 'job-trigger-badge trigger-' + trigLow;
+      trigBadge.textContent = trigLow;
+      tdTrig.appendChild(trigBadge);
+
+      // Col 4: Status Badge
+      var tdStatus = document.createElement('td');
+      var stLow = String(log.status || 'running').toLowerCase();
+      var stPill = document.createElement('span');
+      stPill.className = 'job-status-pill status-' + stLow;
+      stPill.textContent = stLow.toUpperCase();
+      tdStatus.appendChild(stPill);
+
+      // Col 5: Records Processed
+      var tdRecs = document.createElement('td');
+      tdRecs.style.fontWeight = '700';
+      tdRecs.textContent = String(log.records_processed ?? 0);
+
+      // Col 6: Message / Error Details
+      var tdMsg = document.createElement('td');
+      tdMsg.className = 'job-log-msg-cell';
+      tdMsg.textContent = log.message || '—';
+      if (log.error_details && log.error_details !== log.message) {
+        var errSpan = document.createElement('span');
+        errSpan.className = 'job-log-err-detail';
+        errSpan.textContent = 'Error: ' + log.error_details;
+        tdMsg.appendChild(errSpan);
+      }
+
+      tr.append(tdTime, tdName, tdTrig, tdStatus, tdRecs, tdMsg);
+      tbody.appendChild(tr);
+    });
+
+    if (pagBar) {
+      pagBar.hidden = false;
+      var startIdx = (page - 1) * perPage + 1;
+      var endIdx = Math.min(page * perPage, total);
+      if (pageInfo) pageInfo.textContent = 'Showing ' + startIdx + '–' + endIdx + ' of ' + total + ' log(s)';
+      if (pageNum) pageNum.textContent = 'Page ' + page + ' of ' + totalPages;
+      if (prevBtn) prevBtn.disabled = page <= 1;
+      if (nextBtn) nextBtn.disabled = page >= totalPages;
+    }
+  }
+
+  function formatJobDateTime(raw) {
+    if (!raw) return '—';
+    var d = new Date(String(raw).replace(' ', 'T'));
+    if (isNaN(d.getTime())) return String(raw);
+    return d.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
   }
 
 })();

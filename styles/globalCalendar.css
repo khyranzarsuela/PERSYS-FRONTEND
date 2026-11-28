@@ -1,0 +1,610 @@
+/* ============================================================
+   PERSYS — Global Read-Only Google Calendar Component Styles
+   Shared across Admin, Principal, and User/Teacher Dashboards
+   Supports Standard Card Mode & Full-Screen Scroll-Down Mode
+   ============================================================ */
+
+.persys-gcal-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.persys-global-calendar-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5dff5;
+  padding: 22px 26px;
+  box-shadow: 0 4px 16px rgba(107, 15, 186, 0.07);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Large full-screen-feel bottom calendar on User & Principal Dashboards */
+.persys-global-calendar-card.persys-calendar-large {
+  min-height: 78vh;
+  padding: 26px 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.persys-calendar-large .persys-gcal-wrapper {
+  flex: 1;
+}
+
+.persys-calendar-large .persys-gcal-grid {
+  flex: 1;
+}
+
+.persys-calendar-large .persys-gcal-cell {
+  min-height: 118px;
+  padding: 10px 10px 8px;
+}
+
+.persys-calendar-large .persys-gcal-event-pill {
+  font-size: 0.78rem;
+  padding: 4px 9px;
+}
+
+/* ── Header Bar ──────────────────────────────────────────── */
+.persys-gcal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.persys-gcal-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.persys-gcal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.persys-gcal-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1A1A2E;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.persys-calendar-large .persys-gcal-title {
+  font-size: 1.35rem;
+}
+
+.persys-gcal-title svg {
+  width: 21px;
+  height: 21px;
+  stroke: #6B0FBA;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.persys-gcal-subtitle {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Read-only & Source Status Badges */
+.persys-gcal-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.persys-gcal-source-badge.is-online {
+  background: #DCFCE7;
+  color: #166534;
+  border: 1px solid #BBF7D0;
+}
+
+.persys-gcal-source-badge.is-fallback {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+
+.persys-gcal-source-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.persys-gcal-source-badge.is-online .persys-gcal-source-dot {
+  background: #16A34A;
+}
+
+.persys-gcal-source-badge.is-fallback .persys-gcal-source-dot {
+  background: #D97706;
+}
+
+/* ── Navigation & Legend Toolbar ─────────────────────────── */
+.persys-gcal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: #f8f5ff;
+  border-radius: 12px;
+  border: 1px solid #ede7fb;
+}
+
+.persys-gcal-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.persys-gcal-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #d8cef0;
+  background: #ffffff;
+  color: #1A1A2E;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.persys-gcal-nav-btn:hover {
+  border-color: #6B0FBA;
+  color: #6B0FBA;
+  background: #f3eeff;
+}
+
+.persys-gcal-month-label {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #1A1A2E;
+  min-width: 145px;
+  text-align: center;
+}
+
+.persys-calendar-large .persys-gcal-month-label {
+  font-size: 1.1rem;
+  min-width: 165px;
+}
+
+.persys-gcal-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.persys-gcal-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.persys-gcal-legend-swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.persys-gcal-legend-swatch.swatch-leave {
+  background: #6B0FBA;
+}
+
+.persys-gcal-legend-swatch.swatch-credit {
+  background: #0D9488;
+}
+
+.persys-gcal-readonly-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6B0FBA;
+  background: #ede9fe;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+/* ── Calendar 7-Column Grid ──────────────────────────────── */
+.persys-gcal-grid-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.persys-gcal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(105px, 1fr));
+  background: #ede9f5;
+  border: 1px solid #dfd7f3;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+}
+
+.persys-gcal-weekday {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.persys-gcal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(105px, 1fr));
+  border-top: 1px solid #dfd7f3;
+  border-left: 1px solid #dfd7f3;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.persys-gcal-cell {
+  min-height: 78px;
+  padding: 6px 7px;
+  border-right: 1px solid #eae4f7;
+  border-bottom: 1px solid #eae4f7;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #ffffff;
+  box-sizing: border-box;
+  transition: background 0.12s;
+}
+
+.persys-gcal-cell.is-outside-month {
+  background: #faf9fd;
+  opacity: 0.58;
+}
+
+.persys-gcal-cell.is-today {
+  background: #fdfaff;
+  box-shadow: inset 0 0 0 2px #6B0FBA;
+}
+
+.persys-gcal-day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.persys-gcal-day-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #374151;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.persys-gcal-cell.is-today .persys-gcal-day-num {
+  background: #6B0FBA;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.persys-gcal-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Event Pills (Strictly Read-Only, Clickable for Details Popover) */
+.persys-gcal-event-pill {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 3px 7px;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 0.71rem;
+  font-weight: 700;
+  line-height: 1.28;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.persys-gcal-event-pill:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.persys-gcal-event-pill.event-leave {
+  background: #ede9fe;
+  color: #5B21B6;
+  border-left: 3px solid #6B0FBA;
+}
+
+.persys-gcal-event-pill.event-service-credit {
+  background: #ccfbf1;
+  color: #115e59;
+  border-left: 3px solid #0D9488;
+}
+
+.persys-gcal-more-btn {
+  background: none;
+  border: none;
+  color: #6B0FBA;
+  font: inherit;
+  font-size: 0.69rem;
+  font-weight: 800;
+  text-align: left;
+  padding: 1px 4px;
+  cursor: pointer;
+}
+
+.persys-gcal-more-btn:hover {
+  text-decoration: underline;
+}
+
+/* ── Read-Only Event Detail Popover Modal ────────────────── */
+.persys-gcal-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 12, 28, 0.52);
+  z-index: 250;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.persys-gcal-modal-overlay.is-open {
+  display: flex;
+}
+
+.persys-gcal-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  padding: 26px 28px 22px;
+  position: relative;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.24);
+  border: 1px solid #e5dff5;
+}
+
+.persys-gcal-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.15rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 7px;
+  border-radius: 6px;
+}
+
+.persys-gcal-modal-close:hover {
+  background: #f3eeff;
+  color: #1A1A2E;
+}
+
+.persys-gcal-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.persys-gcal-modal-badge.badge-leave {
+  background: #ede9fe;
+  color: #5B21B6;
+}
+
+.persys-gcal-modal-badge.badge-credit {
+  background: #ccfbf1;
+  color: #115e59;
+}
+
+.persys-gcal-modal-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1A1A2E;
+  margin: 0 0 14px;
+  line-height: 1.35;
+}
+
+.persys-gcal-modal-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0ebfc;
+  font-size: 0.84rem;
+}
+
+.persys-gcal-modal-row:last-of-type {
+  border-bottom: none;
+}
+
+.persys-gcal-modal-lbl {
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.persys-gcal-modal-val {
+  font-weight: 700;
+  color: #1A1A2E;
+  text-align: right;
+}
+
+.persys-gcal-privacy-note {
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #f8f5ff;
+  border-left: 3px solid #6B0FBA;
+  font-size: 0.75rem;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+.persys-gcal-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.persys-gcal-modal-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 1.5px solid #d4c6f0;
+  background: #ffffff;
+  color: #374151;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.persys-gcal-modal-btn:hover {
+  border-color: #6B0FBA;
+  color: #6B0FBA;
+  background: #f3eeff;
+}
+
+/* ── Dark Mode Support ───────────────────────────────────── */
+html[data-theme="dark"] .persys-global-calendar-card,
+html[data-theme="dark"] .persys-gcal-modal {
+  background: #1e1926;
+  border-color: #3a314a;
+  color: #f5f2fa;
+}
+
+html[data-theme="dark"] .persys-gcal-title,
+html[data-theme="dark"] .persys-gcal-month-label,
+html[data-theme="dark"] .persys-gcal-modal-title,
+html[data-theme="dark"] .persys-gcal-modal-val {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .persys-gcal-title svg {
+  stroke: #F5C518;
+}
+
+html[data-theme="dark"] .persys-gcal-subtitle,
+html[data-theme="dark"] .persys-gcal-legend-item,
+html[data-theme="dark"] .persys-gcal-modal-lbl {
+  color: #d0c9db;
+}
+
+html[data-theme="dark"] .persys-gcal-toolbar {
+  background: #26212e;
+  border-color: #3a314a;
+}
+
+html[data-theme="dark"] .persys-gcal-nav-btn,
+html[data-theme="dark"] .persys-gcal-modal-btn {
+  background: #1e1926;
+  border-color: #484052;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .persys-gcal-nav-btn:hover,
+html[data-theme="dark"] .persys-gcal-modal-btn:hover {
+  border-color: #F5C518;
+  color: #F5C518;
+}
+
+html[data-theme="dark"] .persys-gcal-weekdays {
+  background: #2b2436;
+  border-color: #3a314a;
+}
+
+html[data-theme="dark"] .persys-gcal-weekday {
+  color: #F5C518;
+}
+
+html[data-theme="dark"] .persys-gcal-grid {
+  background: #1e1926;
+  border-color: #3a314a;
+}
+
+html[data-theme="dark"] .persys-gcal-cell {
+  background: #1e1926;
+  border-color: #322a40;
+}
+
+html[data-theme="dark"] .persys-gcal-cell.is-outside-month {
+  background: #17131d;
+}
+
+html[data-theme="dark"] .persys-gcal-cell.is-today {
+  background: #292138;
+  box-shadow: inset 0 0 0 2px #F5C518;
+}
+
+html[data-theme="dark"] .persys-gcal-day-num {
+  color: #e9e0f5;
+}
+
+html[data-theme="dark"] .persys-gcal-cell.is-today .persys-gcal-day-num {
+  background: #F5C518;
+  color: #1A1A2E;
+}
+
+html[data-theme="dark"] .persys-gcal-event-pill.event-leave {
+  background: rgba(139, 92, 246, 0.22);
+  color: #ddd6fe;
+  border-left-color: #a78bfa;
+}
+
+html[data-theme="dark"] .persys-gcal-event-pill.event-service-credit {
+  background: rgba(20, 184, 166, 0.22);
+  color: #99f6e4;
+  border-left-color: #2dd4bf;
+}
+
+html[data-theme="dark"] .persys-gcal-privacy-note {
+  background: #26212e;
+  color: #d0c9db;
+  border-left-color: #F5C518;
+}
+
+html[data-theme="dark"] .persys-gcal-modal-row {
+  border-bottom-color: #322a40;
+}

@@ -863,7 +863,7 @@
                   <path d="M20 20c0-2.5-1.9-4.5-4.5-5"/>
                 </svg>
               </span>
-              Employees
+              Personnel
             </a>
           </li>
 
@@ -1163,6 +1163,404 @@
           ></div>
         </div><!-- END LEAVE REPORTS CARD -->
 
+        <!-- ══════════════════════════════════════════════════════
+             PRINCIPAL ("SUPER ADMIN") PERSONAL LEAVE REQUESTS VIEW
+             (Shown when PRINCIPAL_PERSONAL_LEAVE_REQUEST_MODE=true in .env)
+        ══════════════════════════════════════════════════════ -->
+        <div id="principalLeaveRequestsView" hidden style="display:none;flex-direction:column;gap:22px;width:100%;">
+          <style>
+            .p-lr-top-grid {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr) 1.55fr;
+              gap: 18px;
+              align-items: stretch;
+              width: 100%;
+            }
+            .p-lr-stat-card {
+              background: #ffffff;
+              border-radius: 16px;
+              padding: 20px 20px 22px;
+              box-shadow: 0 4px 14px rgba(60, 20, 100, 0.07);
+              border: 1px solid rgba(107, 15, 186, 0.08);
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              position: relative;
+              overflow: hidden;
+              min-height: 175px;
+            }
+            .p-lr-stat-card::after {
+              content: "";
+              position: absolute;
+              left: 0; right: 0; bottom: 0;
+              height: 5px;
+            }
+            .p-lr-stat-card.stat-pending::after { background: #F59E0B; }
+            .p-lr-stat-card.stat-approved::after { background: #16A34A; }
+            .p-lr-stat-card.stat-disapproved::after { background: #EF4444; }
+            .p-lr-stat-top {
+              display: flex;
+              align-items: flex-start;
+              justify-content: space-between;
+              gap: 10px;
+            }
+            .p-lr-stat-title {
+              font-size: 0.94rem;
+              font-weight: 800;
+              color: #1A1A2E;
+              margin: 0;
+              line-height: 1.3;
+            }
+            .p-lr-stat-icon {
+              width: 36px; height: 36px;
+              border-radius: 50%;
+              display: flex; align-items: center; justify-content: center;
+              flex-shrink: 0;
+            }
+            .p-lr-stat-icon svg {
+              width: 18px; height: 18px;
+              stroke: currentColor; fill: none; stroke-width: 2;
+            }
+            .stat-pending .p-lr-stat-icon { background: #FEF3C7; color: #D97706; }
+            .stat-approved .p-lr-stat-icon { background: #DCFCE7; color: #16A34A; }
+            .stat-disapproved .p-lr-stat-icon { background: #FEE2E2; color: #DC2626; }
+            .p-lr-stat-num {
+              font-size: 2.55rem;
+              font-weight: 800;
+              color: #1A1A2E;
+              text-align: center;
+              margin: 8px 0 4px;
+              line-height: 1;
+            }
+            .p-lr-stat-sub {
+              font-size: 0.78rem;
+              color: #6b7280;
+              text-align: center;
+              margin: 0;
+            }
+            .p-lr-file-card {
+              background: #ffffff;
+              border-radius: 16px;
+              padding: 22px 24px;
+              box-shadow: 0 4px 14px rgba(60, 20, 100, 0.07);
+              border: 1px solid rgba(107, 15, 186, 0.08);
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              gap: 12px;
+            }
+            .p-lr-file-title {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              font-size: 1.25rem;
+              font-weight: 800;
+              color: #1A1A2E;
+              margin: 0;
+            }
+            .p-lr-file-title svg {
+              width: 24px; height: 24px;
+              stroke: #1A1A2E; fill: none; stroke-width: 2;
+            }
+            .p-lr-file-sub {
+              font-size: 0.86rem;
+              color: #4b5563;
+              font-style: italic;
+              margin: 0;
+            }
+            .p-lr-file-btn-wrap {
+              display: flex;
+              justify-content: flex-end;
+              margin-top: 6px;
+            }
+            .btn-p-leave-application {
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              padding: 11px 22px;
+              border-radius: 999px;
+              border: none;
+              background: #1B8A4B;
+              color: #ffffff;
+              font: inherit;
+              font-size: 0.9rem;
+              font-weight: 700;
+              cursor: pointer;
+              transition: background 0.15s ease, transform 0.1s ease;
+            }
+            .btn-p-leave-application:hover {
+              background: #15703C;
+            }
+            .btn-p-leave-application svg {
+              width: 17px; height: 17px;
+              stroke: currentColor; fill: none; stroke-width: 2;
+            }
+            .p-lr-table-card {
+              background: #ffffff;
+              border-radius: 16px;
+              padding: 22px 26px;
+              box-shadow: 0 4px 14px rgba(60, 20, 100, 0.07);
+              border: 1px solid rgba(107, 15, 186, 0.08);
+              display: flex;
+              flex-direction: column;
+              gap: 16px;
+            }
+            .p-lr-toolbar {
+              display: flex;
+              align-items: flex-end;
+              justify-content: space-between;
+              gap: 16px;
+              flex-wrap: wrap;
+            }
+            .p-lr-card-heading {
+              font-size: 1.25rem;
+              font-weight: 800;
+              color: #1A1A2E;
+              margin: 0;
+            }
+            .p-lr-filters-right {
+              display: flex;
+              align-items: flex-end;
+              gap: 14px;
+              flex-wrap: wrap;
+              flex: 1;
+              justify-content: flex-end;
+            }
+            .p-lr-search-box {
+              flex: 1;
+              max-width: 360px;
+              min-width: 200px;
+            }
+            .p-lr-search-box input {
+              width: 100%;
+              padding: 9px 16px;
+              border-radius: 999px;
+              border: 1.5px solid #dfd7f3;
+              font: inherit;
+              font-size: 0.84rem;
+              box-sizing: border-box;
+            }
+            .p-lr-status-col {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+            }
+            .p-lr-status-col label {
+              font-size: 0.75rem;
+              font-weight: 800;
+              color: #1A1A2E;
+            }
+            .p-lr-status-col select {
+              padding: 8px 14px;
+              border-radius: 999px;
+              border: 1.5px solid #374151;
+              background: #ffffff;
+              font: inherit;
+              font-size: 0.83rem;
+              font-weight: 600;
+              min-width: 140px;
+              cursor: pointer;
+            }
+            .p-lr-form-grid {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 12px;
+              margin-bottom: 12px;
+            }
+            .p-lr-form-field {
+              display: flex;
+              flex-direction: column;
+              gap: 5px;
+            }
+            .p-lr-form-field.full-span {
+              grid-column: 1 / -1;
+            }
+            .p-lr-form-field label {
+              font-size: 0.8rem;
+              font-weight: 700;
+              color: #1f2937;
+            }
+            .p-lr-form-field input,
+            .p-lr-form-field select,
+            .p-lr-form-field textarea {
+              padding: 9px 12px;
+              border: 1.5px solid #d4c6f0;
+              border-radius: 8px;
+              font: inherit;
+              font-size: 0.85rem;
+              color: #1f2937;
+            }
+            @media (max-width: 1050px) {
+              .p-lr-top-grid {
+                grid-template-columns: 1fr 1fr;
+              }
+            }
+            @media (max-width: 640px) {
+              .p-lr-top-grid,
+              .p-lr-form-grid {
+                grid-template-columns: 1fr;
+              }
+            }
+          </style>
+
+          <!-- Top 4 Cards -->
+          <div class="p-lr-top-grid">
+            <article class="p-lr-stat-card stat-pending">
+              <div class="p-lr-stat-top">
+                <h2 class="p-lr-stat-title">Pending Leave<br>Requests</h2>
+                <div class="p-lr-stat-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <polyline points="12 7 12 12 15 14" />
+                  </svg>
+                </div>
+              </div>
+              <p class="p-lr-stat-num" id="pLrPendingCount">0</p>
+              <p class="p-lr-stat-sub" id="pLrPendingSub">0 pending</p>
+            </article>
+
+            <article class="p-lr-stat-card stat-approved">
+              <div class="p-lr-stat-top">
+                <h2 class="p-lr-stat-title">Approved Leave<br>Requests</h2>
+                <div class="p-lr-stat-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <polyline points="9 12 11 14 15 10" />
+                  </svg>
+                </div>
+              </div>
+              <p class="p-lr-stat-num" id="pLrApprovedCount">0</p>
+              <p class="p-lr-stat-sub" id="pLrApprovedSub">0 approved</p>
+            </article>
+
+            <article class="p-lr-stat-card stat-disapproved">
+              <div class="p-lr-stat-top">
+                <h2 class="p-lr-stat-title">Disapproved<br>Leave Requests</h2>
+                <div class="p-lr-stat-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
+                  </svg>
+                </div>
+              </div>
+              <p class="p-lr-stat-num" id="pLrDisapprovedCount">0</p>
+              <p class="p-lr-stat-sub" id="pLrDisapprovedSub">No disapproved requests</p>
+            </article>
+
+            <article class="p-lr-file-card">
+              <div>
+                <h2 class="p-lr-file-title">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="12" y1="18" x2="12" y2="12" />
+                    <line x1="9" y1="15" x2="15" y2="15" />
+                  </svg>
+                  File a Leave Request
+                </h2>
+                <p class="p-lr-file-sub" style="margin-top:8px;">
+                  Your request will be reviewed by an administrator
+                </p>
+              </div>
+
+              <div class="p-lr-file-btn-wrap">
+                <button type="button" class="btn-p-leave-application" id="btnOpenPrincipalLeaveModal">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  Leave Application
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <!-- Bottom Card: My Requests -->
+          <section class="p-lr-table-card" aria-labelledby="pLrMyRequestsHeading">
+            <div class="p-lr-toolbar">
+              <h2 class="p-lr-card-heading" id="pLrMyRequestsHeading">My Requests</h2>
+
+              <div class="p-lr-filters-right">
+                <div class="p-lr-search-box">
+                  <input type="search" id="pLrSearchInput" placeholder="Search requests..." aria-label="Search my leave requests" />
+                </div>
+
+                <div class="p-lr-status-col">
+                  <label for="pLrStatusFilter">Status</label>
+                  <select id="pLrStatusFilter">
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="disapproved">Disapproved</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="tx-table-wrap">
+              <table class="tx-table" aria-label="My leave requests">
+                <thead>
+                  <tr>
+                    <th>Request No.</th>
+                    <th>Date Filed</th>
+                    <th>Leave Type</th>
+                    <th>Leave Dates</th>
+                    <th>Total Days</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="pLrTableBody">
+                  <tr>
+                    <td colspan="6" style="text-align:center;padding:24px;color:#9ca3af;">Loading your leave requests...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="tx-pagination" id="pLrPagination" role="navigation" aria-label="My leave requests pagination" hidden></div>
+          </section>
+        </div>
+
+        <!-- Principal Leave Application Modal -->
+        <div class="tx-modal-overlay" id="principalLeaveAppModalOverlay" role="dialog" aria-modal="true" aria-labelledby="principalLeaveAppModalTitle" tabindex="-1">
+          <div class="tx-modal" id="principalLeaveAppModal" tabindex="-1">
+            <button type="button" class="tx-modal-close" id="pLeaveAppCloseBtn" aria-label="Close">&#10005;</button>
+            <h2 class="tx-modal-title" id="principalLeaveAppModalTitle">File a Leave Request</h2>
+            <form id="principalLeaveAppForm">
+              <div class="p-lr-form-grid">
+                <div class="p-lr-form-field full-span">
+                  <label for="pLeaveTypeSelect">Leave Type</label>
+                  <select id="pLeaveTypeSelect" required>
+                    <option value="">Select Leave Type</option>
+                  </select>
+                </div>
+                <div class="p-lr-form-field">
+                  <label for="pLeaveStartDate">Start Date</label>
+                  <input type="date" id="pLeaveStartDate" required />
+                </div>
+                <div class="p-lr-form-field">
+                  <label for="pLeaveEndDate">End Date</label>
+                  <input type="date" id="pLeaveEndDate" required />
+                </div>
+                <div class="p-lr-form-field full-span">
+                  <label for="pLeaveTotalDays">Total Leave Days</label>
+                  <input type="number" id="pLeaveTotalDays" min="1" step="0.5" value="1" required />
+                </div>
+                <div class="p-lr-form-field full-span">
+                  <label for="pLeaveReason">Reason / Details (Optional)</label>
+                  <textarea id="pLeaveReason" rows="3" placeholder="Provide additional details for your leave request..."></textarea>
+                </div>
+              </div>
+              <div id="pLeaveAppFeedback" style="display:none;padding:9px 12px;border-radius:8px;font-size:0.82rem;font-weight:600;margin-bottom:10px;" role="alert"></div>
+              <div class="tx-modal-footer">
+                <button type="button" class="tx-modal-close-btn" id="pLeaveAppCancelBtn">Cancel</button>
+                <button type="submit" class="btn-p-leave-application" id="pLeaveAppSubmitBtn" style="padding:9px 22px;font-size:0.86rem;">Submit Application</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
         <!-- Logout Modal -->
         <div
           class="modal-overlay"
@@ -1264,6 +1662,14 @@
         <span class="tx-detail-label">Total Days</span>
         <span class="tx-detail-value" id="txTotalDays">—</span>
       </div>
+
+      <!-- Leave Overlap Warning Notice (Admin Review) -->
+      <div
+        id="txOverlapWarningBanner"
+        style="display:none;margin:10px 0 14px;padding:10px 14px;border-radius:8px;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;font-size:0.81rem;line-height:1.45;"
+        role="status"
+        aria-live="polite"
+      ></div>
 
       <!-- Service Credit Information -->
       <h3 class="tx-section-heading">Service Credit Information</h3>

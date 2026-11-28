@@ -70,7 +70,7 @@
                   <path d="M20 20c0-2.5-1.9-4.5-4.5-5" />
                 </svg>
               </span>
-              Employees
+              Personnel
             </a>
           </li>
 
@@ -500,6 +500,188 @@
           </div>
 
         </div>
+
+        <!-- ── SYSTEM JOBS & LOGS (ADMIN ONLY) ────────────── -->
+        <section class="settings-panel-card system-jobs-card" id="systemJobsSection" aria-labelledby="systemJobsTitle">
+          <div class="settings-panel-header system-jobs-header">
+            <div class="system-jobs-title-group">
+              <div class="settings-panel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                  <polyline points="7 10 10 13 17 7" />
+                </svg>
+              </div>
+              <div class="settings-panel-title-wrap">
+                <h3 class="settings-panel-title" id="systemJobsTitle">System Jobs &amp; Logs</h3>
+                <p class="settings-panel-desc">
+                  Manage automated background jobs, configure archive retention, trigger manual runs for testing/demos, and inspect execution logs.
+                </p>
+              </div>
+            </div>
+
+            <div class="system-jobs-meta-pills">
+              <span class="sys-meta-pill" id="gcalQueueSummaryPill" title="Google Calendar sync queue status">
+                Google Calendar: —
+              </span>
+              <span class="sys-meta-pill" id="emailQueueSummaryPill" title="Email queue status">
+                Email Queue: —
+              </span>
+              <span class="sys-meta-pill" id="dbBackupsSummaryPill" title="Stored SQL database backups (max 30 kept)">
+                SQL Backups: —
+              </span>
+            </div>
+          </div>
+
+          <!-- Archive Retention Window Configuration -->
+          <div class="retention-config-bar">
+            <div class="retention-config-info">
+              <label for="archiveRetentionDaysInput" class="retention-config-title">
+                Archive Retention Window (Days)
+              </label>
+              <p class="retention-config-desc">
+                Finalized leave requests (whose end date has passed) and Service Credit upload history older than this window are archived automatically. Set to <strong>0</strong> days during demos to test immediate archiving.
+              </p>
+            </div>
+
+            <div class="retention-config-controls">
+              <input
+                type="number"
+                id="archiveRetentionDaysInput"
+                class="retention-days-input"
+                min="0"
+                max="3650"
+                step="1"
+                value="90"
+                aria-label="Archive retention period in days"
+              />
+              <span class="retention-unit-label">days</span>
+              <button type="button" class="btn-save-retention" id="saveRetentionDaysBtn">
+                Save Retention
+              </button>
+            </div>
+          </div>
+
+          <!-- Google Calendar Global Sync Controls -->
+          <div class="retention-config-bar" style="margin-top:12px;">
+            <div class="retention-config-info">
+              <span class="retention-config-title">
+                Google Calendar Global Sync (Read-Only Service Account)
+              </span>
+              <p class="retention-config-desc" id="gcalSyncDetailText">
+                Approved Leave Requests and Service Credit Upload dates sync automatically to the global calendar. Offline items are queued in <code>calendar_sync_queue</code>.
+              </p>
+            </div>
+
+            <div class="retention-config-controls">
+              <button type="button" class="btn-save-retention" id="btnSyncGoogleCalendarNow">
+                Sync Calendar Now
+              </button>
+            </div>
+          </div>
+
+          <!-- Status Banner for Manual Job Runs / Retention Save -->
+          <div class="job-run-feedback" id="jobRunFeedbackBanner" role="status" aria-live="polite" hidden></div>
+
+          <!-- Scheduled Jobs Table -->
+          <div class="jobs-subblock">
+            <div class="jobs-subblock-header">
+              <h4 class="jobs-subblock-title">Scheduled Background Jobs</h4>
+              <span class="jobs-subblock-hint">Click "Run Now" to execute any job immediately for testing or demonstration.</span>
+            </div>
+
+            <div class="jobs-table-wrap">
+              <table class="jobs-table" aria-label="Scheduled background jobs">
+                <thead>
+                  <tr>
+                    <th>Job Name</th>
+                    <th>Schedule</th>
+                    <th>Last Run Time</th>
+                    <th>Last Status</th>
+                    <th>Records Processed</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduledJobsTableBody">
+                  <tr>
+                    <td colspan="6" class="jobs-empty-cell">Loading scheduled jobs...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="settings-section-divider" role="separator"></div>
+
+          <!-- Job Execution Logs Viewer -->
+          <div class="jobs-subblock">
+            <div class="jobs-subblock-header">
+              <div>
+                <h4 class="jobs-subblock-title">Job Execution Logs</h4>
+                <span class="jobs-subblock-hint">Recent scheduled and manual execution history with status badges and messages.</span>
+              </div>
+
+              <div class="job-logs-toolbar">
+                <select id="jobLogsFilterJob" class="job-logs-select" aria-label="Filter logs by job">
+                  <option value="all">Job: All Jobs</option>
+                  <option value="monthly_report_generator">Monthly Report Generator</option>
+                  <option value="auto_archive_history">Auto-Archive Finalized History</option>
+                  <option value="pending_leave_reminder_digest">Pending Leave Reminder Digest</option>
+                  <option value="email_queue_worker">Email Queue &amp; Auto-Retry</option>
+                  <option value="automated_database_backup">Automated Database Backup</option>
+                  <option value="google_calendar_sync">Google Calendar Queue Sync</option>
+                </select>
+
+                <select id="jobLogsFilterStatus" class="job-logs-select" aria-label="Filter logs by status">
+                  <option value="all">Status: All</option>
+                  <option value="success">Success</option>
+                  <option value="failed">Failed</option>
+                  <option value="running">Running</option>
+                </select>
+
+                <select id="jobLogsPerPage" class="job-logs-select" aria-label="Logs per page">
+                  <option value="5">5 / page</option>
+                  <option value="10" selected>10 / page</option>
+                  <option value="20">20 / page</option>
+                </select>
+
+                <button type="button" class="btn-refresh-logs" id="refreshJobLogsBtn">
+                  Refresh Logs
+                </button>
+              </div>
+            </div>
+
+            <div class="jobs-table-wrap">
+              <table class="jobs-table job-logs-table" aria-label="Job execution logs">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Job Name</th>
+                    <th>Trigger</th>
+                    <th>Status</th>
+                    <th>Records</th>
+                    <th>Message / Error Details</th>
+                  </tr>
+                </thead>
+                <tbody id="jobLogsTableBody">
+                  <tr>
+                    <td colspan="6" class="jobs-empty-cell">Loading job execution logs...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="job-logs-pagination" id="jobLogsPaginationBar" hidden>
+              <span class="job-logs-page-info" id="jobLogsPageInfo">Showing 0–0 of 0 logs</span>
+              <div class="job-logs-page-btns">
+                <button type="button" class="job-page-btn" id="jobLogsPrevBtn">‹ Prev</button>
+                <span class="job-logs-page-num" id="jobLogsPageNum">Page 1 of 1</span>
+                <button type="button" class="job-page-btn" id="jobLogsNextBtn">Next ›</button>
+              </div>
+            </div>
+          </div>
+        </section>
 
       </main>
 

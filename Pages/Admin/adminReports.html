@@ -569,7 +569,7 @@
                   <path d="M20 20c0-2.5-1.9-4.5-4.5-5" />
                 </svg>
               </span>
-              Employees
+              Personnel
             </a>
           </li>
 
@@ -692,6 +692,230 @@
 
       <!-- PAGE CONTENT -->
       <main class="page-content reports-page" id="mainContent">
+
+        <!-- ══════════════════════════════════════════════════════
+             PRINCIPAL ("SUPER ADMIN") REPORTS TABLES:
+             1. Personnel Service Credits Records
+             2. Leave Reports
+             (Shown at top of Reports page when PRINCIPAL_SHOW_RECORDS_IN_REPORTS=true)
+        ══════════════════════════════════════════════════════ -->
+        <div id="principalReportsTablesContainer" hidden style="display:none;flex-direction:column;gap:24px;width:100%;">
+          <style>
+            .rep-large-table-card {
+              background: #ffffff;
+              border: 1px solid #e5dff5;
+              border-radius: 16px;
+              padding: 24px 26px;
+              box-shadow: 0 3px 12px rgba(107, 15, 186, 0.07);
+              display: flex;
+              flex-direction: column;
+              gap: 16px;
+            }
+            .rep-large-card-header {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 14px;
+              flex-wrap: wrap;
+            }
+            .rep-large-card-title {
+              font-size: 1.18rem;
+              font-weight: 800;
+              color: #1A1A2E;
+              margin: 0;
+            }
+            .rep-search-input {
+              padding: 8px 14px;
+              border-radius: 999px;
+              border: 1.5px solid #dfd7f3;
+              font: inherit;
+              font-size: 0.84rem;
+              min-width: 240px;
+            }
+            .rep-table-scroll {
+              width: 100%;
+              overflow-x: auto;
+              overflow-y: auto;
+              max-height: 48vh;
+              border: 1px solid #e5dff5;
+              border-radius: 10px;
+            }
+            .rep-data-table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 0.84rem;
+              text-align: left;
+            }
+            .rep-data-table thead th {
+              position: sticky;
+              top: 0;
+              z-index: 2;
+              background: #ede9f5;
+              color: #1A1A2E;
+              font-weight: 800;
+              padding: 11px 14px;
+              border-bottom: 1px solid #d5cae9;
+              white-space: nowrap;
+            }
+            .rep-data-table tbody td {
+              padding: 11px 14px;
+              border-bottom: 1px solid #f0ebfc;
+              color: #1f2937;
+              vertical-align: middle;
+            }
+            .rep-data-table tbody tr:hover {
+              background: #faf8ff;
+            }
+            .rep-view-btn {
+              padding: 6px 16px;
+              border-radius: 999px;
+              border: none;
+              background: #1B8A4B;
+              color: #ffffff;
+              font: inherit;
+              font-size: 0.78rem;
+              font-weight: 700;
+              cursor: pointer;
+            }
+            .rep-view-btn:hover {
+              background: #15703C;
+            }
+            .rep-pagination-bar {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 12px;
+              flex-wrap: wrap;
+              padding-top: 8px;
+            }
+            .rep-pag-info {
+              font-size: 0.82rem;
+              color: #6b7280;
+              font-weight: 600;
+            }
+            .rep-pag-controls {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+            }
+            .rep-pag-btn {
+              padding: 5px 11px;
+              border-radius: 7px;
+              border: 1.5px solid #dfd7f3;
+              background: #ffffff;
+              color: #1A1A2E;
+              font: inherit;
+              font-size: 0.78rem;
+              font-weight: 700;
+              cursor: pointer;
+            }
+            .rep-pag-btn.is-active {
+              background: #6B0FBA;
+              border-color: #6B0FBA;
+              color: #ffffff;
+            }
+            .rep-pag-btn:disabled {
+              opacity: 0.45;
+              cursor: not-allowed;
+            }
+          </style>
+
+          <!-- LARGE CARD 1: Personnel Service Credits Records -->
+          <section class="rep-large-table-card" aria-labelledby="repPersonnelScTitle">
+            <div class="rep-large-card-header">
+              <h2 class="rep-large-card-title" id="repPersonnelScTitle">Personnel Service Credits Records</h2>
+              <input type="search" id="repScPersonnelSearch" class="rep-search-input" placeholder="Search by employee #, name, role..." aria-label="Search personnel service credit records" />
+            </div>
+
+            <div class="rep-table-scroll">
+              <table class="rep-data-table" aria-label="Personnel service credits records">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Employee #</th>
+                    <th rowspan="2">Name</th>
+                    <th rowspan="2">Role</th>
+                    <th colspan="3" style="text-align:center;border-left:1px solid #d5cae9;">Current Balance</th>
+                    <th colspan="3" style="text-align:center;border-left:1px solid #d5cae9;">Overall Earned</th>
+                    <th colspan="3" style="text-align:center;border-left:1px solid #d5cae9;">Total Used</th>
+                    <th rowspan="2" style="text-align:center;border-left:1px solid #d5cae9;">Activities</th>
+                  </tr>
+                  <tr>
+                    <th style="border-left:1px solid #d5cae9;">National</th>
+                    <th>Wellness</th>
+                    <th>Local</th>
+                    <th style="border-left:1px solid #d5cae9;">National</th>
+                    <th>Wellness</th>
+                    <th>Local</th>
+                    <th style="border-left:1px solid #d5cae9;">National</th>
+                    <th>Wellness</th>
+                    <th>Local</th>
+                  </tr>
+                </thead>
+                <tbody id="repScPersonnelTableBody">
+                  <tr>
+                    <td colspan="13" style="text-align:center;padding:24px;color:#9ca3af;">Loading personnel service credit records...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="rep-pagination-bar" id="repScPersonnelPagination"></div>
+          </section>
+
+          <!-- LARGE CARD 2: Leave Reports -->
+          <section class="rep-large-table-card" aria-labelledby="repLeaveReportsTableTitle">
+            <div class="rep-large-card-header">
+              <h2 class="rep-large-card-title" id="repLeaveReportsTableTitle">Leave Reports</h2>
+              <input type="search" id="repLeaveReportsSearch" class="rep-search-input" placeholder="Search by employee, leave type..." aria-label="Search leave reports" />
+            </div>
+
+            <div class="rep-table-scroll">
+              <table class="rep-data-table" aria-label="Leave reports table">
+                <thead>
+                  <tr>
+                    <th>Employee Number</th>
+                    <th>Employee Name</th>
+                    <th>Date Applied</th>
+                    <th>Inclusive Dates</th>
+                    <th>Type of Leave</th>
+                  </tr>
+                </thead>
+                <tbody id="repLeaveReportsTableBody">
+                  <tr>
+                    <td colspan="5" style="text-align:center;padding:24px;color:#9ca3af;">Loading leave reports...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="rep-pagination-bar" id="repLeaveReportsPagination"></div>
+          </section>
+        </div>
+
+        <!-- Principal Employee Activities Modal on Reports Page -->
+        <div class="modal-overlay" id="repActivitiesModalOverlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="repActivitiesModalTitle">
+          <div class="modal-box" style="max-width:680px;width:100%;">
+            <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;">
+              <h2 id="repActivitiesModalTitle">Activities — <span id="repActivitiesEmpName">Employee</span></h2>
+              <button type="button" id="repActivitiesCloseBtn" class="btn-secondary" style="padding:4px 12px;">&#10005;</button>
+            </div>
+            <div class="modal-body">
+              <div class="rep-table-scroll" style="max-height:320px;">
+                <table class="rep-data-table">
+                  <thead>
+                    <tr>
+                      <th>Name of Activity</th>
+                      <th>Date of Activity</th>
+                      <th>Service Credits / Pts</th>
+                      <th>Credit Type</th>
+                    </tr>
+                  </thead>
+                  <tbody id="repActivitiesTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- TOP 2-COLUMN EXPORT CARDS -->
         <div class="reports-top-grid">

@@ -5,8 +5,8 @@
    2. Leave Request History (Approved & Disapproved leave requests + View + Form 6)
    ============================================================ */
 
-const TX_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/transactions.php`;
-const SC_SUMMARY_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/serviceCredits/summary.php`;
+const TX_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/transactions.php?include_archived=1`;
+const SC_SUMMARY_API = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/serviceCredits/summary.php?include_archived=1`;
 const FORM6_BASE = `${window.PERSYS_CONFIG.API_BASE_URL}/api/admin/generateForm6.php`;
 
 // ── Service Credit Upload History state ──────────────────────────
@@ -156,12 +156,14 @@ function wireScFilters() {
   const roleEl = document.getElementById('scRoleFilter');
   const creditEl = document.getElementById('scCreditTypeFilter');
   const dateEl = document.getElementById('scDateFilter');
+  const archiveEl = document.getElementById('scArchiveFilter');
 
   searchEl?.addEventListener('input', applyScFilters);
   roleEl?.addEventListener('change', applyScFilters);
   creditEl?.addEventListener('change', applyScFilters);
   dateEl?.addEventListener('change', applyScFilters);
   dateEl?.addEventListener('input', applyScFilters);
+  archiveEl?.addEventListener('change', applyScFilters);
 }
 
 function applyScFilters() {
@@ -169,8 +171,13 @@ function applyScFilters() {
   const roleFilter = document.getElementById('scRoleFilter')?.value ?? 'all';
   const creditFilter = document.getElementById('scCreditTypeFilter')?.value ?? 'all';
   const dateFilter = (document.getElementById('scDateFilter')?.value ?? '').trim();
+  const archiveFilter = (document.getElementById('scArchiveFilter')?.value ?? 'active').toLowerCase();
 
   scFilteredRows = scUploadRecords.filter(rec => {
+    const isArchived = Number(rec.is_archived ?? 0) === 1;
+    if (archiveFilter === 'active' && isArchived) return false;
+    if (archiveFilter === 'archived' && !isArchived) return false;
+
     const empName = String(rec.employee_name ?? '').toLowerCase();
     const empNum = String(rec.employee_number ?? '').toLowerCase();
     const uploadedBy = String(rec.uploaded_by_name ?? '').toLowerCase();
@@ -249,6 +256,12 @@ function buildScRow(rec) {
   // Col 1: Date Uploaded
   const tdDate = document.createElement('td');
   tdDate.textContent = formatDate(rec.uploaded_at);
+  if (Number(rec.is_archived ?? 0) === 1) {
+    const archBadge = document.createElement('span');
+    archBadge.className = 'tx-archived-badge';
+    archBadge.textContent = 'Archived';
+    tdDate.appendChild(archBadge);
+  }
 
   // Col 2: Uploaded By
   const tdUploadedBy = document.createElement('td');
@@ -359,18 +372,25 @@ function wireLeaveFilters() {
   const searchEl = document.getElementById('leaveHistorySearchInput');
   const typeEl = document.getElementById('leaveTypeFilter');
   const statusEl = document.getElementById('leaveStatusFilter');
+  const archiveEl = document.getElementById('leaveArchiveFilter');
 
   searchEl?.addEventListener('input', applyLeaveFilters);
   typeEl?.addEventListener('change', applyLeaveFilters);
   statusEl?.addEventListener('change', applyLeaveFilters);
+  archiveEl?.addEventListener('change', applyLeaveFilters);
 }
 
 function applyLeaveFilters() {
   const term = (document.getElementById('leaveHistorySearchInput')?.value ?? '').trim().toLowerCase();
   const typeFilter = (document.getElementById('leaveTypeFilter')?.value ?? 'all').toLowerCase();
   const statusFilter = (document.getElementById('leaveStatusFilter')?.value ?? 'all').toLowerCase();
+  const archiveFilter = (document.getElementById('leaveArchiveFilter')?.value ?? 'active').toLowerCase();
 
   leaveFilteredRows = leaveHistoryRecords.filter(r => {
+    const isArchived = Number(r.is_archived ?? 0) === 1;
+    if (archiveFilter === 'active' && isArchived) return false;
+    if (archiveFilter === 'archived' && !isArchived) return false;
+
     const name = buildName(r).toLowerCase();
     const reviewer = String(r.reviewer_name ?? '').toLowerCase();
     const leaveType = String(r.leave_type_name ?? '').toLowerCase();
@@ -454,6 +474,12 @@ function buildLeaveHistoryRow(r) {
   // Col 1: Request ID
   const tdReqId = document.createElement('td');
   tdReqId.textContent = r.request_number || rid || '—';
+  if (Number(r.is_archived ?? 0) === 1) {
+    const archBadge = document.createElement('span');
+    archBadge.className = 'tx-archived-badge';
+    archBadge.textContent = 'Archived';
+    tdReqId.appendChild(archBadge);
+  }
 
   // Col 2: Reviewed By
   const tdReviewedBy = document.createElement('td');
