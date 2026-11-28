@@ -1346,6 +1346,131 @@
     html[data-theme="dark"] .pending-leave-table tbody td {
       color: #e9e0f5;
     }
+
+    /* =========================================================
+       PRINCIPAL MY SUBMITTED EDIT REQUESTS SECTION INSIDE MODAL
+       ========================================================= */
+    .my-edit-reqs-section {
+      border-top: 1px solid #e8e1f0;
+      margin-top: 18px;
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .my-edit-reqs-heading {
+      margin: 0;
+      font-size: 0.925rem;
+      font-weight: 800;
+      color: #1A1A2E;
+    }
+
+    .my-edit-reqs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 210px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .my-edit-req-card {
+      padding: 12px 14px;
+      border: 1px solid #e5dff5;
+      border-radius: 10px;
+      background: #faf8ff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .my-edit-req-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .my-edit-req-id-cat {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #5b21b6;
+    }
+
+    .my-edit-req-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .my-edit-req-badge.is-pending {
+      background: #FFF8E1;
+      color: #92400E;
+    }
+
+    .my-edit-req-badge.is-resolved {
+      background: #DCFCE7;
+      color: #15803D;
+    }
+
+    .my-edit-req-badge.is-declined {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
+
+    .my-edit-req-msg {
+      margin: 0;
+      font-size: 0.84rem;
+      color: #1f2937;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .my-edit-req-note {
+      margin: 2px 0 0;
+      padding: 7px 10px;
+      border-radius: 7px;
+      background: #ede9fe;
+      color: #4c1d95;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .my-edit-req-date {
+      font-size: 0.73rem;
+      color: #6b7280;
+    }
+
+    html[data-theme="dark"] .my-edit-reqs-section {
+      border-top-color: #484052;
+    }
+    html[data-theme="dark"] .my-edit-reqs-heading {
+      color: #ffffff;
+    }
+    html[data-theme="dark"] .my-edit-req-card {
+      background: #26212e;
+      border-color: #3a314a;
+    }
+    html[data-theme="dark"] .my-edit-req-id-cat {
+      color: #F5C518;
+    }
+    html[data-theme="dark"] .my-edit-req-msg {
+      color: #f3f0fa;
+    }
+    html[data-theme="dark"] .my-edit-req-note {
+      background: #352b47;
+      color: #e9d5ff;
+    }
+    html[data-theme="dark"] .my-edit-req-date {
+      color: #d0c9db;
+    }
   </style>
 
   <script src="../../scripts/apiConfig.js"></script>
@@ -1944,6 +2069,16 @@
                 <button type="submit" class="btn-edit-req-resolve" id="principalReqEditSubmitBtn">Send Request</button>
               </div>
             </form>
+
+            <!-- My Submitted Edit Requests History (Principal) -->
+            <section class="my-edit-reqs-section" aria-labelledby="principalMyEditReqsHeading">
+              <h3 class="my-edit-reqs-heading" id="principalMyEditReqsHeading">My Submitted Edit Requests</h3>
+              <div class="my-edit-reqs-list" id="principalMyEditRequestsList">
+                <p style="font-size:0.825rem; color:#9ca3af; font-style:italic; margin:0;">
+                  Loading your requests...
+                </p>
+              </div>
+            </section>
           </div>
         </div>
 

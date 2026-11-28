@@ -134,6 +134,7 @@ function wirePrincipalRequestEditModal() {
     overlay?.classList.add("is-open");
     document.body.style.overflow = "hidden";
     msgEl?.focus();
+    loadPrincipalMyProfileEditRequests();
   });
 
   closeBtn?.addEventListener("click", close);
@@ -180,7 +181,7 @@ function wirePrincipalRequestEditModal() {
         fbEl.textContent = result.message || "Your profile edit request has been sent.";
         fbEl.className = "edit-req-feedback is-success";
       }
-      setTimeout(close, 850);
+      await loadPrincipalMyProfileEditRequests();
     } catch (err) {
       if (fbEl) {
         fbEl.textContent = err.message || "Unable to submit profile edit request.";
@@ -193,6 +194,98 @@ function wirePrincipalRequestEditModal() {
       }
     }
   });
+}
+
+async function loadPrincipalMyProfileEditRequests() {
+  const listEl = document.getElementById("principalMyEditRequestsList");
+  if (!listEl) return;
+
+  try {
+    const response = await fetch(USER_PROFILE_EDIT_REQ_API, {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store",
+      headers: { Accept: "application/json" }
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to load your submitted requests.");
+    }
+
+    const result = await response.json();
+    const requests = Array.isArray(result?.data?.requests)
+      ? result.data.requests
+      : [];
+
+    listEl.replaceChildren();
+
+    if (requests.length === 0) {
+      const emptyP = document.createElement("p");
+      emptyP.style.cssText =
+        "font-size:0.825rem; color:#9ca3af; font-style:italic; margin:0;";
+      emptyP.textContent = "You have not submitted any profile edit requests yet.";
+      listEl.appendChild(emptyP);
+      return;
+    }
+
+    requests.forEach((req) => {
+      const card = document.createElement("div");
+      card.className = "my-edit-req-card";
+
+      const top = document.createElement("div");
+      top.className = "my-edit-req-top";
+
+      const idCat = document.createElement("span");
+      idCat.className = "my-edit-req-id-cat";
+      idCat.textContent = `${req.request_id || "REQ"} • ${req.category || "Profile"}`;
+
+      const rawStatus = String(req.status || "PENDING").toUpperCase();
+      const badge = document.createElement("span");
+      badge.className =
+        "my-edit-req-badge " +
+        (rawStatus === "RESOLVED"
+          ? "is-resolved"
+          : rawStatus === "DECLINED"
+          ? "is-declined"
+          : "is-pending");
+      badge.textContent = rawStatus;
+
+      top.append(idCat, badge);
+
+      const msg = document.createElement("p");
+      msg.className = "my-edit-req-msg";
+      msg.textContent = req.message || "";
+
+      const dateSpan = document.createElement("span");
+      dateSpan.className = "my-edit-req-date";
+      const createdFmt = formatDateTimeReadable(req.created_at);
+      dateSpan.textContent = req.resolved_at
+        ? `Submitted: ${createdFmt} • Reviewed: ${formatDateTimeReadable(
+            req.resolved_at
+          )}${req.resolved_by ? ` by ${req.resolved_by}` : ""}`
+        : `Submitted: ${createdFmt}`;
+
+      card.append(top, msg);
+
+      if (req.admin_note) {
+        const note = document.createElement("div");
+        note.className = "my-edit-req-note";
+        note.textContent = `Admin Note: ${req.admin_note}`;
+        card.appendChild(note);
+      }
+
+      card.appendChild(dateSpan);
+      listEl.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Load Principal submitted edit requests error:", err);
+    listEl.replaceChildren();
+    const errP = document.createElement("p");
+    errP.style.cssText =
+      "font-size:0.825rem; color:#dc2626; font-style:italic; margin:0;";
+    errP.textContent = "Unable to load your submitted requests.";
+    listEl.appendChild(errP);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════

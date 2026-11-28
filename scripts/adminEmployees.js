@@ -55,8 +55,9 @@
           }
         });
 
-        // Re-apply search filter whenever the panel changes
-     //   filterRows();
+        if (typeof window.syncPersonnelFilterToolbarForPanel === 'function') {
+          window.syncPersonnelFilterToolbarForPanel(targetPanel);
+        }
       });
     });
 
@@ -973,7 +974,9 @@ const employeeTableState = {
         perPage: 5,
         tbodyId: "teachingTableBody",
         paginationId: "teachingPagination",
-        emptyMessage: "No teaching employee records found."
+        emptyMessage: "No teaching employee records found.",
+        sortField: null,
+        sortDir: null
     },
     nonTeaching: {
         records: [],
@@ -981,7 +984,9 @@ const employeeTableState = {
         perPage: 5,
         tbodyId: "nonTeachingTableBody",
         paginationId: "nonTeachingPagination",
-        emptyMessage: "No non-teaching employee records found."
+        emptyMessage: "No non-teaching employee records found.",
+        sortField: null,
+        sortDir: null
     },
     accounts: {
         records: [],
@@ -989,9 +994,234 @@ const employeeTableState = {
         perPage: 5,
         tbodyId: "accountsTableBody",
         paginationId: "accountsPagination",
-        emptyMessage: "No account records found."
+        emptyMessage: "No account records found.",
+        sortField: null,
+        sortDir: null,
+        filterPersonnelType: "all",
+        filterAccountStatus: "all"
     }
 };
+
+let activeEmployeePanelKey = "teaching";
+
+// Sortable column definitions per sub-tab
+// Teaching & Non-Teaching exclude: First Name, Middle Name, DepEd Email
+const PERSONNEL_SORT_COLUMNS = [
+    { field: "last_name",                 label: "Last Name",                    kind: "text" },
+    { field: "plantilla_item_number",     label: "Plantilla Number",             kind: "text" },
+    { field: "position",                  label: "Position",                     kind: "text" },
+    { field: "salary_grade",              label: "Salary Grade",                 kind: "number" },
+    { field: "step_increment",            label: "Step Increment",               kind: "number" },
+    { field: "date_original_appointment", label: "Date of Original Appointment", kind: "date" },
+    { field: "date_last_promotion",       label: "Date of Last Promotion",       kind: "date" }
+];
+
+// Accounts sort dropdown includes: Employee Number and Full Name (excludes DepEd Email)
+const ACCOUNTS_SORT_COLUMNS = [
+    { field: "employee_number", label: "Employee Number", kind: "text" },
+    { field: "full_name",       label: "Full Name",       kind: "text" }
+];
+
+function getActiveSortColumns() {
+    return activeEmployeePanelKey === "accounts"
+        ? ACCOUNTS_SORT_COLUMNS
+        : PERSONNEL_SORT_COLUMNS;
+}
+
+function getAccountStatusLabel(employee) {
+    if (employee.account_id === null || employee.account_id === undefined) {
+        return "No Account";
+    }
+    return Number(employee.is_active) === 1 ? "Active" : "Inactive";
+}
+
+function renderSortDropdownMenu() {
+    const panelEl = document.getElementById("empSortDropdownPanel");
+    const btnTextEl = document.getElementById("btnFilterText");
+    if (!panelEl) return;
+
+    const state = employeeTableState[activeEmployeePanelKey];
+    const columns = getActiveSortColumns();
+
+    panelEl.replaceChildren();
+
+    const header = document.createElement("div");
+    header.className = "emp-dropdown-header";
+    header.textContent = "Sort By Column";
+    panelEl.appendChild(header);
+
+    const hint = document.createElement("div");
+    hint.className = "emp-dropdown-hint";
+    hint.textContent = "1st click: Asc (▲) • 2nd: Desc (▼) • 3rd: Reset";
+    panelEl.appendChild(hint);
+
+    columns.forEach(function (col) {
+        const isSelected = state.sortField === col.field && state.sortDir !== null;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "emp-sort-item" + (isSelected ? " is-active" : "");
+        btn.setAttribute("role", "menuitem");
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = col.label;
+        btn.appendChild(nameSpan);
+
+        if (isSelected) {
+            const badge = document.createElement("span");
+            badge.className = "emp-sort-dir-badge";
+            badge.textContent = state.sortDir === "asc" ? "▲ Asc" : "▼ Desc";
+            btn.appendChild(badge);
+        }
+
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+
+            // 3-click cycle: 1st = asc, 2nd = desc, 3rd = unselect
+            if (state.sortField !== col.field || state.sortDir === null) {
+                state.sortField = col.field;
+                state.sortDir = "asc";
+            } else if (state.sortDir === "asc") {
+                state.sortDir = "desc";
+            } else {
+                state.sortField = null;
+                state.sortDir = null;
+            }
+
+            state.page = 1;
+            renderSortDropdownMenu();
+            renderEmployeePage(activeEmployeePanelKey);
+        });
+
+        panelEl.appendChild(btn);
+    });
+
+    if (btnTextEl) {
+        const activeCol = columns.find(c => c.field === state.sortField);
+        if (activeCol && state.sortDir) {
+            const arrow = state.sortDir === "asc" ? "▲" : "▼";
+            btnTextEl.textContent = `Filter: ${activeCol.label} ${arrow}`;
+        } else {
+            btnTextEl.textContent = "Filter";
+        }
+    }
+}
+
+window.syncPersonnelFilterToolbarForPanel = function (rawPanelName) {
+    if (rawPanelName === "teaching") {
+        activeEmployeePanelKey = "teaching";
+    } else if (rawPanelName === "non-teaching" || rawPanelName === "nonTeaching") {
+        activeEmployeePanelKey = "nonTeaching";
+    } else if (rawPanelName === "accounts") {
+        activeEmployeePanelKey = "accounts";
+    }
+
+    const extraFiltersEl = document.getElementById("accountsExtraFilters");
+    if (extraFiltersEl) {
+        extraFiltersEl.hidden = activeEmployeePanelKey !== "accounts";
+    }
+
+    // Close any open dropdown panels when switching tabs
+    document.querySelectorAll(".emp-filter-wrap.is-open").forEach(function (w) {
+        w.classList.remove("is-open");
+        w.querySelector("button")?.setAttribute("aria-expanded", "false");
+    });
+
+    renderSortDropdownMenu();
+    renderEmployeePage(activeEmployeePanelKey);
+};
+
+(function wirePersonnelFilterDropdowns() {
+    const sortWrap = document.getElementById("empSortFilterWrap");
+    const sortBtn  = document.getElementById("btnFilter");
+    const typeWrap = document.getElementById("accTypeFilterWrap");
+    const typeBtn  = document.getElementById("accTypeFilterBtn");
+    const statWrap = document.getElementById("accStatusFilterWrap");
+    const statBtn  = document.getElementById("accStatusFilterBtn");
+
+    function toggleWrap(targetWrap, targetBtn) {
+        if (!targetWrap) return;
+        const willOpen = !targetWrap.classList.contains("is-open");
+        document.querySelectorAll(".emp-filter-wrap.is-open").forEach(function (w) {
+            w.classList.remove("is-open");
+            w.querySelector("button")?.setAttribute("aria-expanded", "false");
+        });
+        if (willOpen) {
+            targetWrap.classList.add("is-open");
+            targetBtn?.setAttribute("aria-expanded", "true");
+        }
+    }
+
+    sortBtn?.addEventListener("click", function (e) {
+        e.stopPropagation();
+        renderSortDropdownMenu();
+        toggleWrap(sortWrap, sortBtn);
+    });
+
+    typeBtn?.addEventListener("click", function (e) {
+        e.stopPropagation();
+        toggleWrap(typeWrap, typeBtn);
+    });
+
+    statBtn?.addEventListener("click", function (e) {
+        e.stopPropagation();
+        toggleWrap(statWrap, statBtn);
+    });
+
+    // Wire Accounts Personnel Type options
+    document.querySelectorAll("#accTypeDropdownPanel [data-acc-type]").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const val = btn.getAttribute("data-acc-type") || "all";
+            employeeTableState.accounts.filterPersonnelType = val;
+            employeeTableState.accounts.page = 1;
+
+            document.querySelectorAll("#accTypeDropdownPanel [data-acc-type]").forEach(function (b) {
+                b.classList.toggle("is-active", b === btn);
+            });
+
+            const txtEl = document.getElementById("accTypeFilterText");
+            if (txtEl) {
+                txtEl.textContent = val === "all" ? "Type: All" : `Type: ${val}`;
+            }
+
+            typeWrap?.classList.remove("is-open");
+            typeBtn?.setAttribute("aria-expanded", "false");
+            renderEmployeePage("accounts");
+        });
+    });
+
+    // Wire Accounts Status options
+    document.querySelectorAll("#accStatusDropdownPanel [data-acc-status]").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const val = btn.getAttribute("data-acc-status") || "all";
+            employeeTableState.accounts.filterAccountStatus = val;
+            employeeTableState.accounts.page = 1;
+
+            document.querySelectorAll("#accStatusDropdownPanel [data-acc-status]").forEach(function (b) {
+                b.classList.toggle("is-active", b === btn);
+            });
+
+            const txtEl = document.getElementById("accStatusFilterText");
+            if (txtEl) {
+                txtEl.textContent = val === "all" ? "Status: All" : `Status: ${val}`;
+            }
+
+            statWrap?.classList.remove("is-open");
+            statBtn?.setAttribute("aria-expanded", "false");
+            renderEmployeePage("accounts");
+        });
+    });
+
+    document.addEventListener("click", function () {
+        document.querySelectorAll(".emp-filter-wrap.is-open").forEach(function (w) {
+            w.classList.remove("is-open");
+            w.querySelector("button")?.setAttribute("aria-expanded", "false");
+        });
+    });
+
+    renderSortDropdownMenu();
+})();
 
 function renderPersonnelTable(employees, tableBodyId, emptyMessage) {
     const type = tableBodyId === "teachingTableBody"
@@ -1020,16 +1250,31 @@ function getFilteredEmployeeRecords(type) {
         ? searchInput.value.trim().toLowerCase()
         : "";
 
-    if (!term) {
-        return state.records;
-    }
-
-    return state.records.filter(function (employee) {
+    let filtered = state.records.filter(function (employee) {
         const fullName = [
             employee.first_name,
             employee.middle_name,
             employee.last_name
         ].filter(Boolean).join(" ");
+
+        const accountStatus = getAccountStatusLabel(employee);
+
+        // Accounts-only filters: Personnel Type & Account Status
+        if (type === "accounts") {
+            const pTypeFilter = state.filterPersonnelType || "all";
+            if (pTypeFilter !== "all" && String(employee.personnel_type || "") !== pTypeFilter) {
+                return false;
+            }
+
+            const statusFilter = state.filterAccountStatus || "all";
+            if (statusFilter !== "all" && accountStatus !== statusFilter) {
+                return false;
+            }
+        }
+
+        if (!term) {
+            return true;
+        }
 
         const searchableValues = [
             employee.employee_number,
@@ -1049,11 +1294,7 @@ function getFilteredEmployeeRecords(type) {
             employee.personnel_type,
             employee.username,
             employee.role_name,
-            employee.account_id === null
-                ? "No Account"
-                : Number(employee.is_active) === 1
-                    ? "Active"
-                    : "Inactive"
+            accountStatus
         ];
 
         return searchableValues.some(function (value) {
@@ -1062,6 +1303,55 @@ function getFilteredEmployeeRecords(type) {
                 .includes(term);
         });
     });
+
+    // Apply 3-click column sort if active
+    if (state.sortField && state.sortDir) {
+        const columns = type === "accounts" ? ACCOUNTS_SORT_COLUMNS : PERSONNEL_SORT_COLUMNS;
+        const colMeta = columns.find(c => c.field === state.sortField);
+        const kind = colMeta ? colMeta.kind : "text";
+        const dirMultiplier = state.sortDir === "asc" ? 1 : -1;
+
+        filtered = filtered.slice().sort(function (a, b) {
+            if (kind === "number") {
+                const numA = Number(a[state.sortField] ?? 0);
+                const numB = Number(b[state.sortField] ?? 0);
+                return (numA - numB) * dirMultiplier;
+            }
+
+            if (kind === "date") {
+                const rawA = String(a[state.sortField] || "").trim();
+                const rawB = String(b[state.sortField] || "").trim();
+                const emptyA = !rawA || rawA.toLowerCase() === "none" || rawA === "0000-00-00";
+                const emptyB = !rawB || rawB.toLowerCase() === "none" || rawB === "0000-00-00";
+
+                // Always keep empty/None dates at the bottom
+                if (emptyA && emptyB) return 0;
+                if (emptyA) return 1;
+                if (emptyB) return -1;
+
+                return rawA.localeCompare(rawB) * dirMultiplier;
+            }
+
+            // Text / Alphanumeric natural sort
+            let valA = "";
+            let valB = "";
+
+            if (state.sortField === "full_name") {
+                valA = [a.first_name, a.middle_name, a.last_name].filter(Boolean).join(" ").trim();
+                valB = [b.first_name, b.middle_name, b.last_name].filter(Boolean).join(" ").trim();
+            } else {
+                valA = String(a[state.sortField] ?? "").trim();
+                valB = String(b[state.sortField] ?? "").trim();
+            }
+
+            return valA.localeCompare(valB, undefined, {
+                numeric: true,
+                sensitivity: "base"
+            }) * dirMultiplier;
+        });
+    }
+
+    return filtered;
 }
 
 function renderEmployeePage(type) {
@@ -1514,9 +1804,11 @@ if (addEmployeeForm) {
 
       showMasterFileNotification(
         "error",
-        "Employee Creation Error",
-        "An unexpected error occurred while adding the employee. Please try again."
-    );
+        "Employee Not Added",
+        (error && error.message && error.message !== "Request failed. Please try again.")
+          ? error.message
+          : "An unexpected error occurred while adding the employee. Please try again."
+      );
 
     } finally {
       if (submitButton) {

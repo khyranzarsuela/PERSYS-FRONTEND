@@ -179,7 +179,7 @@
               </h2>
               <span class="persys-gcal-readonly-tag">View-Only</span>
             </div>
-            <p class="persys-gcal-subtitle">
+            <p class="persys-gcal-subtitle" data-gcal-subtitle>
               School-wide Approved Leaves &amp; Service Credit Upload Dates
             </p>
           </div>
@@ -201,7 +201,7 @@
           <div class="persys-gcal-legend" aria-label="Calendar event legend">
             <span class="persys-gcal-legend-item">
               <span class="persys-gcal-legend-swatch swatch-leave" aria-hidden="true"></span>
-              Approved Leave
+              <span data-gcal-leave-legend>Approved Leave</span>
             </span>
             <span class="persys-gcal-legend-item">
               <span class="persys-gcal-legend-swatch swatch-credit" aria-hidden="true"></span>
@@ -287,6 +287,20 @@
         if (res.ok && result && result.success && result.data) {
           currentSource = result.data.source || "local_fallback";
           currentEvents = Array.isArray(result.data.events) ? result.data.events : [];
+
+          const isPersonalScope = result.data.scope === "personal_leaves";
+          const subtitleEl = container.querySelector("[data-gcal-subtitle]");
+          const leaveLegendEl = container.querySelector("[data-gcal-leave-legend]");
+          if (subtitleEl) {
+            subtitleEl.textContent = isPersonalScope
+              ? "My Approved Leaves & School Service Credit Upload Dates"
+              : "School-wide Approved Leaves & Service Credit Upload Dates";
+          }
+          if (leaveLegendEl) {
+            leaveLegendEl.textContent = isPersonalScope
+              ? "My Approved Leave"
+              : "Approved Leave";
+          }
         } else {
           currentSource = "local_fallback";
         }

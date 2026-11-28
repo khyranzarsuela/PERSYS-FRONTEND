@@ -94,10 +94,8 @@
       return null;
     }
 
-    if (!response.ok) {
-      throw new Error("Request failed. Please try again.");
-    }
-
+    // Return 2xx and 4xx (400, 404, 409, 422 validation/conflict) responses
+    // so callers can read `await checkedResponse.json()` and display `result.message`.
     return response;
   }
 

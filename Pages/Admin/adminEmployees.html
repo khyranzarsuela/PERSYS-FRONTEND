@@ -272,13 +272,66 @@
             </svg>
           </div>
 
-          <!-- Filter button -->
-          <button type="button" class="btn-filter" id="btnFilter" aria-label="Filter records" aria-expanded="false">
-            Filter
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
+          <!-- Filter / Sort dropdown (3-click cycle: 1st = Asc, 2nd = Desc, 3rd = Unselect) -->
+          <div class="emp-filter-wrap" id="empSortFilterWrap">
+            <button type="button" class="btn-filter" id="btnFilter" aria-label="Sort records" aria-expanded="false" aria-haspopup="true">
+              <span id="btnFilterText">Filter</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="emp-dropdown-panel" id="empSortDropdownPanel" role="menu" aria-label="Sort columns"></div>
+          </div>
+
+          <!-- Accounts-only Filter Dropdowns (Personnel Type & Account Status) -->
+          <div class="accounts-extra-filters" id="accountsExtraFilters" hidden>
+            <!-- Personnel Type: All / Teaching / Non-Teaching -->
+            <div class="emp-filter-wrap" id="accTypeFilterWrap">
+              <button type="button" class="btn-filter btn-filter--sub" id="accTypeFilterBtn" aria-expanded="false" aria-haspopup="true">
+                <span id="accTypeFilterText">Type: All</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              <div class="emp-dropdown-panel" id="accTypeDropdownPanel" role="menu" aria-label="Filter by personnel type">
+                <div class="emp-dropdown-header">Personnel Type</div>
+                <button type="button" class="emp-sort-item is-active" data-acc-type="all" role="menuitem">
+                  <span>All Personnel</span>
+                </button>
+                <button type="button" class="emp-sort-item" data-acc-type="Teaching" role="menuitem">
+                  <span>Teaching</span>
+                </button>
+                <button type="button" class="emp-sort-item" data-acc-type="Non-Teaching" role="menuitem">
+                  <span>Non-Teaching</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Account Status: All / Active / Inactive / No Account -->
+            <div class="emp-filter-wrap" id="accStatusFilterWrap">
+              <button type="button" class="btn-filter btn-filter--sub" id="accStatusFilterBtn" aria-expanded="false" aria-haspopup="true">
+                <span id="accStatusFilterText">Status: All</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              <div class="emp-dropdown-panel" id="accStatusDropdownPanel" role="menu" aria-label="Filter by account status">
+                <div class="emp-dropdown-header">Account Status</div>
+                <button type="button" class="emp-sort-item is-active" data-acc-status="all" role="menuitem">
+                  <span>All Statuses</span>
+                </button>
+                <button type="button" class="emp-sort-item" data-acc-status="Active" role="menuitem">
+                  <span>Active</span>
+                </button>
+                <button type="button" class="emp-sort-item" data-acc-status="Inactive" role="menuitem">
+                  <span>Inactive</span>
+                </button>
+                <button type="button" class="emp-sort-item" data-acc-status="No Account" role="menuitem">
+                  <span>No Account</span>
+                </button>
+              </div>
+            </div>
+          </div>
 
           <!-- Trigger Button -->
           <button id="openBtn" class="btn-add-employee" aria-label="Upload Master File">
